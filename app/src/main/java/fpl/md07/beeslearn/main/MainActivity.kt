@@ -1,4 +1,4 @@
-package fpl.md07.beeslearn
+package fpl.md07.beeslearn.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
