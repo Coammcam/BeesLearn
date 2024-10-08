@@ -68,46 +68,13 @@ fun FillInTheBlankScreen() {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Heart Icon with Background
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = fpl.md07.beeslearn.R.drawable.heart),
-                            contentDescription = "Heart",
-                            tint = Color(0xFFFF1744),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "5", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
-                    }
-                }
-
+                ScoreItem(iconResId = fpl.md07.beeslearn.R.drawable.heart, value = "5", tint = Color(0xFFFF1744))
                 // Coins Icon with Background
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = fpl.md07.beeslearn.R.drawable.honey),
-                            contentDescription = "Coins",
-                            tint = Color(0xFFFFD700),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "100", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
-                    }
-                }
+                ScoreItem(iconResId = fpl.md07.beeslearn.R.drawable.honey, value = "100", tint = Color(0xFFFFD700))
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Question box with fill-in-the-blank
         Box(
@@ -125,6 +92,8 @@ fun FillInTheBlankScreen() {
                 color = Color(0xFF5D4037)
             )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Word options
         Column(
@@ -149,6 +118,8 @@ fun FillInTheBlankScreen() {
                 WordOptionButton("aha", selectedWord == "aha", onClick = { toggleWordSelection("aha", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
             }
         }
+
+        Spacer(modifier = Modifier.height(32.dp)) // Add extra space at the bottom
     }
 }
 
@@ -174,6 +145,28 @@ fun WordOptionButton(
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037)
         )
+    }
+}
+
+@Composable
+fun ScoreItem(iconResId: Int, value: String, tint: Color) {
+    Box(
+        modifier = Modifier
+            .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = iconResId),
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = value, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+        }
     }
 }
 
