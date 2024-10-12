@@ -288,7 +288,6 @@ fun HexGrid() {
 }
 
 
-
 @Composable
 fun Hexagon(
     radius: Dp,
@@ -298,64 +297,95 @@ fun Hexagon(
 ) {
     var isPressed by remember { mutableStateOf(false) }
 
-    Canvas(
-        modifier = Modifier
-            .size(radius * 2)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = { offset ->
-                        val centerX = size.width / 2
-                        val centerY = size.height / 2
-                        val radiusPx = radius.toPx()
-                        val angle = Math.PI / 3.0
+    Box(modifier = Modifier.size(radius * 2)) {
+        Canvas(
+            modifier = Modifier
+                .size(radius * 2)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onPress = { offset ->
+                            val centerX = size.width / 2
+                            val centerY = size.height / 2
+                            val radiusPx = radius.toPx()
+                            val angle = Math.PI / 3.0
 
-                        val points = (0..5).map { i ->
-                            Offset(
-                                (centerX + radiusPx * cos(angle * i - Math.PI / 6)).toFloat(),
-                                (centerY + radiusPx * sin(angle * i - Math.PI / 6)).toFloat()
-                            )
-                        }
+                            val points = (0..5).map { i ->
+                                Offset(
+                                    (centerX + radiusPx * cos(angle * i - Math.PI / 6)).toFloat(),
+                                    (centerY + radiusPx * sin(angle * i - Math.PI / 6)).toFloat()
+                                )
+                            }
 
-                        if (isPointInPolygon(offset, points)) {
-                            isPressed = true
-                            tryAwaitRelease()
-                            isPressed = false
-                            onClick()
+                            if (isPointInPolygon(offset, points)) {
+                                isPressed = true
+                                tryAwaitRelease()
+                                isPressed = false
+                                onClick()
+                            }
                         }
-                    }
-                )
-            }
-    ) {
-        val hexPath = Path().apply {
+                    )
+                }
+        ) {
             val radiusPx = radius.toPx()
             val centerX = size.width / 2
             val centerY = size.height / 2
             val angle = Math.PI / 3.0
 
-            moveTo(
-                (centerX + radiusPx * cos(angle / 2)).toFloat(),
-                (centerY + radiusPx * sin(angle / 2)).toFloat()
+            // Hexagon path
+            val hexPath = Path().apply {
+                moveTo(
+                    (centerX + radiusPx * cos(angle / 2)).toFloat(),
+                    (centerY + radiusPx * sin(angle / 2)).toFloat()
+                )
+
+                for (i in 1..6) {
+                    lineTo(
+                        (centerX + radiusPx * cos(angle * i + angle / 2)).toFloat(),
+                        (centerY + radiusPx * sin(angle * i + angle / 2)).toFloat()
+                    )
+                }
+                close()
+            }
+
+            // Shadow hexagon (drawn slightly larger and shifted)
+            val shadowOffset = 10f
+            val shadowColor = Color(0x55000000)
+
+            val shadowPath = Path().apply {
+                moveTo(
+                    (centerX + (radiusPx + shadowOffset) * cos(angle / 2)).toFloat(),
+                    (centerY + (radiusPx + shadowOffset) * sin(angle / 2) + shadowOffset).toFloat()
+                )
+
+                for (i in 1..6) {
+                    lineTo(
+                        (centerX + (radiusPx + shadowOffset) * cos(angle * i + angle / 2)).toFloat(),
+                        (centerY + (radiusPx + shadowOffset) * sin(angle * i + angle / 2) + shadowOffset).toFloat()
+                    )
+                }
+                close()
+            }
+
+            // Draw shadow
+            drawPath(
+                path = shadowPath,
+                color = shadowColor
             )
 
-            for (i in 1..6) {
-                lineTo(
-                    (centerX + radiusPx * cos(angle * i + angle / 2)).toFloat(),
-                    (centerY + radiusPx * sin(angle * i + angle / 2)).toFloat()
-                )
-            }
-            close()
+            // Draw hexagon
+            drawPath(
+                path = hexPath,
+                color = if (isPressed) color.copy(alpha = 0.7f) else color
+            )
         }
 
-        drawPath(
-            path = hexPath,
-            color = if (isPressed) color.copy(alpha = 0.7f) else color
-        )
-
         if (isCenter) {
-            drawCircle(
-                color = Color.White,
-                radius = radius.toPx() * 0.4f,
-                center = Offset(size.width / 2, size.height / 2)
+            Image(
+                painter = painterResource(id = R.drawable.honey_picture), // Replace with your drawable
+                contentDescription = null,
+                modifier = Modifier
+                    .size(radius * 0.8f) // Adjust size of the image relative to hexagon size
+                    .align(Alignment.Center), // Center the image within the hexagon
             )
         }
     }
