@@ -11,9 +11,11 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -29,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -114,24 +117,22 @@ fun TopBar() {
 
 @Composable
 fun InputBox() {
-
     Spacer(modifier = Modifier.height(50.dp))
 
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color(android.graphics.Color.parseColor("#FFF192"))) // Nền màu từ mã màu HEX
-                .padding(40.dp) // Padding bên trong box
-                .clip(RoundedCornerShape(30.dp))
-
-        ) {
-            Text(
-                text = "Đây là đoạn văn bản trong khung có viền và nền màu vàng.",
-                color = Color.Black // Màu chữ
-            )
-        }
+    Box(
+        modifier = Modifier
+            .background(Color(android.graphics.Color.parseColor("#FFF192")), shape = RoundedCornerShape(16.dp)) // Nền màu từ mã màu HEX với góc bo tròn
+            .border(BorderStroke(2.dp, Color.White), shape = RoundedCornerShape(16.dp)) // Viền với góc bo tròn
+            .padding(40.dp) // Padding bên trong box
+            .clip(RoundedCornerShape(16.dp)) // Cắt hình dạng với góc bo tròn
+    ) {
+        Text(
+            text = "Đây là đoạn văn bản trong khung có viền và nền màu vàng.",
+            color = Color.Black, // Màu chữ
+            textAlign = TextAlign.Center // Canh giữa văn bản
+        )
     }
-
+}
 
 @Composable
 fun BeeAndHexGrid() {
@@ -206,7 +207,7 @@ fun BeeAnimationScreen1() {
         BouncingBeee(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(end = 16.dp)
+                .padding(top = 60.dp, end = 16.dp) // Thêm khoảng cách 50dp từ trên
         )
     }
 }
