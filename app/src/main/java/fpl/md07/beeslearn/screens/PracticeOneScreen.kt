@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,6 +27,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -34,7 +37,7 @@ import fpl.md07.beeslearn.R
 import kotlin.math.cos
 import kotlin.math.sin
 
-class BeeGameActivity : ComponentActivity() {
+class PracticeOneScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -196,6 +199,18 @@ fun BouncingBeee(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun BeeAnimationScreen1() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        BouncingBeee(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(end = 16.dp)
+        )
+    }
+}
+@Composable
 fun HexGrid() {
     // State for the color of each hexagon
     val hexagonColors = remember {
@@ -272,18 +287,7 @@ fun HexGrid() {
     }
 }
 
-@Composable
-fun BeeAnimationScreen1() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        BouncingBeee(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 16.dp)
-        )
-    }
-}
+
 
 @Composable
 fun Hexagon(
@@ -292,26 +296,47 @@ fun Hexagon(
     isCenter: Boolean = false,
     onClick: () -> Unit
 ) {
-    // Draw the hexagonal shape using Canvas
+    var isPressed by remember { mutableStateOf(false) }
+
     Canvas(
         modifier = Modifier
-            .size(radius * 2) // Hexagon diameter
-            .clickable { onClick() } // Handle click events
-            .background(Color.Transparent)
+            .size(radius * 2)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = { offset ->
+                        val centerX = size.width / 2
+                        val centerY = size.height / 2
+                        val radiusPx = radius.toPx()
+                        val angle = Math.PI / 3.0
+
+                        val points = (0..5).map { i ->
+                            Offset(
+                                (centerX + radiusPx * cos(angle * i - Math.PI / 6)).toFloat(),
+                                (centerY + radiusPx * sin(angle * i - Math.PI / 6)).toFloat()
+                            )
+                        }
+
+                        if (isPointInPolygon(offset, points)) {
+                            isPressed = true
+                            tryAwaitRelease()
+                            isPressed = false
+                            onClick()
+                        }
+                    }
+                )
+            }
     ) {
         val hexPath = Path().apply {
             val radiusPx = radius.toPx()
             val centerX = size.width / 2
             val centerY = size.height / 2
-            val angle = Math.PI / 3.0 // 60 degrees for hexagon angles
+            val angle = Math.PI / 3.0
 
-            // Move to the first point (rotated by 30 degrees)
             moveTo(
                 (centerX + radiusPx * cos(angle / 2)).toFloat(),
                 (centerY + radiusPx * sin(angle / 2)).toFloat()
             )
 
-            // Draw the hexagon path
             for (i in 1..6) {
                 lineTo(
                     (centerX + radiusPx * cos(angle * i + angle / 2)).toFloat(),
@@ -321,13 +346,11 @@ fun Hexagon(
             close()
         }
 
-        // Draw the hexagon with the chosen color
         drawPath(
             path = hexPath,
-            color = color // Use color as background
+            color = if (isPressed) color.copy(alpha = 0.7f) else color
         )
 
-        // Add icon to the center hexagon
         if (isCenter) {
             drawCircle(
                 color = Color.White,
@@ -337,6 +360,26 @@ fun Hexagon(
         }
     }
 }
+
+fun isPointInPolygon(point: Offset, vertices: List<Offset>): Boolean {
+    var intersections = 0
+    for (i in vertices.indices) {
+        val a = vertices[i]
+        val b = vertices[(i + 1) % vertices.size]
+
+        if ((a.y > point.y) != (b.y > point.y) &&
+            point.x < (b.x - a.x) * (point.y - a.y) / (b.y - a.y) + a.x
+        ) {
+            intersections++
+        }
+    }
+    return intersections % 2 == 1
+}
+
+// Rest of the HexGrid code remains the same
+
+
+
 
 @Preview
 @Composable
