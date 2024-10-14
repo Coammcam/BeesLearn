@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.screens
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import fpl.md07.beeslearn.data.multipleChoiceQuestions // Import the fake data
 
 class MultipleChoiceQuestion : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,9 @@ class MultipleChoiceQuestion : ComponentActivity() {
 fun MultipleChoiceScreen() {
     // Maintain selected state for the answers
     var selectedAnswer by remember { mutableStateOf("") }
+
+    // Use the first question from the fake data
+    val currentQuestion = multipleChoiceQuestions[0]
 
     Column(
         modifier = Modifier
@@ -128,7 +131,7 @@ fun MultipleChoiceScreen() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Cuốn sách",
+                text = currentQuestion.questionText, // Use questionText from the fake data
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037)
@@ -141,13 +144,18 @@ fun MultipleChoiceScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                AnswerButton("A", "Book", selectedAnswer == "A", onClick = { selectedAnswer = "A" }, Modifier.weight(1f))
-                AnswerButton("B", "Cook", selectedAnswer == "B", onClick = { selectedAnswer = "B" }, Modifier.weight(1f))
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                AnswerButton("C", "Look", selectedAnswer == "C", onClick = { selectedAnswer = "C" }, Modifier.weight(1f))
-                AnswerButton("D", "Hook", selectedAnswer == "D", onClick = { selectedAnswer = "D" }, Modifier.weight(1f))
+            currentQuestion.answers.chunked(2).forEach { rowAnswers ->
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    rowAnswers.forEach { answer ->
+                        AnswerButton(
+                            label = answer.label,
+                            answerText = answer.answerText,
+                            isSelected = selectedAnswer == answer.label,
+                            onClick = { selectedAnswer = answer.label },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
             }
         }
     }
@@ -201,9 +209,8 @@ fun AnswerButton(
 
 @Preview(showBackground = true)
 @Composable
-fun MultipleChoicePreview() { // Renamed to avoid conflict
+fun MultipleChoicePreview() {
     BeesLearnTheme {
-        MultipleChoiceQuestion() // Assuming this is your function name for multiple choice questions
+        MultipleChoiceQuestion()
     }
 }
-
