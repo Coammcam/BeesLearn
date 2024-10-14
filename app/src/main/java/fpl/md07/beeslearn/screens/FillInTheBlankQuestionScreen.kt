@@ -18,8 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
 
-class FillInTheBlankQuestion : ComponentActivity() {
+class FillInTheBlankQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,6 +39,9 @@ class FillInTheBlankQuestion : ComponentActivity() {
 @Composable
 fun FillInTheBlankScreen() {
     var selectedWord by remember { mutableStateOf("") }
+
+    // Use the first question from the fake data
+    val currentQuestion = fillInTheBlankQuestions[0]
 
     Column(
         modifier = Modifier
@@ -86,7 +90,7 @@ fun FillInTheBlankScreen() {
         ) {
             // Display the sentence with the selected word in the blank
             Text(
-                text = "Lorem ipsum ${if (selectedWord.isEmpty()) "______" else selectedWord} dolor sit amet",
+                text = currentQuestion.questionText.replace("____", if (selectedWord.isEmpty()) "______" else selectedWord),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037)
@@ -101,21 +105,20 @@ fun FillInTheBlankScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                WordOptionButton("Lorem", selectedWord == "Lorem", onClick = { toggleWordSelection("Lorem", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
-                WordOptionButton("ipsum", selectedWord == "ipsum", onClick = { toggleWordSelection("ipsum", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
-                WordOptionButton("amet", selectedWord == "amet", onClick = { toggleWordSelection("amet", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
-            }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                WordOptionButton("sit", selectedWord == "sit", onClick = { toggleWordSelection("sit", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
-                WordOptionButton("dolor", selectedWord == "dolor", onClick = { toggleWordSelection("dolor", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
-                WordOptionButton("aha", selectedWord == "aha", onClick = { toggleWordSelection("aha", selectedWord, onSelect = { selectedWord = it }) }, Modifier.weight(1f))
+            currentQuestion.wordOptions.chunked(3).forEach { rowWords ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    rowWords.forEach { word ->
+                        WordOptionButton(
+                            word,
+                            selectedWord == word,
+                            onClick = { toggleWordSelection(word, selectedWord, onSelect = { selectedWord = it }) },
+                            Modifier.weight(1f)
+                        )
+                    }
+                }
             }
         }
 
