@@ -185,6 +185,6 @@ fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -
 @Composable
 fun FillInTheBlankPreview() {
     BeesLearnTheme {
-        FillInTheBlankScreen()
+        FillInTheBlankQuestionScreen()
     }
 }
