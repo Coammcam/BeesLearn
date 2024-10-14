@@ -22,7 +22,7 @@ import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.multipleChoiceQuestions // Import the fake data
 
-class MultipleChoiceQuestion : ComponentActivity() {
+class MultipleChoiceQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -211,6 +211,6 @@ fun AnswerButton(
 @Composable
 fun MultipleChoicePreview() {
     BeesLearnTheme {
-        MultipleChoiceQuestion()
+        MultipleChoiceQuestionScreen()
     }
 }
