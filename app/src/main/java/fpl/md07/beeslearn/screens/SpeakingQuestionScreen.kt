@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SpeakingQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +43,13 @@ class SpeakingQuestionScreen : ComponentActivity() {
 
 @Composable
 fun SpeakingQuestionContent() {
+    // State to track recording progress (from 0 to 1)
+    var isRecording by remember { mutableStateOf(false) }
+    var recordingProgress by remember { mutableStateOf(0f) }
+    var secondsElapsed by remember { mutableStateOf(0) }
+
+    val scope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -164,6 +173,34 @@ fun SpeakingQuestionContent() {
             }
 
             Spacer(modifier = Modifier.height(32.dp))
+
+            // Recording progress bar
+            if (isRecording) {
+                LinearProgressIndicator(
+                    progress = recordingProgress,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Timer in a rounded box
+            if (isRecording) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFE3F2FD))
+                        .padding(horizontal = 24.dp, vertical = 12.dp)
+                ) {
+                    Text(
+                        text = "$secondsElapsed giây",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1976D2)
+                    )
+                }
+            }
         }
 
         // Mic and text at the bottom
@@ -179,7 +216,21 @@ fun SpeakingQuestionContent() {
                     .size(100.dp)
                     .clip(CircleShape)
                     .background(Color(0xFFFFEB46))
-                    .clickable { /* Handle speak action */ },
+                    .clickable {
+                        isRecording = true
+                        recordingProgress = 0f
+                        secondsElapsed = 0
+
+                        // Simulate recording progress and seconds elapsed
+                        scope.launch {
+                            while (recordingProgress < 1f) {
+                                delay(1000) // Update every second
+                                secondsElapsed += 1
+                                recordingProgress += 0.05f // Adjust speed of progress bar
+                            }
+                            isRecording = false // Stop recording when done
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
