@@ -20,8 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import fpl.md07.beeslearn.data.connectingWordQuestions // Import fake data
 
-class ConnectingWordQuestion : ComponentActivity() {
+class ConnectingWordQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -41,6 +42,9 @@ class ConnectingWordQuestion : ComponentActivity() {
 fun ConnectingWordScreen() {
     var selectedLeft by remember { mutableStateOf("") }
     var selectedRight by remember { mutableStateOf("") }
+
+    // Use the first question from the fake data
+    val currentQuestion = connectingWordQuestions[0]
 
     Column(
         modifier = Modifier
@@ -149,13 +153,7 @@ fun ConnectingWordScreen() {
                     .weight(1f)
                     .padding(8.dp)
             ) {
-                listOf(
-                    "1. We visited Hyde Park,",
-                    "2. The police needed details",
-                    "3. Mr. Smith,",
-                    "4. I'd like to take you to a café",
-                    "5. The skirt,"
-                ).forEach { text ->
+                currentQuestion.columnA.forEach { text ->
                     SelectableMatchingItem(
                         text = text,
                         isSelected = selectedLeft == text,
@@ -170,13 +168,7 @@ fun ConnectingWordScreen() {
                     .weight(1f)
                     .padding(8.dp)
             ) {
-                listOf(
-                    "a. which serves excellent coffee",
-                    "b. which is close to Buckingham Palace.",
-                    "c. that could help identify the robber.",
-                    "d. who works with me, has invited me to a party.",
-                    "e. which is a lovely dark blue colour, only cost £10"
-                ).forEach { text ->
+                currentQuestion.columnB.forEach { text ->
                     SelectableMatchingItem(
                         text = text,
                         isSelected = selectedRight == text,
@@ -214,6 +206,6 @@ fun SelectableMatchingItem(text: String, isSelected: Boolean, onClick: () -> Uni
 @Composable
 fun ConnectingWordPreview() {
     BeesLearnTheme {
-        ConnectingWordScreen()
+        ConnectingWordQuestionScreen()
     }
 }

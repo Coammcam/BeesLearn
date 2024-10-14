@@ -19,8 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import fpl.md07.beeslearn.data.trueFalseQuestions // Import the fake data
 
-class TrueFalseQuestion : ComponentActivity() {
+class TrueFalseQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,6 +39,12 @@ class TrueFalseQuestion : ComponentActivity() {
 
 @Composable
 fun TrueFalseScreen() {
+    // Keep track of the current question index
+    var currentQuestionIndex by remember { mutableStateOf(0) }
+
+    // Get the current question from the fake data
+    val currentQuestion = trueFalseQuestions[currentQuestionIndex]
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -126,7 +133,7 @@ fun TrueFalseScreen() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Hello, Night to meet you",
+                text = currentQuestion.questionText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037)
@@ -146,13 +153,25 @@ fun TrueFalseScreen() {
                 icon = fpl.md07.beeslearn.R.drawable.ic_false,
                 backgroundColor = Color(0xFFFFEB3B),
                 iconTint = Color(0xFFFF1744),
-                onClick = { /* False action */ }
+                onClick = {
+                    // Check if the answer is false
+                    if (!currentQuestion.isTrue) {
+                        // Move to next question
+                        currentQuestionIndex = (currentQuestionIndex + 1) % trueFalseQuestions.size
+                    }
+                }
             )
             TrueFalseButton(
                 icon = fpl.md07.beeslearn.R.drawable.ic_true,
                 backgroundColor = Color(0xFFFFEB3B),
                 iconTint = Color(0xFF00E676),
-                onClick = { /* True action */ }
+                onClick = {
+                    // Check if the answer is true
+                    if (currentQuestion.isTrue) {
+                        // Move to next question
+                        currentQuestionIndex = (currentQuestionIndex + 1) % trueFalseQuestions.size
+                    }
+                }
             )
         }
     }
@@ -185,6 +204,6 @@ fun TrueFalseButton(
 @Composable
 fun TrueFalsePreview() {
     BeesLearnTheme {
-        TrueFalseScreen()
+        TrueFalseQuestionScreen()
     }
 }
