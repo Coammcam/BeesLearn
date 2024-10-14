@@ -206,6 +206,6 @@ fun SelectableMatchingItem(text: String, isSelected: Boolean, onClick: () -> Uni
 @Composable
 fun ConnectingWordPreview() {
     BeesLearnTheme {
-        ConnectingWordScreen()
+        ConnectingWordQuestionScreen()
     }
 }
