@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
 import kotlin.math.cos
 import kotlin.math.sin
+import fpl.md07.beeslearn.components.TextBoxComponent
 
 class PracticeOneScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,9 +72,9 @@ fun BeeGameScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Input box
-        InputBox()
-
+        Box(modifier = Modifier.padding(10.dp)) { // Adjust padding as needed
+            TextBoxComponent()
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         // Bee and hexagonal grid
@@ -118,24 +119,7 @@ fun TopBar() {
     }
 }
 
-@Composable
-fun InputBox() {
-    Spacer(modifier = Modifier.height(50.dp))
 
-    Box(
-        modifier = Modifier
-            .background(Color(android.graphics.Color.parseColor("#FFF192")), shape = RoundedCornerShape(16.dp)) // Nền màu từ mã màu HEX với góc bo tròn
-            .border(BorderStroke(2.dp, Color.White), shape = RoundedCornerShape(16.dp)) // Viền với góc bo tròn
-            .padding(40.dp) // Padding bên trong box
-            .clip(RoundedCornerShape(16.dp)) // Cắt hình dạng với góc bo tròn
-    ) {
-        Text(
-            text = "Đây là đoạn văn bản trong khung có viền và nền màu vàng.",
-            color = Color.Black, // Màu chữ
-            textAlign = TextAlign.Center // Canh giữa văn bản
-        )
-    }
-}
 
 @Composable
 fun BeeAndHexGrid() {
@@ -216,8 +200,6 @@ fun BeeAnimationScreen1() {
 }
 
 
-
-
 @Composable
 fun HexGrid() {
     // State for the color of each hexagon using a List of mutableStateOf
@@ -264,7 +246,12 @@ fun HexGrid() {
                 Hexagon(hexagonRadius, hexagonColors[2], R.drawable.icon_lock) { // Outer image
                     toggleHexagonColor(hexagonColors[2])
                 }
-                Hexagon(hexagonRadius, hexagonColors[3], R.drawable.honey_picture, isCenter = true) { // Inner image (center)
+                Hexagon(
+                    hexagonRadius,
+                    hexagonColors[3],
+                    R.drawable.honey_picture,
+                    isCenter = true
+                ) { // Inner image (center)
                     toggleHexagonColor(hexagonColors[3])
                 }
                 Hexagon(hexagonRadius, hexagonColors[4], R.drawable.icon_lock) { // Outer image
@@ -302,8 +289,10 @@ fun Hexagon(
     isCenter: Boolean = false,
     onClick: () -> Unit
 ) {
-    val outerColor = if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFD3D3D3) else Color(0xFFFFBE00)
-    val innerColor = if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFC8C8C8) else Color(0xFFFFAA01)
+    val outerColor =
+        if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFD3D3D3) else Color(0xFFFFBE00)
+    val innerColor =
+        if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFC8C8C8) else Color(0xFFFFAA01)
     val shadowColor = Color(android.graphics.Color.parseColor("#D9D9D9"))
 
     Box(modifier = Modifier.size(radius * 2)) {
