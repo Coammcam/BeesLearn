@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.graphicsLayer
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.multipleChoiceQuestions // Import the fake data
@@ -79,7 +80,7 @@ fun MultipleChoiceScreen() {
                     modifier = Modifier
                         .background(
                             color = Color(0xFFFFF59D),
-                            shape = RoundedCornerShape(50)
+                            shape = RoundedCornerShape(50) // Keep this for circle shape
                         )
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
@@ -102,7 +103,7 @@ fun MultipleChoiceScreen() {
                     modifier = Modifier
                         .background(
                             color = Color(0xFFFFF59D),
-                            shape = RoundedCornerShape(50)
+                            shape = RoundedCornerShape(50) // Keep this for circle shape
                         )
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
@@ -122,23 +123,29 @@ fun MultipleChoiceScreen() {
             }
         }
 
-        // Question box
+        // Question box with top shadow effect and rounded corners
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+                .graphicsLayer {
+                    shadowElevation = 8.dp.toPx() // Shadow elevation
+                    shape = RoundedCornerShape(16.dp)
+                    clip = true
+                    translationY = -8.dp.toPx() // Offset shadow to the top
+                }
+                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)), // Apply background after shadow
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = currentQuestion.questionText, // Use questionText from the fake data
+                text = currentQuestion.questionText,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037)
             )
         }
 
-        // Answer options
+        // Answer options with bottom shadow and rounded corners
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -173,9 +180,15 @@ fun AnswerButton(
         onClick = onClick,
         shape = RoundedCornerShape(16.dp), // Rounded corners
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFF59D)),
-        border = if (isSelected) BorderStroke(2.dp, Color(0xFF5D4037)) else BorderStroke(0.dp, Color.Transparent), // Add border when selected
+        border = if (isSelected) BorderStroke(2.dp, Color(0xFF5D4037)) else BorderStroke(0.dp, Color.Transparent),
         modifier = modifier
             .height(100.dp)
+            .graphicsLayer {
+                shadowElevation = 8.dp.toPx() // Shadow elevation
+                shape = RoundedCornerShape(16.dp)
+                clip = true
+                translationY = 8.dp.toPx() // Offset shadow to the bottom
+            }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Circle label

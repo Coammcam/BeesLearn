@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -129,7 +130,13 @@ fun TrueFalseScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+                .graphicsLayer {
+                    shadowElevation = 8.dp.toPx() // Shadow elevation
+                    shape = RoundedCornerShape(16.dp)
+                    clip = true
+                    translationY = -8.dp.toPx() // Offset shadow to the top
+                }
+                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)), // Apply background after shadow
             contentAlignment = Alignment.Center
         ) {
             Text(
