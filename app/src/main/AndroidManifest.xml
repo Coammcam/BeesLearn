@@ -12,14 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BeesLearn"
         tools:targetApi="31">
-
+        <activity
+            android:name=".screens.SelectExScreen"
+            android:exported="false" />
         <activity
             android:name=".main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.BeesLearn">
-
-        </activity>
+            android:theme="@style/Theme.BeesLearn"></activity>
         <activity
             android:name=".screens.PracticeOneScreen"
             android:exported="true"
