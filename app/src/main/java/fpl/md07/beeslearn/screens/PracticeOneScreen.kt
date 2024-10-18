@@ -45,7 +45,7 @@ import fpl.md07.beeslearn.components.IconTopComponent
 import kotlin.math.cos
 import kotlin.math.sin
 import fpl.md07.beeslearn.components.TextBoxComponent
-
+import fpl.md07.beeslearn.components.BeeAnimaComponent
 class PracticeOneScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,7 @@ class PracticeOneScreen : ComponentActivity() {
             MaterialTheme {
                 Surface {
                     BeeGameScreen() // Call your Compose screen here
-                    BeeAnimationScreen1()
+
                 }
             }
         }
@@ -74,8 +74,22 @@ fun BeeGameScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
         Box(modifier = Modifier.padding(10.dp)) { // Adjust padding as needed
-            TextBoxComponent()
+            // Use the Bee Animation Component at the top left
+            TextBoxComponent(
+                modifier = Modifier
+                    .fillMaxWidth() // Fill the width of the parent
+                    .height(200.dp) // Set a specific height for the text box
+                    .padding(top = 50.dp) // Adjust padding to avoid overlap if needed
+            )
+            BeeAnimaComponent(
+                modifier = Modifier
+                    .align(Alignment.TopEnd) // Align to top end (right corner)
+                    .size(200.dp) // Increase the size of the bee image
+                    .padding(top = 10.dp, start = 100.dp) // Optional padding from the top and left
+
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -117,64 +131,6 @@ fun BeeAndHexGrid() {
 
     // Hexagonal grid with center hexagon and surrounding ones
     HexGrid()
-}
-
-// animation
-@Composable
-fun BouncingBeee(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition()
-
-    val verticalOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 30f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    val horizontalOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 15f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = -5f,
-        targetValue = 5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-
-    Box(modifier = modifier) {
-        Image(
-            painter = painterResource(id = R.drawable.ani1_picture), // Replace with your bee image resource
-            contentDescription = "Bouncing Bee",
-            modifier = Modifier
-                .size(100.dp)
-                .offset(x = horizontalOffset.dp, y = -verticalOffset.dp)
-                .rotate(rotation)
-        )
-    }
-}
-
-@Composable
-fun BeeAnimationScreen1() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        BouncingBeee(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(top = 60.dp, end = 16.dp) // Thêm khoảng cách 50dp từ trên
-        )
-    }
 }
 
 

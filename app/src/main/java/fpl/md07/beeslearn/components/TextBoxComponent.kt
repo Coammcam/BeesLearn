@@ -19,14 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextBoxComponent() {
-    Spacer(modifier = Modifier.height(50.dp))
-
+fun TextBoxComponent(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier // Apply the passed modifier to the Box
             .shadow(8.dp, shape = RoundedCornerShape(16.dp)) // Add shadow here
-            .background(Color(android.graphics.Color.parseColor("#FFF192")), shape = RoundedCornerShape(16.dp)) // Background color from HEX code with rounded corners
-//            .border(BorderStroke(2.dp, Color.White), shape = RoundedCornerShape(16.dp)) // Border with rounded corners
+            .background(Color(android.graphics.Color.parseColor("#FFF192")), shape = RoundedCornerShape(16.dp)) // Background color
             .padding(50.dp) // Inner padding
             .clip(RoundedCornerShape(16.dp)) // Clip shape with rounded corners
     ) {
@@ -38,3 +35,4 @@ fun TextBoxComponent() {
         )
     }
 }
+
