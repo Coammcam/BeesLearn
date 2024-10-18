@@ -24,11 +24,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -211,18 +214,19 @@ fun BeeAnimationScreen1() {
         )
     }
 }
+
 @Composable
 fun HexGrid() {
-    // State for the color of each hexagon
+    // State for the color of each hexagon using a List of mutableStateOf
     val hexagonColors = remember {
         mutableStateListOf(
-            Color.Gray,
-            Color.Gray,
-            Color.Gray,
-            Color.Gray,
-            Color.Gray,
-            Color.Gray,
-            Color.Gray
+            mutableStateOf(Color(android.graphics.Color.parseColor("#C8C8C8"))), // Outer color default
+            mutableStateOf(Color(android.graphics.Color.parseColor("#C8C8C8"))), // Outer color default
+            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
+            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
+            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
+            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
+            mutableStateOf(Color(0xFFD3D3D3))  // Outer color default
         )
     }
 
@@ -242,89 +246,69 @@ fun HexGrid() {
             verticalArrangement = Arrangement.spacedBy(spacing * 0.5f)
         ) {
 
-            // Row 2: Two hexagons
+            // Row 2: Two outer hexagons
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(hexagonRadius, hexagonColors[0]) {
-                    hexagonColors[0] =
-                        if (hexagonColors[0] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[0], R.drawable.icon_lock) { // Outer image
+                    toggleHexagonColor(hexagonColors[0])
                 }
-                Hexagon(hexagonRadius, hexagonColors[1]) {
-                    hexagonColors[1] =
-                        if (hexagonColors[1] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[1], R.drawable.icon_lock) { // Outer image
+                    toggleHexagonColor(hexagonColors[1])
                 }
             }
 
             // Row 3: Three hexagons including center
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(hexagonRadius, hexagonColors[2]) {
-                    hexagonColors[2] =
-                        if (hexagonColors[2] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[2], R.drawable.icon_lock) { // Outer image
+                    toggleHexagonColor(hexagonColors[2])
                 }
-                Hexagon(
-                    hexagonRadius, hexagonColors[3], isCenter = true
-                ) {
-                    hexagonColors[3] =
-                        if (hexagonColors[3] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[3], R.drawable.honey_picture,  isCenter = true) { // Inner image (center)
+                    toggleHexagonColor(hexagonColors[3])
                 }
-                Hexagon(hexagonRadius, hexagonColors[4]) {
-                    hexagonColors[4] =
-                        if (hexagonColors[4] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[4], R.drawable.icon_lock) { // Outer image
+                    toggleHexagonColor(hexagonColors[4])
                 }
             }
 
-
-            // Row 3: Two hexagons
+            // Row 4: Two outer hexagons
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(hexagonRadius, hexagonColors[5]) {
-                    hexagonColors[5] =
-                        if (hexagonColors[5] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[5], R.drawable.icon_lock) { // Outer image
+                    toggleHexagonColor(hexagonColors[5])
                 }
-                Hexagon(hexagonRadius, hexagonColors[6]) {
-                    hexagonColors[6] =
-                        if (hexagonColors[6] == Color.Gray) Color.Yellow else Color.Gray
+                Hexagon(hexagonRadius, hexagonColors[6], R.drawable.icon_lock) { // Outer image
+                    toggleHexagonColor(hexagonColors[6])
                 }
             }
         }
     }
 }
 
+fun toggleHexagonColor(hexColor: MutableState<Color>) {
+    hexColor.value = if (hexColor.value == Color(0xFFD3D3D3)) {
+        Color(0xFFFFAA01) // Inner color on click
+    } else {
+        Color(0xFFD3D3D3) // Reset to default outer color
+    }
+}
 
+// Hexagon Composable
 @Composable
 fun Hexagon(
     radius: Dp,
-    color: Color,
-    isCenter: Boolean = false,
+    hexColor: MutableState<Color>, // Receive the mutable state for color
+    imageRes: Int, // Resource ID for the image
+    isCenter: Boolean = false, // Flag to check if it's the center hexagon
     onClick: () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
+    // Define colors for inner and outer hexagons based on the state
+    val outerColor = if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFD3D3D3) else Color(0xFFFFBE00)
+    val innerColor = if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFC8C8C8) else Color(0xFFFFAA01)
 
     Box(modifier = Modifier.size(radius * 2)) {
         Canvas(
             modifier = Modifier
                 .size(radius * 2)
                 .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = { offset ->
-                            val centerX = size.width / 2
-                            val centerY = size.height / 2
-                            val radiusPx = radius.toPx()
-                            val angle = Math.PI / 3.0
-
-                            val points = (0..5).map { i ->
-                                Offset(
-                                    (centerX + radiusPx * cos(angle * i - Math.PI / 6)).toFloat(),
-                                    (centerY + radiusPx * sin(angle * i - Math.PI / 6)).toFloat()
-                                )
-                            }
-
-                            if (isPointInPolygon(offset, points)) {
-                                isPressed = true
-                                tryAwaitRelease()
-                                isPressed = false
-                                onClick()
-                            }
-                        }
-                    )
+                    detectTapGestures(onTap = { onClick() }) // Change color on tap
                 }
         ) {
             val radiusPx = radius.toPx()
@@ -332,8 +316,8 @@ fun Hexagon(
             val centerY = size.height / 2
             val angle = Math.PI / 3.0
 
-            // Hexagon path
-            val hexPath = Path().apply {
+            // Hexagon path (outer)
+            val hexPathOuter = Path().apply {
                 moveTo(
                     (centerX + radiusPx * cos(angle / 2)).toFloat(),
                     (centerY + radiusPx * sin(angle / 2)).toFloat()
@@ -348,66 +332,54 @@ fun Hexagon(
                 close()
             }
 
-            // Shadow hexagon (drawn slightly larger and shifted)
-            val shadowOffset = 10f
-            val shadowColor = Color(0x55000000)
-
-            val shadowPath = Path().apply {
+            // Hexagon path (inner) - smaller hexagon inside the outer hexagon
+            val innerRadiusPx = radiusPx * 0.7f // Adjusted size for the inner hexagon
+            val hexPathInner = Path().apply {
                 moveTo(
-                    (centerX + (radiusPx + shadowOffset) * cos(angle / 2)).toFloat(),
-                    (centerY + (radiusPx + shadowOffset) * sin(angle / 2) + shadowOffset).toFloat()
+                    (centerX + innerRadiusPx * cos(angle / 2)).toFloat(),
+                    (centerY + innerRadiusPx * sin(angle / 2)).toFloat()
                 )
 
                 for (i in 1..6) {
                     lineTo(
-                        (centerX + (radiusPx + shadowOffset) * cos(angle * i + angle / 2)).toFloat(),
-                        (centerY + (radiusPx + shadowOffset) * sin(angle * i + angle / 2) + shadowOffset).toFloat()
+                        (centerX + innerRadiusPx * cos(angle * i + angle / 2)).toFloat(),
+                        (centerY + innerRadiusPx * sin(angle * i + angle / 2)).toFloat()
                     )
                 }
                 close()
             }
 
-            // Draw shadow
+            // Draw shadow (a slightly offset larger hexagon)
             drawPath(
-                path = shadowPath,
-                color = shadowColor
+                path = hexPathOuter,
+                color = Color.Black.copy(alpha = 0.2f), // Shadow color with transparency
+                style = Fill
             )
 
-            // Draw hexagon
+            // Draw outer hexagon
             drawPath(
-                path = hexPath,
-                color = if (isPressed) color.copy(alpha = 0.7f) else color
+                path = hexPathOuter,
+                color = outerColor // Use the outer color based on the state
+            )
+
+            // Draw inner hexagon
+            drawPath(
+                path = hexPathInner,
+                color = innerColor // Use the inner color based on the state
             )
         }
 
-        if (isCenter) {
-            Image(
-                painter = painterResource(id = R.drawable.honey_picture), // Replace with your drawable
-                contentDescription = null,
-                modifier = Modifier
-                    .size(radius * 0.8f) // Adjust size of the image relative to hexagon size
-                    .align(Alignment.Center), // Center the image within the hexagon
-            )
-        }
+        // Add the image for hexagon
+        Image(
+            painter = painterResource(id = imageRes), // Use the passed image resource
+            contentDescription = null,
+            modifier = Modifier
+                .size(if (isCenter) radius * 0.9f else radius * 0.7f) // Make center hexagon image larger
+                .align(Alignment.Center)
+        )
     }
 }
 
-fun isPointInPolygon(point: Offset, vertices: List<Offset>): Boolean {
-    var intersections = 0
-    for (i in vertices.indices) {
-        val a = vertices[i]
-        val b = vertices[(i + 1) % vertices.size]
-
-        if ((a.y > point.y) != (b.y > point.y) &&
-            point.x < (b.x - a.x) * (point.y - a.y) / (b.y - a.y) + a.x
-        ) {
-            intersections++
-        }
-    }
-    return intersections % 2 == 1
-}
-
-// Rest of the HexGrid code remains the same
 
 
 
