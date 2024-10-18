@@ -215,6 +215,9 @@ fun BeeAnimationScreen1() {
     }
 }
 
+
+
+
 @Composable
 fun HexGrid() {
     // State for the color of each hexagon using a List of mutableStateOf
@@ -261,7 +264,7 @@ fun HexGrid() {
                 Hexagon(hexagonRadius, hexagonColors[2], R.drawable.icon_lock) { // Outer image
                     toggleHexagonColor(hexagonColors[2])
                 }
-                Hexagon(hexagonRadius, hexagonColors[3], R.drawable.honey_picture,  isCenter = true) { // Inner image (center)
+                Hexagon(hexagonRadius, hexagonColors[3], R.drawable.honey_picture, isCenter = true) { // Inner image (center)
                     toggleHexagonColor(hexagonColors[3])
                 }
                 Hexagon(hexagonRadius, hexagonColors[4], R.drawable.icon_lock) { // Outer image
@@ -290,25 +293,25 @@ fun toggleHexagonColor(hexColor: MutableState<Color>) {
     }
 }
 
-// Hexagon Composable
+
 @Composable
 fun Hexagon(
     radius: Dp,
-    hexColor: MutableState<Color>, // Receive the mutable state for color
-    imageRes: Int, // Resource ID for the image
-    isCenter: Boolean = false, // Flag to check if it's the center hexagon
+    hexColor: MutableState<Color>,
+    imageRes: Int,
+    isCenter: Boolean = false,
     onClick: () -> Unit
 ) {
-    // Define colors for inner and outer hexagons based on the state
     val outerColor = if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFD3D3D3) else Color(0xFFFFBE00)
     val innerColor = if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFC8C8C8) else Color(0xFFFFAA01)
+    val shadowColor = Color(android.graphics.Color.parseColor("#D9D9D9"))
 
     Box(modifier = Modifier.size(radius * 2)) {
         Canvas(
             modifier = Modifier
                 .size(radius * 2)
                 .pointerInput(Unit) {
-                    detectTapGestures(onTap = { onClick() }) // Change color on tap
+                    detectTapGestures(onTap = { onClick() })
                 }
         ) {
             val radiusPx = radius.toPx()
@@ -316,13 +319,36 @@ fun Hexagon(
             val centerY = size.height / 2
             val angle = Math.PI / 3.0
 
-            // Hexagon path (outer)
+            // Shadow path (slightly larger and offset)
+            val shadowPath = Path().apply {
+                val shadowOffset = radiusPx * 0.2f
+                moveTo(
+                    (centerX + radiusPx * cos(angle / 2)).toFloat(),
+                    (centerY + radiusPx * sin(angle / 2) + shadowOffset).toFloat()
+                )
+                for (i in 1..6) {
+                    lineTo(
+                        (centerX + radiusPx * cos(angle * i + angle / 2)).toFloat(),
+                        (centerY + radiusPx * sin(angle * i + angle / 2) + shadowOffset).toFloat()
+                    )
+                }
+                close()
+            }
+
+            // Draw shadow
+            drawPath(
+                path = shadowPath,
+                color = shadowColor,
+                style = Fill,
+                alpha = 0.5f
+            )
+
+            // Outer hexagon path
             val hexPathOuter = Path().apply {
                 moveTo(
                     (centerX + radiusPx * cos(angle / 2)).toFloat(),
                     (centerY + radiusPx * sin(angle / 2)).toFloat()
                 )
-
                 for (i in 1..6) {
                     lineTo(
                         (centerX + radiusPx * cos(angle * i + angle / 2)).toFloat(),
@@ -332,14 +358,13 @@ fun Hexagon(
                 close()
             }
 
-            // Hexagon path (inner) - smaller hexagon inside the outer hexagon
-            val innerRadiusPx = radiusPx * 0.7f // Adjusted size for the inner hexagon
+            // Inner hexagon path
+            val innerRadiusPx = radiusPx * 0.7f
             val hexPathInner = Path().apply {
                 moveTo(
                     (centerX + innerRadiusPx * cos(angle / 2)).toFloat(),
                     (centerY + innerRadiusPx * sin(angle / 2)).toFloat()
                 )
-
                 for (i in 1..6) {
                     lineTo(
                         (centerX + innerRadiusPx * cos(angle * i + angle / 2)).toFloat(),
@@ -349,39 +374,29 @@ fun Hexagon(
                 close()
             }
 
-            // Draw shadow (a slightly offset larger hexagon)
-            drawPath(
-                path = hexPathOuter,
-                color = Color.Black.copy(alpha = 0.2f), // Shadow color with transparency
-                style = Fill
-            )
-
             // Draw outer hexagon
             drawPath(
                 path = hexPathOuter,
-                color = outerColor // Use the outer color based on the state
+                color = outerColor
             )
 
             // Draw inner hexagon
             drawPath(
                 path = hexPathInner,
-                color = innerColor // Use the inner color based on the state
+                color = innerColor
             )
         }
 
-        // Add the image for hexagon
+        // Add image to hexagon
         Image(
-            painter = painterResource(id = imageRes), // Use the passed image resource
+            painter = painterResource(id = imageRes),
             contentDescription = null,
             modifier = Modifier
-                .size(if (isCenter) radius * 0.9f else radius * 0.7f) // Make center hexagon image larger
+                .size(if (isCenter) radius * 0.9f else radius * 0.7f)
                 .align(Alignment.Center)
         )
     }
 }
-
-
-
 
 
 @Preview
