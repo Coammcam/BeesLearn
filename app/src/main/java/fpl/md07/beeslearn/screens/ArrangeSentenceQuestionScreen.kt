@@ -18,8 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import fpl.md07.beeslearn.data.arrangeSentenceQuestions // Import fake data
 
-class ArrangeSentenceQuestion : ComponentActivity() {
+class ArrangeSentenceQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,7 +38,10 @@ class ArrangeSentenceQuestion : ComponentActivity() {
 
 @Composable
 fun ArrangeSentenceScreen() {
-    var sentenceParts by remember { mutableStateOf(listOf("Lorem", "ipsum", "dolor", "sit", "amet")) }
+    // Use the first question from the fake data
+    val currentQuestion = arrangeSentenceQuestions[0]
+
+    var sentenceParts by remember { mutableStateOf(currentQuestion.sentenceParts) }
     var selectedParts by remember { mutableStateOf(mutableListOf<String>()) }
 
     Column(
