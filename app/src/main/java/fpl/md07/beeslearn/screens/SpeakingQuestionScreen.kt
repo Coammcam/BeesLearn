@@ -43,10 +43,10 @@ class SpeakingQuestionScreen : ComponentActivity() {
 
 @Composable
 fun SpeakingQuestionContent() {
-    // State to track recording progress (from 0 to 1)
     var isRecording by remember { mutableStateOf(false) }
     var recordingProgress by remember { mutableStateOf(0f) }
     var secondsElapsed by remember { mutableStateOf(0) }
+    var showActionButtons by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
 
@@ -71,7 +71,7 @@ fun SpeakingQuestionContent() {
             ) {
                 // Back button
                 Image(
-                    painter = painterResource(id = R.drawable.ic_back), // Replace with your back icon resource
+                    painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back",
                     modifier = Modifier
                         .size(24.dp)
@@ -86,15 +86,12 @@ fun SpeakingQuestionContent() {
                     // Heart with background
                     Box(
                         modifier = Modifier
-                            .background(
-                                color = Color(0xFFFFF59D),
-                                shape = RoundedCornerShape(50)
-                            )
+                            .background(color = Color(0xFFFFF59D), shape = RoundedCornerShape(50))
                             .padding(horizontal = 12.dp, vertical = 4.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Image(
-                                painter = painterResource(id = R.drawable.heart), // Replace with your heart icon
+                                painter = painterResource(id = R.drawable.heart),
                                 contentDescription = "Heart",
                                 modifier = Modifier.size(16.dp)
                             )
@@ -106,15 +103,12 @@ fun SpeakingQuestionContent() {
                     // Coins with background
                     Box(
                         modifier = Modifier
-                            .background(
-                                color = Color(0xFFFFF59D),
-                                shape = RoundedCornerShape(50)
-                            )
+                            .background(color = Color(0xFFFFF59D), shape = RoundedCornerShape(50))
                             .padding(horizontal = 12.dp, vertical = 4.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Image(
-                                painter = painterResource(id = R.drawable.honey), // Replace with your coin icon
+                                painter = painterResource(id = R.drawable.honey),
                                 contentDescription = "Coins",
                                 modifier = Modifier.size(16.dp)
                             )
@@ -125,35 +119,31 @@ fun SpeakingQuestionContent() {
                 }
             }
 
-            // Bee icon and audio message (moved further down and centered horizontally)
+            // Bee icon and audio message
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center, // Center horizontally
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(top = 48.dp) // Further increase top padding to move this section down
+                    .padding(top = 48.dp)
                     .fillMaxWidth()
             ) {
-                // Bee Icon
                 Image(
-                    painter = painterResource(id = R.drawable.logo), // Replace with your bee icon
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = "Bee Icon",
                     modifier = Modifier.size(80.dp)
                 )
 
-                // Volume icon outside waveform box
-                Spacer(modifier = Modifier.width(16.dp)) // Add space between the bee and the volume icon
+                Spacer(modifier = Modifier.width(16.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.volume), // Replace with your volume icon
+                    painter = painterResource(id = R.drawable.volume),
                     contentDescription = "Play Audio",
                     modifier = Modifier.size(30.dp)
                 )
-
-                // Waveform inside rounded background
-                Spacer(modifier = Modifier.width(16.dp)) // Add space between the volume and waveform
+                Spacer(modifier = Modifier.width(16.dp))
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp)) // Rounded corners for the waveform background
-                        .background(Color(0xFFFFF1B0)) // Light yellow background
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(Color(0xFFFFF1B0))
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Row(
@@ -161,11 +151,11 @@ fun SpeakingQuestionContent() {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.adi), // Replace with your waveform icon
+                            painter = painterResource(id = R.drawable.adi),
                             contentDescription = "Waveform",
                             modifier = Modifier
                                 .width(120.dp)
-                                .height(40.dp) // Adjusted height
+                                .height(40.dp)
                         )
                         Text(text = "x1", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                     }
@@ -174,7 +164,6 @@ fun SpeakingQuestionContent() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Recording progress bar
             if (isRecording) {
                 LinearProgressIndicator(
                     progress = recordingProgress,
@@ -183,10 +172,6 @@ fun SpeakingQuestionContent() {
                         .padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            // Timer in a rounded box
-            if (isRecording) {
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
@@ -201,49 +186,145 @@ fun SpeakingQuestionContent() {
                     )
                 }
             }
+
+            if (showActionButtons) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFE0E0E0))
+                                .clickable { /* Logic to listen again */ },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.listen), // Substitua pelo seu ícone de "Listen again"
+                                contentDescription = "Listen again",
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Listen again",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                    }
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFE0E0E0))
+                                .clickable { /* Logic to delete */ },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.delete), // Substitua pelo ícone de "delete"
+                                contentDescription = "Delete",
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Delete",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                    }
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFE0E0E0))
+                                .clickable { /* Logic to send */ },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.send), // Substitua pelo ícone de "Send"
+                                contentDescription = "Send",
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Send",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                    }
+                }
+            }
+
+
         }
 
-        // Mic and text at the bottom
         Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter) // This aligns the mic and text to the bottom center
-                .padding(bottom = 16.dp), // Adjust bottom padding as needed
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Mic icon inside a circle
             Box(
                 modifier = Modifier
                     .size(100.dp)
                     .clip(CircleShape)
                     .background(Color(0xFFFFEB46))
                     .clickable {
-                        isRecording = true
-                        recordingProgress = 0f
-                        secondsElapsed = 0
+                        if (isRecording) {
+                            // Dừng ghi âm
+                            isRecording = false
+                            showActionButtons = true // Hiển thị các nút hành động sau khi dừng
+                        } else {
+                            // Bắt đầu ghi âm
+                            isRecording = true
+                            recordingProgress = 0f
+                            secondsElapsed = 0
+                            showActionButtons = false // Ẩn các nút trong khi ghi âm
 
-                        // Simulate recording progress and seconds elapsed
-                        scope.launch {
-                            while (recordingProgress < 1f) {
-                                delay(1000) // Update every second
-                                secondsElapsed += 1
-                                recordingProgress += 0.05f // Adjust speed of progress bar
+                            // Bắt đầu bộ đếm thời gian và ghi âm
+                            scope.launch {
+                                while (isRecording) {
+                                    delay(1000)
+                                    secondsElapsed += 1
+                                    recordingProgress = (secondsElapsed % 20) / 20f // Thanh tiến trình sẽ làm mới sau 20 giây
+                                }
                             }
-                            isRecording = false // Stop recording when done
                         }
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.mic), // Replace with your mic icon
+                    painter = painterResource(id = R.drawable.mic),
                     contentDescription = "Speak",
                     modifier = Modifier.size(50.dp)
                 )
             }
 
-            // Text below the mic button
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Hold to speak",
+                text = if (isRecording) "Đang ghi âm" else "Nhấn để nói",
                 fontSize = 16.sp,
                 color = Color(0xFF5D4037),
                 fontWeight = FontWeight.Bold
@@ -259,3 +340,4 @@ fun PreviewSpeakingQuestionContent() {
         SpeakingQuestionContent()
     }
 }
+
