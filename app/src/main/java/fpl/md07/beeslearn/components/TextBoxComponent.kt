@@ -17,7 +17,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.Font
+import fpl.md07.beeslearn.R
+import androidx.compose.ui.text.font.FontWeight
 
+// Define the custom font
+val customFont = FontFamily(
+    Font(R.font.nunito_bold, FontWeight.Normal)
+)
 @Composable
 fun TextBoxComponent(modifier: Modifier = Modifier) {
     Box(
@@ -31,7 +39,8 @@ fun TextBoxComponent(modifier: Modifier = Modifier) {
             text = "Đây là đoạn văn bản trong khung có viền và nền màu vàng.",
             color = Color.Black, // Text color
             textAlign = TextAlign.Center, // Center text alignment
-            modifier = Modifier.align(Alignment.Center) // Align text in the center
+            modifier = Modifier.align(Alignment.Center), // Align text in the center
+            fontFamily = customFont
         )
     }
 }

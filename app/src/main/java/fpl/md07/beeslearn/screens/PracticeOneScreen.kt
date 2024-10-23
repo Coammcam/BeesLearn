@@ -82,6 +82,7 @@ fun BeeGameScreen() {
                     .fillMaxWidth() // Fill the width of the parent
                     .height(200.dp) // Set a specific height for the text box
                     .padding(top = 50.dp) // Adjust padding to avoid overlap if needed
+                    
             )
             BeeAnimaComponent(
                 modifier = Modifier
@@ -167,45 +168,62 @@ fun HexGrid() {
 
             // Row 2: Two outer hexagons
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(hexagonRadius, hexagonColors[0], R.drawable.icon_lock) { // Outer image
+                Hexagon(
+                    hexagonRadius, hexagonColors[0],
+                    isCenter = false
+                ) { // Outer image
                     toggleHexagonColor(hexagonColors[0])
                 }
-                Hexagon(hexagonRadius, hexagonColors[1], R.drawable.icon_lock) { // Outer image
+                Hexagon(
+                    hexagonRadius, hexagonColors[1],
+                    isCenter = false
+                ) { // Outer image
                     toggleHexagonColor(hexagonColors[1])
                 }
             }
 
             // Row 3: Three hexagons including center
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(hexagonRadius, hexagonColors[2], R.drawable.icon_lock) { // Outer image
+                Hexagon(
+                    hexagonRadius, hexagonColors[2],
+                    isCenter = false
+                ) { // Outer image
                     toggleHexagonColor(hexagonColors[2])
                 }
                 Hexagon(
                     hexagonRadius,
                     hexagonColors[3],
-                    R.drawable.honey_picture,
+                    imageRes = R.drawable.honey_picture, // Only the center hexagon has an image
                     isCenter = true
                 ) { // Inner image (center)
                     toggleHexagonColor(hexagonColors[3])
                 }
-                Hexagon(hexagonRadius, hexagonColors[4], R.drawable.icon_lock) { // Outer image
+                Hexagon(
+                    hexagonRadius, hexagonColors[4],
+                    isCenter = false
+                ) { // Outer image
                     toggleHexagonColor(hexagonColors[4])
                 }
             }
 
             // Row 4: Two outer hexagons
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(hexagonRadius, hexagonColors[5], R.drawable.icon_lock) { // Outer image
+                Hexagon(
+                    hexagonRadius, hexagonColors[5],
+                    isCenter = false
+                ) { // Outer image
                     toggleHexagonColor(hexagonColors[5])
                 }
-                Hexagon(hexagonRadius, hexagonColors[6], R.drawable.icon_lock) { // Outer image
+                Hexagon(
+                    hexagonRadius, hexagonColors[6],
+                    isCenter = false
+                ) { // Outer image
                     toggleHexagonColor(hexagonColors[6])
                 }
             }
         }
     }
 }
-
 fun toggleHexagonColor(hexColor: MutableState<Color>) {
     hexColor.value = if (hexColor.value == Color(0xFFD3D3D3)) {
         Color(0xFFFFAA01) // Inner color on click
@@ -219,7 +237,7 @@ fun toggleHexagonColor(hexColor: MutableState<Color>) {
 fun Hexagon(
     radius: Dp,
     hexColor: MutableState<Color>,
-    imageRes: Int,
+    imageRes: Int? = null, // Optional image for the center hexagon
     isCenter: Boolean = false,
     onClick: () -> Unit
 ) {
@@ -310,14 +328,16 @@ fun Hexagon(
             )
         }
 
-        // Add image to hexagon
-        Image(
-            painter = painterResource(id = imageRes),
-            contentDescription = null,
-            modifier = Modifier
-                .size(if (isCenter) radius * 0.9f else radius * 0.7f)
-                .align(Alignment.Center)
-        )
+        // Add image only if it's the center hexagon
+        if (isCenter && imageRes != null) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(radius * 1.3f)
+                    .align(Alignment.Center)
+            )
+        }
     }
 }
 
