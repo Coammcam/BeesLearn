@@ -1,4 +1,4 @@
-package fpl.md07.beeslearn.components
+package fpl.md07.beeslearn.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.viewmodels.data.musicList
-import fpl.md07.beeslearn.viewmodels.data.podcastList
 
 @Composable
 fun MusicScreen() {

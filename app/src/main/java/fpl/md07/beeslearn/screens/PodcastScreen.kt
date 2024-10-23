@@ -1,4 +1,4 @@
-package fpl.md07.beeslearn.components
+package fpl.md07.beeslearn.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
