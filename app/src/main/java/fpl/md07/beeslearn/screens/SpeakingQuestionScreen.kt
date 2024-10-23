@@ -129,9 +129,9 @@ fun SpeakingQuestionContent() {
                     .fillMaxWidth()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo),
+                    painter = painterResource(id = R.drawable.logo_without_text),
                     contentDescription = "Bee Icon",
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(90.dp)
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
