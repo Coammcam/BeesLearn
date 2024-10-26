@@ -1,15 +1,16 @@
-package com.example.myapplication.Screen
+package fpl.md07.beeslearn.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -20,75 +21,133 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
 fun ChaoHoiScreen() {
-
-
-
-
-    Column(
+    Box(
         modifier = Modifier
-            .background(Color(0xfffff192))
-            .padding(10.dp)
-            .padding(top = 120.dp)
             .fillMaxSize()
-        ,
+            .background(color = colorResource(id = R.color.primary_color)),
     ) {
-        Image( painterResource(id = R.drawable.logo),
-            contentDescription = "Cart button icon",
-            modifier = Modifier.width(170.dp).height(210.dp)
-        )
-        Spacer(modifier = Modifier.height(66.dp))
-        Button(
-            onClick = { /* TODO: handle login */ },
-            modifier = Modifier
-                .padding(top=30.dp,start = 30.dp)
-                .width(300.dp)
-                .height(48.dp)
-                .shadow(elevation = 10.dp,
-                    shape = RoundedCornerShape(12.dp),
-                    clip = false
-                ),
+        Column {
+            Spacer(modifier = Modifier.height(100.dp))
 
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xFFFFF9D3   ))
-        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painterResource(id = R.drawable.logo_without_text),
+                    contentDescription = "Placeholder",
+                    modifier = Modifier
+                        .width(170.dp)
+                        .height(210.dp)
+//                        .align(Alignment.TopStart)
+//                        .padding(top = 10.dp)
+                )
 
-            Text(
-                text = "Tiếng Anh",
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-                color = Color(0xff591429)
-            ) }
+                Box(
+                    modifier = Modifier
+                        .width(230.dp)
+                        .height(130.dp)
+//                        .align(Alignment.TopEnd)
+//                        .padding(start = (-20).dp)
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.cloudshape),
+                        contentDescription = "Placeholder",
+                        modifier = Modifier.fillMaxSize()
+                    )
 
-        Button(
-            onClick = { /* TODO: handle login */ },
-            modifier = Modifier
-                .padding(top=30.dp,start = 30.dp)
-                .width(300.dp)
-                .height(48.dp)
-                .shadow(elevation = 10.dp,
-                    shape = RoundedCornerShape(12.dp),
-                    clip = false
-                ),
+                    Text(
+                        text = "Bạn muốn học cùng\n" +
+                                "Bee ngôn ngữ nào ?",
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(10.dp),
+                        color = Color.Black, 
+                        fontFamily = Nunito_Bold
+                    )
+                }
+            }
 
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xFFFFF9D3   ))
-        ) {
+            Spacer(modifier = Modifier.height(55.dp))
 
-            Text(
-                text = "Tiếng Việt",
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-                color = Color(0xff591429)
-            ) }
+            Button(
+                onClick = { /* TODO: handle login */ },
+                modifier = Modifier
+                    .height(48.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .shadow(
+                        elevation = 10.dp, shape = RoundedCornerShape(12.dp), clip = false
+                    ),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFFFFF9D3))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.united_kingdom),
+                        contentDescription = "Placeholder",
+                        modifier = Modifier
+                            .width(35.dp)
+                            .height(35.dp)
+                    )
 
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Text(
+                        text = "Tiếng Anh",
+                        fontFamily = Nunito_Bold,
+                        color = colorResource(id = R.color.secondary_color)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Button(
+                onClick = { /* TODO: handle login */ },
+                modifier = Modifier
+                    .height(48.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .shadow(
+                        elevation = 10.dp, shape = RoundedCornerShape(12.dp), clip = false
+                    ),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFFFFF9D3))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.vietnam),
+                        contentDescription = "Placeholder",
+                        modifier = Modifier
+                            .width(35.dp)
+                            .height(35.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Text(
+                        text = "Tiếng Việt",
+                        fontFamily = Nunito_Bold,
+                        color = colorResource(id = R.color.secondary_color)
+                    )
+                }
+            }
+        }
     }
 }
 

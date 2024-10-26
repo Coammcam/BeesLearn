@@ -1,167 +1,89 @@
-package com.example.myapplication.Screen
+package fpl.md07.beeslearn.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.CustomButtonLogin
 
 
 @Composable
 fun WelcomeScreen() {
-//    Column (modifier = Modifier.fillMaxSize().background(color = Color.Yellow),
-//
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//
-//        ){
-//        Column(modifier = Modifier.padding(top = 150.dp)) {
-//            Text("Bắt đầu học cùng Bee!" ,color = Color.Red, fontSize = 24.sp)
-//            Button(
-//                onClick = {}, Modifier.background(Color.Red)) {
-//                Image(
-//                    painterResource(id = R.drawable.email),
-//                    contentDescription ="Cart button icon",
-//                    modifier = Modifier.size(20.dp))
-//                Text(
-//                    text = "Tiep tuc với Email",
-//                    modifier = Modifier
-//                        .padding(10.dp),
-//                    color = Color.Red
-//                )
-//            }
-//            Button(
-//                onClick = {}) {
-//                Image(
-//                    painterResource(id = R.drawable.email),
-//                    contentDescription ="Cart button icon",
-//                    modifier = Modifier.size(20.dp))
-//                Text(text = "Tiep tuc với Email", Modifier.padding(start = 10.dp))
-//            }
-//            Button(
-//                onClick = {}) {
-//                Image(
-//                    painterResource(id = R.drawable.email),
-//                    contentDescription ="Cart button icon",
-//                    modifier = Modifier.size(20.dp))
-//                Text(text = "Tiep tuc với Email", Modifier.padding(start = 10.dp))
-//            }
-//            Button(
-//                onClick = {}) {
-//                Image(
-//                    painterResource(id = R.drawable.email),
-//                    contentDescription ="Cart button icon",
-//                    modifier = Modifier.size(20.dp))
-//                Text(text = "Tiep tuc với Email", Modifier.padding(start = 10.dp))
-//            }
-//        }
-//    }
-
-
-    Column(
+    Box(
         modifier = Modifier
-            .background(Color(0xfffff192))
-            .padding(10.dp)
+            .background(color = colorResource(id = R.color.primary_color))
+            .padding(horizontal = 20.dp)
             .fillMaxSize()
-            ,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            "Bắt đầu học cùng Bee !",
-            fontSize = 35.sp,
-            color = Color(0xFF591429),
-            fontWeight = FontWeight.Bold
-        )
-        Button(
+        Column(
             modifier = Modifier
-                .padding(10.dp, top = 20.dp)
-                .width(262.dp),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(Color(0xff591429))
+                .fillMaxSize()
+                .align(Alignment.Center), // Căn giữa cả cột trong box
+            horizontalAlignment = Alignment.CenterHorizontally, // Căn giữa theo chiều ngang
+            verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painterResource(id = R.drawable.email),
-                contentDescription = "Cart button icon",
-                modifier = Modifier.size(40.dp),
-            )
             Text(
-                text = "Tiếp tục với Email",
-                modifier = Modifier
-                    .padding(10.dp),
+                "Bắt đầu học cùng \nBee !",
+                fontSize = 35.sp,
+                color = Color(0xFF591429),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
-        }
-        Button(
-            modifier = Modifier
-                .padding(10.dp, top = 20.dp)
-                .width(262.dp),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(Color(0xff130101))
-        ) {
-            Image(
-                painterResource(id = R.drawable.apple),
-                contentDescription = "Cart button icon",
-                modifier = Modifier.size(40.dp),
-            )
-            Text(
-                text = "Tiếp tục với Apple",
-                modifier = Modifier
-                    .padding(10.dp),
-            )
-        }
-        Button(
-            modifier = Modifier
-                .padding(10.dp, top = 20.dp)
-                .width(262.dp),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(Color(0xff475993))
-        ) {
-            Image(
-                painterResource(id = R.drawable.facebook),
-                contentDescription = "Cart button icon",
-                modifier = Modifier.size(40.dp),
-            )
-            Text(
-                text = "Tiếp tục với Facebook",
-                modifier = Modifier
-                    .padding(10.dp),
-            )
-        }
-        Button(
-            modifier = Modifier
-                .padding(10.dp, top = 20.dp)
-                .width(262.dp),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(Color(0xffffffff))
-        ) {
-            Image(
-                painterResource(id = R.drawable.google),
-                contentDescription = "Cart button icon",
-                modifier = Modifier.size(40.dp),
-            )
-            Text(
-                text = "Tiếp tục với Google",
-                modifier = Modifier
-                    .padding(10.dp),
-                color = Color.Black
-            )
-        }
+            Spacer(modifier = Modifier.height(30.dp))
 
+            CustomButtonLogin(
+                imageResId = R.drawable.email,
+                title = "Tiếp tục với Email",
+                backgroundColor = Color(0xFF591429),
+                textColor = Color.White,
+                onClick = {}
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            CustomButtonLogin(
+                imageResId = R.drawable.apple,
+                title = "Tiếp tục với Apple",
+                backgroundColor = Color(0xFF130101),
+                textColor = Color.White,
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
+            CustomButtonLogin(
+                imageResId = R.drawable.facebook,
+                title = "Tiếp tục với Facebook",
+                backgroundColor = Color(0xFF475993),
+                textColor = Color.White,
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
+            CustomButtonLogin(
+                imageResId = R.drawable.google,
+                title = "Tiếp tục với Google",
+                backgroundColor = Color(0xFFFFFFFF),
+                textColor = Color.Black,
+                onClick = {}
+            )
+
+        }
     }
 }
 
