@@ -15,11 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.arrangeSentenceQuestions // Import fake data
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 class ArrangeSentenceQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +41,7 @@ class ArrangeSentenceQuestionScreen : ComponentActivity() {
 
 @Composable
 fun ArrangeSentenceScreen() {
-    // Use the first question from the fake data
     val currentQuestion = arrangeSentenceQuestions[0]
-
     var sentenceParts by remember { mutableStateOf(currentQuestion.sentenceParts) }
     var selectedParts by remember { mutableStateOf(mutableListOf<String>()) }
 
@@ -51,7 +51,6 @@ fun ArrangeSentenceScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Back button and score area (header)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -69,7 +68,6 @@ fun ArrangeSentenceScreen() {
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Score hearts
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
@@ -83,13 +81,18 @@ fun ArrangeSentenceScreen() {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("5", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+                        Text(
+                            text = "5",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color(0xFF5D4037),
+                            fontFamily = Nunito_Bold
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Coins
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
@@ -103,24 +106,29 @@ fun ArrangeSentenceScreen() {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("100", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+                        Text(
+                            text = "100",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color(0xFF5D4037),
+                            fontFamily = Nunito_Bold
+                        )
                     }
                 }
             }
         }
 
-        // Sentence box showing the arranged parts
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .graphicsLayer {
-                    shadowElevation = 8.dp.toPx() // Shadow elevation
+                    shadowElevation = 8.dp.toPx()
                     shape = RoundedCornerShape(16.dp)
                     clip = true
-                    translationY = -8.dp.toPx() // Offset shadow to the top
+                    translationY = -8.dp.toPx()
                 }
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)), // Apply background after shadow
+                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
             if (selectedParts.isEmpty()) {
@@ -128,13 +136,13 @@ fun ArrangeSentenceScreen() {
                     color = Color(0xFF5D4037),
                     thickness = 2.dp,
                     modifier = Modifier
-                        .fillMaxWidth(0.8f) // Adjust this to control the line length
+                        .fillMaxWidth(0.8f)
                         .padding(horizontal = 8.dp)
                 )
             } else {
                 Row(
                     modifier = Modifier.padding(horizontal = 4.dp),
-                    horizontalArrangement = Arrangement.Center // Remove spacing between words
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     selectedParts.forEach { part ->
                         DraggableWordOption(
@@ -150,9 +158,8 @@ fun ArrangeSentenceScreen() {
             }
         }
 
-        Spacer(modifier = Modifier.height(48.dp)) // Adjusted spacing to push the words down
+        Spacer(modifier = Modifier.height(48.dp))
 
-        // Draggable word options
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -190,9 +197,15 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced padding for closer layout
+            .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
-        Text(text = word, fontSize = 16.sp, color = Color(0xFF5D4037), fontWeight = FontWeight.Bold)
+        Text(
+            text = word,
+            fontSize = 16.sp,
+            color = Color(0xFF5D4037),
+            fontWeight = FontWeight.Bold,
+            fontFamily = Nunito_Bold
+        )
     }
 }
 

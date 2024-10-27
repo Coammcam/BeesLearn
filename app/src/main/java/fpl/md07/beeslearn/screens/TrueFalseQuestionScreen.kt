@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.trueFalseQuestions // Import the fake data
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 class TrueFalseQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +41,8 @@ class TrueFalseQuestionScreen : ComponentActivity() {
 
 @Composable
 fun TrueFalseScreen() {
-    // Keep track of the current question index
     var currentQuestionIndex by remember { mutableStateOf(0) }
 
-    // Get the current question from the fake data
     val currentQuestion = trueFalseQuestions[currentQuestionIndex]
 
     Column(
@@ -53,7 +52,6 @@ fun TrueFalseScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Back button and score area
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -74,15 +72,12 @@ fun TrueFalseScreen() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Heart Icon with Background
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             painter = painterResource(id = fpl.md07.beeslearn.R.drawable.heart),
                             contentDescription = "Heart",
@@ -90,19 +85,22 @@ fun TrueFalseScreen() {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "5", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+                        Text(
+                            text = "5",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color(0xFF5D4037),
+                            fontFamily = Nunito_Bold
+                        )
                     }
                 }
 
-                // Coins Icon with Background
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             painter = painterResource(id = fpl.md07.beeslearn.R.drawable.honey),
                             contentDescription = "Coins",
@@ -110,46 +108,51 @@ fun TrueFalseScreen() {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = "100", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+                        Text(
+                            text = "100",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color(0xFF5D4037),
+                            fontFamily = Nunito_Bold
+                        )
                     }
                 }
             }
         }
 
-        // Question prompt
         Text(
             text = "Swipe to the left or right",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),
+            fontFamily = Nunito_Bold,
             modifier = Modifier.padding(top = 16.dp)
         )
 
-        // Question box
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .graphicsLayer {
-                    shadowElevation = 8.dp.toPx() // Shadow elevation
+                    shadowElevation = 8.dp.toPx()
                     shape = RoundedCornerShape(16.dp)
                     clip = true
-                    translationY = -8.dp.toPx() // Offset shadow to the top
+                    translationY = -8.dp.toPx()
                 }
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)), // Apply background after shadow
+                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = currentQuestion.questionText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF5D4037)
+                color = Color(0xFF5D4037),
+                fontFamily = Nunito_Bold
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp)) // Adjust spacing to better match the layout in the image
+        Spacer(modifier = Modifier.height(32.dp))
 
-        // True/False options
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
@@ -161,9 +164,7 @@ fun TrueFalseScreen() {
                 backgroundColor = Color(0xFFFFEB3B),
                 iconTint = Color(0xFFFF1744),
                 onClick = {
-                    // Check if the answer is false
                     if (!currentQuestion.isTrue) {
-                        // Move to next question
                         currentQuestionIndex = (currentQuestionIndex + 1) % trueFalseQuestions.size
                     }
                 }
@@ -173,9 +174,7 @@ fun TrueFalseScreen() {
                 backgroundColor = Color(0xFFFFEB3B),
                 iconTint = Color(0xFF00E676),
                 onClick = {
-                    // Check if the answer is true
                     if (currentQuestion.isTrue) {
-                        // Move to next question
                         currentQuestionIndex = (currentQuestionIndex + 1) % trueFalseQuestions.size
                     }
                 }

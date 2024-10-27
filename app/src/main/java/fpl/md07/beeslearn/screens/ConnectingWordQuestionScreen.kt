@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.connectingWordQuestions // Import fake data
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 class ConnectingWordQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +44,6 @@ fun ConnectingWordScreen() {
     var selectedLeft by remember { mutableStateOf("") }
     var selectedRight by remember { mutableStateOf("") }
 
-    // Use the first question from the fake data
     val currentQuestion = connectingWordQuestions[0]
 
     Column(
@@ -52,7 +52,6 @@ fun ConnectingWordScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header with back button and score
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -70,7 +69,6 @@ fun ConnectingWordScreen() {
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Score hearts
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
@@ -84,13 +82,18 @@ fun ConnectingWordScreen() {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("5", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+                        Text(
+                            "5",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color(0xFF5D4037),
+                            fontFamily = Nunito_Bold
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Coins
                 Box(
                     modifier = Modifier
                         .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
@@ -104,7 +107,13 @@ fun ConnectingWordScreen() {
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("100", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+                        Text(
+                            "100",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color(0xFF5D4037),
+                            fontFamily = Nunito_Bold
+                        )
                     }
                 }
             }
@@ -115,10 +124,10 @@ fun ConnectingWordScreen() {
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),
+            fontFamily = Nunito_Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Column Headers with background and no border
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -131,7 +140,13 @@ fun ConnectingWordScreen() {
                     .background(Color(0xFFFFF59D), shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Text("A", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF5D4037))
+                Text(
+                    "A",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF5D4037),
+                    fontFamily = Nunito_Bold
+                )
             }
             Box(
                 modifier = Modifier
@@ -139,11 +154,16 @@ fun ConnectingWordScreen() {
                     .background(Color(0xFFFFF59D), shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Text("B", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF5D4037))
+                Text(
+                    "B",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF5D4037),
+                    fontFamily = Nunito_Bold
+                )
             }
         }
 
-        // Columns A and B
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -158,7 +178,7 @@ fun ConnectingWordScreen() {
                         text = text,
                         isSelected = selectedLeft == text,
                         onClick = { selectedLeft = if (selectedLeft == text) "" else text },
-                        Modifier.padding(vertical = 4.dp) // Padding between items
+                        Modifier.padding(vertical = 4.dp)
                     )
                 }
             }
@@ -173,7 +193,7 @@ fun ConnectingWordScreen() {
                         text = text,
                         isSelected = selectedRight == text,
                         onClick = { selectedRight = if (selectedRight == text) "" else text },
-                        Modifier.padding(vertical = 4.dp) // Padding between items
+                        Modifier.padding(vertical = 4.dp)
                     )
                 }
             }
@@ -198,7 +218,12 @@ fun SelectableMatchingItem(text: String, isSelected: Boolean, onClick: () -> Uni
             .padding(16.dp)
             .clickable { onClick() }
     ) {
-        Text(text = text, fontWeight = FontWeight.Bold, color = Color(0xFF5D4037))
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF5D4037),
+            fontFamily = Nunito_Bold
+        )
     }
 }
 
