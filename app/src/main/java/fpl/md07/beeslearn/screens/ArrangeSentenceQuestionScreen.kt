@@ -122,13 +122,19 @@ fun ArrangeSentenceScreen() {
                 }
                 .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)), // Apply background after shadow
             contentAlignment = Alignment.Center
-        ){
+        ) {
             if (selectedParts.isEmpty()) {
-                Text("_____________________________", color = Color(0xFF5D4037), fontSize = 18.sp)
+                Divider(
+                    color = Color(0xFF5D4037),
+                    thickness = 2.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f) // Adjust this to control the line length
+                        .padding(horizontal = 8.dp)
+                )
             } else {
                 Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.Center // Remove spacing between words
                 ) {
                     selectedParts.forEach { part ->
                         DraggableWordOption(
@@ -184,7 +190,7 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 8.dp, vertical = 8.dp) // Slightly larger padding
+            .padding(horizontal = 4.dp, vertical = 4.dp) // Reduced padding for closer layout
     ) {
         Text(text = word, fontSize = 16.sp, color = Color(0xFF5D4037), fontWeight = FontWeight.Bold)
     }
