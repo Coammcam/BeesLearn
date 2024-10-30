@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 class FillInTheBlankQuestionScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,6 @@ class FillInTheBlankQuestionScreen : ComponentActivity() {
 fun FillInTheBlankScreen() {
     var selectedWord by remember { mutableStateOf("") }
 
-    // Use the first question from the fake data
     val currentQuestion = fillInTheBlankQuestions[0]
 
     Column(
@@ -51,7 +51,6 @@ fun FillInTheBlankScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Back button and score area
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -72,41 +71,37 @@ fun FillInTheBlankScreen() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Heart Icon with Background
                 ScoreItem(iconResId = fpl.md07.beeslearn.R.drawable.heart, value = "5", tint = Color(0xFFFF1744))
-                // Coins Icon with Background
                 ScoreItem(iconResId = fpl.md07.beeslearn.R.drawable.honey, value = "100", tint = Color(0xFFFFD700))
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Question box with fill-in-the-blank
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .graphicsLayer {
-                    shadowElevation = 8.dp.toPx() // Shadow elevation
+                    shadowElevation = 8.dp.toPx()
                     shape = RoundedCornerShape(16.dp)
                     clip = true
-                    translationY = -8.dp.toPx() // Offset shadow to the top
+                    translationY = -8.dp.toPx()
                 }
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)), // Apply background after shadow
+                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
-            // Display the sentence with the selected word in the blank
             Text(
                 text = currentQuestion.questionText.replace("____", if (selectedWord.isEmpty()) "______" else selectedWord),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF5D4037)
+                color = Color(0xFF5D4037),
+                fontFamily = Nunito_Bold
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Word options
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -129,7 +124,7 @@ fun FillInTheBlankScreen() {
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp)) // Add extra space at the bottom
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -153,7 +148,8 @@ fun WordOptionButton(
             text = word,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF5D4037)
+            color = Color(0xFF5D4037),
+            fontFamily = Nunito_Bold
         )
     }
 }
@@ -175,16 +171,22 @@ fun ScoreItem(iconResId: Int, value: String, tint: Color) {
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = value, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF5D4037))
+            Text(
+                text = value,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                color = Color(0xFF5D4037),
+                fontFamily = Nunito_Bold
+            )
         }
     }
 }
 
 fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -> Unit) {
     if (word == selectedWord) {
-        onSelect("") // Clear the selection
+        onSelect("")
     } else {
-        onSelect(word) // Select the clicked word
+        onSelect(word)
     }
 }
 

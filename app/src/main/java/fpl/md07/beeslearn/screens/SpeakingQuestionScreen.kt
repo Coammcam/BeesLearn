@@ -47,6 +47,7 @@ fun SpeakingQuestionContent() {
     var recordingProgress by remember { mutableStateOf(0f) }
     var secondsElapsed by remember { mutableStateOf(0) }
     var showActionButtons by remember { mutableStateOf(false) }
+    var showMicButton by remember { mutableStateOf(true) } // Điều khiển hiển thị nút mic
 
     val scope = rememberCoroutineScope()
 
@@ -55,7 +56,7 @@ fun SpeakingQuestionContent() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Other content at the top (toolbar, bee, audio, etc.)
+        // Nội dung phía trên (toolbar, bee, audio, etc.)
         Column(
             modifier = Modifier.align(Alignment.TopCenter),
             verticalArrangement = Arrangement.Top,
@@ -128,9 +129,9 @@ fun SpeakingQuestionContent() {
                     .fillMaxWidth()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo),
+                    painter = painterResource(id = R.drawable.logo_without_text),
                     contentDescription = "Bee Icon",
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(90.dp)
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -186,13 +187,74 @@ fun SpeakingQuestionContent() {
                     )
                 }
             }
+        }
 
-            if (showActionButtons) {
+        // Hiển thị nút mic nếu `showMicButton` là true
+        if (showMicButton) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFFFEB46))
+                        .clickable {
+                            if (isRecording) {
+                                // Dừng ghi âm
+                                isRecording = false
+                                showActionButtons = true // Hiển thị các nút hành động sau khi dừng
+                                showMicButton = false // Ẩn nút mic sau khi dừng
+                            } else {
+                                // Bắt đầu ghi âm
+                                isRecording = true
+                                recordingProgress = 0f
+                                secondsElapsed = 0
+                                showActionButtons = false // Ẩn các nút trong khi ghi âm
+
+                                // Bắt đầu bộ đếm thời gian và ghi âm
+                                scope.launch {
+                                    while (isRecording) {
+                                        delay(1000)
+                                        secondsElapsed += 1
+                                        recordingProgress = (secondsElapsed % 20) / 20f // Thanh tiến trình sẽ làm mới sau 20 giây
+                                    }
+                                }
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.mic),
+                        contentDescription = "Speak",
+                        modifier = Modifier.size(50.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = if (isRecording) "Đang ghi âm" else "Nhấn để nói",
+                    fontSize = 16.sp,
+                    color = Color(0xFF5D4037),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        // Hiển thị các nút hành động nếu `showActionButtons` là true
+        if (showActionButtons) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter) // Đặt các nút ở dưới cùng thay vì trên
+                    .padding(bottom = 16.dp), // Padding dưới để cách cạnh
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -203,11 +265,11 @@ fun SpeakingQuestionContent() {
                                 .size(60.dp)
                                 .clip(CircleShape)
                                 .background(Color(0xFFE0E0E0))
-                                .clickable { /* Logic to listen again */ },
+                                .clickable { /* Logic để nghe lại */ },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.listen), // Substitua pelo seu ícone de "Listen again"
+                                painter = painterResource(id = R.drawable.listen),
                                 contentDescription = "Listen again",
                                 modifier = Modifier.size(24.dp),
                                 tint = Color.Black
@@ -230,11 +292,15 @@ fun SpeakingQuestionContent() {
                                 .size(60.dp)
                                 .clip(CircleShape)
                                 .background(Color(0xFFE0E0E0))
-                                .clickable { /* Logic to delete */ },
+                                .clickable {
+                                    // Logic để xóa và hiển thị lại nút mic
+                                    showActionButtons = false
+                                    showMicButton = true
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.delete), // Substitua pelo ícone de "delete"
+                                painter = painterResource(id = R.drawable.delete),
                                 contentDescription = "Delete",
                                 modifier = Modifier.size(24.dp),
                                 tint = Color.Black
@@ -257,11 +323,11 @@ fun SpeakingQuestionContent() {
                                 .size(60.dp)
                                 .clip(CircleShape)
                                 .background(Color(0xFFE0E0E0))
-                                .clickable { /* Logic to send */ },
+                                .clickable { /* Logic để gửi */ },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.send), // Substitua pelo ícone de "Send"
+                                painter = painterResource(id = R.drawable.send),
                                 contentDescription = "Send",
                                 modifier = Modifier.size(24.dp),
                                 tint = Color.Black
@@ -276,59 +342,6 @@ fun SpeakingQuestionContent() {
                     }
                 }
             }
-
-
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFFFEB46))
-                    .clickable {
-                        if (isRecording) {
-                            // Dừng ghi âm
-                            isRecording = false
-                            showActionButtons = true // Hiển thị các nút hành động sau khi dừng
-                        } else {
-                            // Bắt đầu ghi âm
-                            isRecording = true
-                            recordingProgress = 0f
-                            secondsElapsed = 0
-                            showActionButtons = false // Ẩn các nút trong khi ghi âm
-
-                            // Bắt đầu bộ đếm thời gian và ghi âm
-                            scope.launch {
-                                while (isRecording) {
-                                    delay(1000)
-                                    secondsElapsed += 1
-                                    recordingProgress = (secondsElapsed % 20) / 20f // Thanh tiến trình sẽ làm mới sau 20 giây
-                                }
-                            }
-                        }
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.mic),
-                    contentDescription = "Speak",
-                    modifier = Modifier.size(50.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = if (isRecording) "Đang ghi âm" else "Nhấn để nói",
-                fontSize = 16.sp,
-                color = Color(0xFF5D4037),
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }
@@ -340,4 +353,3 @@ fun PreviewSpeakingQuestionContent() {
         SpeakingQuestionContent()
     }
 }
-
