@@ -4,61 +4,48 @@ package fpl.md07.beeslearn.screens
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fpl.md07.beeslearn.R
+import androidx.navigation.NavController
 import fpl.md07.beeslearn.components.BeeAnimaComponent
 import fpl.md07.beeslearn.components.TextBoxComponent
-
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import fpl.md07.beeslearn.R
 import kotlin.math.cos
 import kotlin.math.sin
 class SelectExScreen : ComponentActivity() { // Use ComponentActivity instead of AppCompatActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SelectExercise() // Call your Composable here
+            val navController = rememberNavController()
+            NavHost(navController, startDestination = "select_exercise") {
+                composable("select_exercise") { SelectExercise(navController) }
+                composable("practice_one_screen") { PracticeOneScreen() }
+            }
         }
     }
 }
 
 @Composable
-fun SelectExercise() {
+fun SelectExercise(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -95,14 +82,14 @@ fun SelectExercise() {
         Spacer(modifier = Modifier.height(200.dp))
 
         // Center the hexagonal grid in the middle of the screen
-        HexGridd()
+        HexGridd(navController)
     }
 }
 
 
 
 @Composable
-fun HexGridd() {
+fun HexGridd(navController: NavController) {
     // Define the hexagon radius (size)
     val hexagonRadius = 40.dp
 
@@ -115,7 +102,9 @@ fun HexGridd() {
     ) {
         for (i in 1..10) {
             // Draw the hexagon with number
-            HexagonWithNumber(radius = hexagonRadius, number = i)
+            HexagonWithNumber(radius = hexagonRadius, number = i) {
+                navController.navigate("practice_one_screen")
+            }
 
             // Draw a connecting line (except for the last hexagon)
             if (i < 10) {
@@ -134,13 +123,16 @@ fun HexGridd() {
 }
 
 @Composable
-fun HexagonWithNumber(radius: Dp, number: Int) {
-    // Outer and inner colors for the hexagon
-    val outerColor = Color(0xFFD3D3D3)
-    val innerColor = Color(0xFFC8C8C8)
-    val shadowColor = Color(android.graphics.Color.parseColor("#D9D9D9"))
+fun HexagonWithNumber(radius: Dp, number: Int, onClick: () -> Unit) {
 
-    Box(modifier = Modifier.size(radius * 2)) {
+    val outerColor = colorResource(id = R.color.outerColor_hexagon)
+    val innerColor = colorResource(id = R.color.innerColor_hexagon)
+
+
+    Box(modifier = Modifier
+        .size(radius * 2)
+        .clickable {  onClick()} // Handle click to navigate
+    ) {
         Canvas(
             modifier = Modifier
                 .size(radius * 2)
@@ -210,5 +202,6 @@ fun HexagonWithNumber(radius: Dp, number: Int) {
 @Preview
 @Composable
 fun PreviewSelectExercise() {
-    SelectExercise()
+    val mockNavController = rememberNavController()
+    SelectExercise(navController = mockNavController)
 }

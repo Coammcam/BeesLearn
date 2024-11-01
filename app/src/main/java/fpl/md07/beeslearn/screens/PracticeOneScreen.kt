@@ -1,44 +1,23 @@
 package fpl.md07.beeslearn.screens
 
-
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.components.IconTopComponent
@@ -46,19 +25,16 @@ import kotlin.math.cos
 import kotlin.math.sin
 import fpl.md07.beeslearn.components.TextBoxComponent
 import fpl.md07.beeslearn.components.BeeAnimaComponent
-class PracticeOneScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface {
-                    BeeGameScreen() // Call your Compose screen here
 
-                }
-            }
+@Composable
+fun PracticeOneScreen() {
+    MaterialTheme {
+        Surface {
+            BeeGameScreen()
         }
     }
 }
+
 
 @Composable
 fun BeeGameScreen() {
@@ -116,17 +92,7 @@ fun TopBar() {
 
 @Composable
 fun BeeAndHexGrid() {
-    Box(
-        contentAlignment = Alignment.TopEnd,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-//        Image(
-//            painter = painterResource(id = R.drawable.picture_ani), // replace with bee drawable
-//            contentDescription = "Bee",
-//            contentScale = ContentScale.Fit,
-//            modifier = Modifier.size(80.dp)
-//        )
-    }
+
 
     Spacer(modifier = Modifier.height(50.dp))
 
@@ -137,23 +103,29 @@ fun BeeAndHexGrid() {
 
 @Composable
 fun HexGrid() {
-    // State for the color of each hexagon using a List of mutableStateOf
+    // Load colors using colorResource
+    val outerColor = colorResource(id = R.color.outerColor_hexagon)
+    val innerColor = colorResource(id = R.color.innerColor_hexagon)
+    val newOuterColor = colorResource(id = R.color.newOuterColor) // New color for outer hexagons
+    val newInnerColor = colorResource(id = R.color.newInnerColor) // New color for inner hexagons
+
+    // State for the colors of each hexagon using MutableState
     val hexagonColors = remember {
         mutableStateListOf(
-            mutableStateOf(Color(android.graphics.Color.parseColor("#C8C8C8"))), // Outer color default
-            mutableStateOf(Color(android.graphics.Color.parseColor("#C8C8C8"))), // Outer color default
-            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
-            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
-            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
-            mutableStateOf(Color(0xFFD3D3D3)), // Outer color default
-            mutableStateOf(Color(0xFFD3D3D3))  // Outer color default
+            mutableStateOf(Pair(outerColor, innerColor)), // Hexagon 1
+            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 2
+            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 3
+            mutableStateOf(Pair(outerColor, innerColor)),  // Center hexagon
+            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 4
+            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 5
+            mutableStateOf(Pair(outerColor, innerColor))    // Hexagon 6
         )
     }
 
     // Define the hexagon radius (size)
     val hexagonRadius = 40.dp
 
-    // Define spacing between hexagons (adjust based on the hexagon size)
+    // Define spacing between hexagons
     val spacing = hexagonRadius * 0.1f
 
     // Create the grid structure with hexagons arranged around a central one
@@ -165,70 +137,58 @@ fun HexGrid() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(spacing * 0.5f)
         ) {
-
-            // Row 2: Two outer hexagons
+            // Row 1: Two outer hexagons
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(
-                    hexagonRadius, hexagonColors[0],
-                    isCenter = false
-                ) { // Outer image
-                    toggleHexagonColor(hexagonColors[0])
+                Hexagon(hexagonRadius, hexagonColors[0]) {
+                    toggleHexagonColor(hexagonColors[0], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
-                Hexagon(
-                    hexagonRadius, hexagonColors[1],
-                    isCenter = false
-                ) { // Outer image
-                    toggleHexagonColor(hexagonColors[1])
+                Hexagon(hexagonRadius, hexagonColors[1]) {
+                    toggleHexagonColor(hexagonColors[1], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
             }
 
-            // Row 3: Three hexagons including center
+            // Row 2: Three hexagons including center
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(
-                    hexagonRadius, hexagonColors[2],
-                    isCenter = false
-                ) { // Outer image
-                    toggleHexagonColor(hexagonColors[2])
+                Hexagon(hexagonRadius, hexagonColors[2]) {
+                    toggleHexagonColor(hexagonColors[2], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
-                Hexagon(
-                    hexagonRadius,
-                    hexagonColors[3],
-                    imageRes = R.drawable.honey_picture, // Only the center hexagon has an image
-                    isCenter = true
-                ) { // Inner image (center)
-                    toggleHexagonColor(hexagonColors[3])
+                Hexagon(hexagonRadius, hexagonColors[3], imageRes = R.drawable.honey_picture, isCenter = true) {
+                    toggleHexagonColor(hexagonColors[3], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
-                Hexagon(
-                    hexagonRadius, hexagonColors[4],
-                    isCenter = false
-                ) { // Outer image
-                    toggleHexagonColor(hexagonColors[4])
+                Hexagon(hexagonRadius, hexagonColors[4]) {
+                    toggleHexagonColor(hexagonColors[4], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
             }
 
-            // Row 4: Two outer hexagons
+            // Row 3: Two outer hexagons
             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                Hexagon(
-                    hexagonRadius, hexagonColors[5],
-                    isCenter = false
-                ) { // Outer image
-                    toggleHexagonColor(hexagonColors[5])
+                Hexagon(hexagonRadius, hexagonColors[5]) {
+                    toggleHexagonColor(hexagonColors[5], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
-                Hexagon(
-                    hexagonRadius, hexagonColors[6],
-                    isCenter = false
-                ) { // Outer image
-                    toggleHexagonColor(hexagonColors[6])
+                Hexagon(hexagonRadius, hexagonColors[6]) {
+                    toggleHexagonColor(hexagonColors[6], outerColor, innerColor, newOuterColor, newInnerColor)
                 }
             }
         }
     }
 }
-fun toggleHexagonColor(hexColor: MutableState<Color>) {
-    hexColor.value = if (hexColor.value == Color(0xFFD3D3D3)) {
-        Color(0xFFFFAA01) // Inner color on click
-    } else {
-        Color(0xFFD3D3D3) // Reset to default outer color
+
+fun toggleHexagonColor(
+    hexColor: MutableState<Pair<Color, Color>>,
+    outerColor: Color,
+    innerColor: Color,
+    newOuterColor: Color,
+    newInnerColor: Color
+) {
+    val (currentOuterColor, currentInnerColor) = hexColor.value
+
+    hexColor.value = when {
+        currentOuterColor == newOuterColor && currentInnerColor == newInnerColor ->
+            Pair(currentOuterColor, currentInnerColor) // No change
+        currentOuterColor == outerColor && currentInnerColor == innerColor ->
+            Pair(newOuterColor, newInnerColor) // Change to new colors
+        else ->
+            Pair(outerColor, innerColor) // Reset to default colors
     }
 }
 
@@ -236,16 +196,14 @@ fun toggleHexagonColor(hexColor: MutableState<Color>) {
 @Composable
 fun Hexagon(
     radius: Dp,
-    hexColor: MutableState<Color>,
+    hexColor: MutableState<Pair<Color, Color>>,
     imageRes: Int? = null, // Optional image for the center hexagon
     isCenter: Boolean = false,
     onClick: () -> Unit
 ) {
-    val outerColor =
-        if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFD3D3D3) else Color(0xFFFFBE00)
-    val innerColor =
-        if (hexColor.value == Color(0xFFD3D3D3)) Color(0xFFC8C8C8) else Color(0xFFFFAA01)
-    val shadowColor = Color(android.graphics.Color.parseColor("#D9D9D9"))
+    // Load colors using colorResource or define it directly
+    val innerColor = colorResource(id = R.color.innerColor_hexagon) // Ensure this resource exists
+    val shadowColor = colorResource(id = R.color.shadowColor_hexagon)
 
     Box(modifier = Modifier.size(radius * 2)) {
         Canvas(
@@ -318,13 +276,13 @@ fun Hexagon(
             // Draw outer hexagon
             drawPath(
                 path = hexPathOuter,
-                color = outerColor
+                color = hexColor.value.first // Use the outer color from hexColor
             )
 
             // Draw inner hexagon
             drawPath(
                 path = hexPathInner,
-                color = innerColor
+                color = hexColor.value.second // Use the inner color from hexColor
             )
         }
 
@@ -340,7 +298,6 @@ fun Hexagon(
         }
     }
 }
-
 
 @Preview
 @Composable

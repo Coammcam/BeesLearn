@@ -1,4 +1,3 @@
-
 package fpl.md07.beeslearn.screens
 
 import android.os.Bundle
@@ -8,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.*
+
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -92,34 +92,35 @@ fun SectionTitle(title: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Left horizontal line
-        HorizontalLine()
+        Box(
+            modifier = Modifier
+                .height(1.dp)
+                .weight(1f)
+                .background(colorResource(id = R.color.secondary_color))
+        )
 
         // Title text, using weight to fill available space
         Text(
             text = title,
-            fontSize = 24.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
-                .weight(1f) // This allows the text to be centered between the lines
+                .weight(1.3f) // This allows the text to be centered between the lines
                 .padding(horizontal = 8.dp), // Padding for separation
             textAlign = TextAlign.Center
         )
 
         // Right horizontal line
-        HorizontalLine()
+        Box(
+            modifier = Modifier
+                .height(1.dp)
+                .weight(1f)
+                .background(colorResource(id = R.color.secondary_color))
+        )
     }
 }
 
-@Composable
-fun HorizontalLine() {
-    Box(
-        modifier = Modifier
-       //      .weight(1f)  Allow the line to expand to fill available space
-            .height(1.dp) // Set the thickness of the line
-            .background(colorResource(id = R.color.secondary_color)) // Set the color of the line
-    )
-}
 
 @Composable
 fun IPAGrid(symbols: List<Pair<String, String>>) {
@@ -127,8 +128,7 @@ fun IPAGrid(symbols: List<Pair<String, String>>) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             modifier = Modifier
-                .fillMaxWidth()
-           , // Set a fixed height for the grid
+                .fillMaxWidth(), // Set a fixed height for the grid
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
