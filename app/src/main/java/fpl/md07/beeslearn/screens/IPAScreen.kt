@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
-
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 private val vowels = listOf(
     "ɑ" to "hot", "æ" to "cat", "ʌ" to "but", "ɛ" to "bed",
@@ -108,7 +107,8 @@ fun SectionTitle(title: String) {
             modifier = Modifier
                 .weight(1.3f) // This allows the text to be centered between the lines
                 .padding(horizontal = 8.dp), // Padding for separation
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            fontFamily = Nunito_Bold
         )
 
         // Right horizontal line
@@ -159,7 +159,8 @@ fun IPACard(symbol: String, example: String) {
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.secondary_color),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontFamily = Nunito_Bold
             )
             Text(
                 text = example,
