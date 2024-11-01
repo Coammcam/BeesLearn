@@ -11,5 +11,11 @@
     <!--custom color-->
     <color name="primary_color">#FFF192</color>
     <color name="secondary_color">#591429</color>
-
+    <color name="third_color">#999999</color>
+    <color name="fourth_color">#FFF8CC</color>
+    <color name="outerColor_hexagon">#D3D3D3</color>
+    <color name="innerColor_hexagon">#C8C8C8</color>
+    <color name="shadowColor_hexagon">#D9D9D9</color>
+    <color name="newOuterColor">#FFBE00</color>
+    <color name="newInnerColor">#FFAA01</color>
 </resources>
