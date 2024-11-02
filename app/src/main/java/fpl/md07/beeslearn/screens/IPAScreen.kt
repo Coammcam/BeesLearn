@@ -7,13 +7,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.*
-
-
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.R
-
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 private val vowels = listOf(
     "ɑ" to "hot", "æ" to "cat", "ʌ" to "but", "ɛ" to "bed",
@@ -59,28 +57,21 @@ class IPAScreen : ComponentActivity() {
 
 @Composable
 fun IPAExercise() {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Enable scrolling for the entire screen
             .padding(16.dp)
     ) {
-        item {
-            SectionTitle(title = "Vowels")
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            IPAGrid(symbols = vowels)
-        }
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            SectionTitle(title = "Consonants")
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            IPAGrid(symbols = consonants)
-        }
+        SectionTitle(title = "Vowels")
+        Spacer(modifier = Modifier.height(16.dp))
+        IPAGrid(symbols = vowels)
+        Spacer(modifier = Modifier.height(50.dp)) // Adjust spacing as needed
+
+        SectionTitle(title = "Consonants")
+        Spacer(modifier = Modifier.height(16.dp))
+        IPAGrid(symbols = consonants)
+
     }
 }
 
@@ -108,7 +99,8 @@ fun SectionTitle(title: String) {
             modifier = Modifier
                 .weight(1.3f) // This allows the text to be centered between the lines
                 .padding(horizontal = 8.dp), // Padding for separation
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            fontFamily = Nunito_Bold
         )
 
         // Right horizontal line
@@ -124,11 +116,12 @@ fun SectionTitle(title: String) {
 
 @Composable
 fun IPAGrid(symbols: List<Pair<String, String>>) {
-    Box(modifier = Modifier.height(700.dp)) {
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             modifier = Modifier
-                .fillMaxWidth(), // Set a fixed height for the grid
+                .fillMaxWidth()
+                .heightIn(max = 800.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -137,8 +130,6 @@ fun IPAGrid(symbols: List<Pair<String, String>>) {
                 IPACard(symbol, example)
             }
         }
-    }
-
 }
 
 @Composable
@@ -159,7 +150,8 @@ fun IPACard(symbol: String, example: String) {
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.secondary_color),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontFamily = Nunito_Bold
             )
             Text(
                 text = example,
