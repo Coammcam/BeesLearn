@@ -38,14 +38,15 @@ fun CongratulationsScreen() {
                  contentAlignment = Alignment.Center
         ) {
             GlideImage(
-                imageUrl = R.drawable.phaohoa,
+                imageUrl = R.drawable.firework,
                 modifier = Modifier
                     .size(300.dp)
                     .align(Alignment.CenterStart)
 
+
             )
             GlideImage(
-                imageUrl = R.drawable.phaohoa,
+                imageUrl = R.drawable.firework,
                 modifier = Modifier
                     .size(300.dp)
                     .align(Alignment.CenterEnd)
@@ -53,7 +54,7 @@ fun CongratulationsScreen() {
 
             )
             Image(
-                painter = painterResource(id = R.drawable.elip),
+                painter = painterResource(id = R.drawable.elipshadow),
                 contentDescription = "Shadow",
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
