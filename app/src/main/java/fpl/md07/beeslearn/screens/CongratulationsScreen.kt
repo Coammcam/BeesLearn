@@ -52,12 +52,12 @@ fun CongratulationsScreen() {
                     .graphicsLayer(scaleX = -1f) //lật
 
             )
-//            Image(
-//                painter = painterResource(id = R.drawable.elip),
-//                contentDescription = "Shadow",
-//                modifier = Modifier
-//                    .align(Alignment.BottomCenter)
-//            )
+            Image(
+                painter = painterResource(id = R.drawable.elip),
+                contentDescription = "Shadow",
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            )
 
             Image(
                 painter = painterResource(id = R.drawable.beeds),
