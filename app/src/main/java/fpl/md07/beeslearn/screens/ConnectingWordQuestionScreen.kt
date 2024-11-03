@@ -3,6 +3,7 @@ package fpl.md07.beeslearn.screens
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.connectingWordQuestions // Import fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
@@ -59,14 +61,13 @@ fun ConnectingWordScreen() {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         ) {
-            IconButton(onClick = { /* Back action */ }) {
-                Icon(
-                    painter = painterResource(id = fpl.md07.beeslearn.R.drawable.ic_back),
-                    contentDescription = "Back",
-                    tint = Color(0xFFB71C1C),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "Back",
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { /* Back action */ }
+            )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
@@ -231,6 +232,6 @@ fun SelectableMatchingItem(text: String, isSelected: Boolean, onClick: () -> Uni
 @Composable
 fun ConnectingWordPreview() {
     BeesLearnTheme {
-        ConnectingWordQuestionScreen()
+        ConnectingWordScreen()
     }
 }
