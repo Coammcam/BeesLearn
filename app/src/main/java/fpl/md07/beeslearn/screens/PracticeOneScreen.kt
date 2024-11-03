@@ -18,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.components.IconTopComponent
@@ -26,18 +28,18 @@ import kotlin.math.sin
 import fpl.md07.beeslearn.components.TextBoxComponent
 import fpl.md07.beeslearn.components.BeeAnimaComponent
 
-@Composable
-fun PracticeOneScreen() {
-    MaterialTheme {
-        Surface {
-            BeeGameScreen()
-        }
-    }
-}
+//@Composable
+//fun PracticeOneScreen() {
+//    MaterialTheme {
+//        Surface {
+//            BeeGameScreen()
+//        }
+//    }
+//}
 
 
 @Composable
-fun BeeGameScreen() {
+fun PracticeOneScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +48,7 @@ fun BeeGameScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Top bar with hearts and coins
-        TopBar()
+        TopBar(navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -76,14 +78,13 @@ fun BeeGameScreen() {
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(navController: NavController) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        BackComponent()
+        BackComponent(navController)
         IconTopComponent()
     }
 }
@@ -92,8 +93,6 @@ fun TopBar() {
 
 @Composable
 fun BeeAndHexGrid() {
-
-
     Spacer(modifier = Modifier.height(50.dp))
 
     // Hexagonal grid with center hexagon and surrounding ones
@@ -302,5 +301,6 @@ fun Hexagon(
 @Preview
 @Composable
 fun PreviewBeeGameScreen() {
-    BeeGameScreen()
+    var navController = rememberNavController()
+    PracticeOneScreen(navController)
 }

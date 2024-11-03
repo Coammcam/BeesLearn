@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,21 +27,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.Music2
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.music2List
 import fpl.md07.beeslearn.viewmodels.data.musicList
 
 @Composable
-fun MusicScreen2() {
+fun MusicScreen2(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 20.dp, end = 20.dp, top = 70.dp, bottom = 20.dp),
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
+        Image(
+            painter = painterResource(R.drawable.back_left),
+            contentDescription = "Back",
+            modifier = Modifier
+                .padding(16.dp)
+                .size(30.dp)
+                .clickable { navController.popBackStack() }
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,18 +93,19 @@ fun MusicScreen2() {
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(music2List) { music2 ->
-                Music2Item(music2)
+                Music2Item(music2, navController)
             }
         }
     }
 }
 
 @Composable
-fun Music2Item (music2: Music2) {
+fun Music2Item (music2: Music2, navController: NavController) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 30.dp, top = 10.dp),
+            .padding(start = 30.dp, top = 10.dp)
+            .clickable {navController.navigate("musicScreen3")},
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -101,6 +114,7 @@ fun Music2Item (music2: Music2) {
            textAlign = TextAlign.Center,
            fontSize = 20.sp,
            fontWeight = FontWeight.Bold,
+           fontFamily = Nunito_Bold,
            modifier = Modifier
                .padding(end = 30.dp)
        )
@@ -111,6 +125,7 @@ fun Music2Item (music2: Music2) {
                 text = music2.title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = Nunito_Bold,
                 color = colorResource(id = R.color.secondary_color),
             )
             Text(
@@ -125,5 +140,6 @@ fun Music2Item (music2: Music2) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewMusicScreen2() {
-    MusicScreen2()
+    var navController = rememberNavController()
+    MusicScreen2(navController)
 }

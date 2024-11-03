@@ -31,18 +31,19 @@ import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import kotlin.math.cos
 import kotlin.math.sin
-class SelectExScreen : ComponentActivity() { // Use ComponentActivity instead of AppCompatActivity
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            val navController = rememberNavController()
-            NavHost(navController, startDestination = "select_exercise") {
-                composable("select_exercise") { SelectExercise(navController) }
-                composable("practice_one_screen") { PracticeOneScreen() }
-            }
-        }
-    }
-}
+
+//class SelectExScreen : ComponentActivity() { // Use ComponentActivity instead of AppCompatActivity
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            val navController = rememberNavController()
+//            NavHost(navController, startDestination = "select_exercise") {
+//                composable("select_exercise") { SelectExercise(navController) }
+//                composable("practice_one_screen") { PracticeOneScreen() }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun SelectExercise(navController: NavController) {
@@ -54,7 +55,7 @@ fun SelectExercise(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Top bar with hearts and coins
-        TopBar()
+        TopBar(navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -103,7 +104,7 @@ fun HexGridd(navController: NavController) {
         for (i in 1..10) {
             // Draw the hexagon with number
             HexagonWithNumber(radius = hexagonRadius, number = i) {
-                navController.navigate("practice_one_screen")
+                navController.navigate("practiceOneScreen")
             }
 
             // Draw a connecting line (except for the last hexagon)
@@ -123,7 +124,7 @@ fun HexGridd(navController: NavController) {
 }
 
 @Composable
-fun HexagonWithNumber(radius: Dp, number: Int, onClick: () -> Unit) {
+fun HexagonWithNumber(radius: Dp, number: Int, onClick: () -> Unit, ) {
 
     val outerColor = colorResource(id = R.color.outerColor_hexagon)
     val innerColor = colorResource(id = R.color.innerColor_hexagon)
@@ -136,6 +137,7 @@ fun HexagonWithNumber(radius: Dp, number: Int, onClick: () -> Unit) {
         Canvas(
             modifier = Modifier
                 .size(radius * 2)
+//                .clickable { navController.navigate("")}
         ) {
             val radiusPx = radius.toPx()
             val centerX = size.width / 2

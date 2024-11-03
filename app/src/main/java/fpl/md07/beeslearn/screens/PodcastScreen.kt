@@ -32,27 +32,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.Podcast
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.podcastList
 
 @Composable
-fun PodcastScreen() {
+fun PodcastScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 10.dp, end = 10.dp, top = 50.dp, bottom = 20.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
         // Back arrow
-        Image(
+         Image(
             painter = painterResource(R.drawable.back_left),
             contentDescription = "Back",
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { /* Handle back navigation */ }
+                .clickable { navController.popBackStack() }
         )
 
         Box(
@@ -77,6 +80,7 @@ fun PodcastScreen() {
                         text = "Podcast",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
+                            fontFamily = Nunito_Bold,
                             color = Color(0xFF591429), // Màu nâu chữ
                             fontSize = 20.sp
                         )
@@ -85,6 +89,7 @@ fun PodcastScreen() {
                         text = "excellent way for\nstudents to practice\nself-study",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color(0xFF591429),
+                            fontFamily = Nunito_Bold,
                             fontSize = 14.sp
                         )
                     )
@@ -133,18 +138,19 @@ fun PodcastScreen() {
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(podcastList) { podcast ->
-                PodcastItem(podcast)
+                PodcastItem(podcast, navController)
             }
         }
     }
 }
 
 @Composable
-fun PodcastItem(podcast: Podcast) {
+fun PodcastItem(podcast: Podcast, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {navController.navigate("podcastScreen2")},
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -165,11 +171,13 @@ fun PodcastItem(podcast: Podcast) {
                 text = podcast.title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
+                fontFamily = Nunito_Bold,
                 maxLines = 1
             )
             Text(
                 text = podcast.description,
                 fontSize = 14.sp,
+                fontFamily = Nunito_Bold,
                 color = Color.Gray,
                 maxLines = 2
             )
@@ -182,12 +190,14 @@ fun PodcastItem(podcast: Podcast) {
                 Text(
                     text = podcast.view + " view",
                     fontWeight = FontWeight.W300,
+                    fontFamily = Nunito_Bold,
                     fontSize = 10.sp
                 )
                 Text(
                     text = podcast.time,
                     fontWeight = FontWeight.W300,
                     fontSize = 10.sp,
+                    fontFamily = Nunito_Bold,
                     modifier = Modifier
                         .padding(end = 50.dp)
                 )
@@ -199,5 +209,6 @@ fun PodcastItem(podcast: Podcast) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewPodcastScreen() {
-    PodcastScreen()
+    var navController = rememberNavController()
+    PodcastScreen(navController)
 }

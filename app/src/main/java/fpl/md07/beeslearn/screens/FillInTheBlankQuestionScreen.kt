@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -18,25 +20,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class FillInTheBlankQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    FillInTheBlankScreen()
-                }
-            }
-        }
-    }
-}
+//class FillInTheBlankQuestionScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            BeesLearnTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    FillInTheBlankScreen()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun FillInTheBlankScreen() {
@@ -58,14 +61,13 @@ fun FillInTheBlankScreen() {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            IconButton(onClick = { /* Back action */ }) {
-                Icon(
-                    painter = painterResource(id = fpl.md07.beeslearn.R.drawable.ic_back),
-                    contentDescription = "Back",
-                    tint = Color(0xFFB71C1C),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            Image(
+                painter = painterResource(R.drawable.back_left),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable {}
+            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -190,10 +192,8 @@ fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun FillInTheBlankPreview() {
-    BeesLearnTheme {
-        FillInTheBlankQuestionScreen()
-    }
+    FillInTheBlankScreen()
 }

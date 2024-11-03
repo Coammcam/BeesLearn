@@ -33,17 +33,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.Movie
+import fpl.md07.beeslearn.navigation.BottomNavBar
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.movieList
 
 @Composable
-fun MovieScreen() {
+fun MovieScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 10.dp, end = 10.dp, top = 50.dp, bottom = 20.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -52,7 +56,8 @@ fun MovieScreen() {
             contentDescription = "Back",
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { /* Handle back navigation */ }
+                .size(30.dp)
+                .clickable { navController.popBackStack()}
         )
         Box(
             modifier = Modifier
@@ -77,14 +82,16 @@ fun MovieScreen() {
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF591429), // Màu nâu chữ
-                            fontSize = 20.sp
+                            fontSize = 20.sp,
+                            fontFamily = Nunito_Bold,
                         )
                     )
                     Text(
                         text = "excellent way for\nstudents to practice\nself-study",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color(0xFF591429),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = Nunito_Bold,
                         )
                     )
                 }
@@ -107,14 +114,14 @@ fun MovieScreen() {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(movieList.size) { index ->
-                MovieItem(movie = movieList[index])
+                MovieItem(movie = movieList[index], navController)
             }
         }
     }
 }
 
 @Composable
-fun MovieItem(movie: Movie) {
+fun MovieItem(movie: Movie, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,7 +134,7 @@ fun MovieItem(movie: Movie) {
                 .width(200.dp)
                 .height(250.dp)
                 .clip(shape = RoundedCornerShape(8.dp))
-                .clickable { },
+                .clickable {navController.navigate("musicScreen2") },
             painter = painterResource(id = movie.imageResMovie),
             contentDescription = null,
             contentScale = ContentScale.Crop // Thay đổi sang Crop nếu bạn muốn cắt ảnh
@@ -136,6 +143,7 @@ fun MovieItem(movie: Movie) {
             text = movie.titleMovie,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
+            fontFamily = Nunito_Bold,
             modifier = Modifier
                 .padding(8.dp),
         )
@@ -145,5 +153,6 @@ fun MovieItem(movie: Movie) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreViewMovieScreen() {
-    MovieScreen()
+    var navController = rememberNavController()
+    MovieScreen(navController)
 }

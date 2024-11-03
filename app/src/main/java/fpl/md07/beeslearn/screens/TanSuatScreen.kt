@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,16 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomButtonWithText
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun TanSuatScreen() {
+fun TanSuatScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -67,22 +71,27 @@ fun TanSuatScreen() {
 
             Spacer(modifier = Modifier.height(55.dp))
 
+            val context = LocalContext.current
+
             CustomButtonWithText(
-                onClick = { /* TODO: handle login */ },
+                onClick = { navController.navigate("HomeScreen")
+                    Toast.makeText(context, "Chúc Bạn Học Tập Vui Vẻ !", Toast.LENGTH_SHORT).show()},
                 buttonText = "15’ mỗi ngày"
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             CustomButtonWithText(
-                onClick = { /* TODO: handle login */ },
+                onClick = { navController.navigate("HomeScreen")
+                    Toast.makeText(context, "Chúc Bạn Học Tập Vui Vẻ !", Toast.LENGTH_SHORT).show()},
                 buttonText = "30’ mỗi ngày"
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             CustomButtonWithText(
-                onClick = { /* TODO: handle login */ },
+                onClick = { navController.navigate("HomeScreen")
+                    Toast.makeText(context, "Chúc Bạn Học Tập Vui Vẻ !", Toast.LENGTH_SHORT).show()},
                 buttonText = "60’ mỗi ngày"
             )
 
@@ -93,5 +102,6 @@ fun TanSuatScreen() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun TanSuatScreenPreview() {
-    TanSuatScreen()
+    var navController = rememberNavController()
+    TanSuatScreen(navController)
 }

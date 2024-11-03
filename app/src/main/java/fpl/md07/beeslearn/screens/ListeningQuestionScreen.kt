@@ -23,24 +23,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.R
-import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class ListeningQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ListeningQuestionContent()
-                }
-            }
-        }
-    }
-}
+
+//class ListeningQuestionScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            BeesLearnTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    ListeningQuestionContent()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ListeningQuestionContent() {
@@ -118,7 +118,8 @@ fun ListeningQuestionContent() {
                                 text = "100",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
-                                color = Color(0xFF5D4037)
+                                color = Color(0xFF5D4037),
+                                fontFamily = Nunito_Bold
                             )
                         }
                     }
@@ -246,7 +247,5 @@ fun AnswerButtonListen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewListeningQuestionContent() {
-    BeesLearnTheme {
-        ListeningQuestionContent()
-    }
+    ListeningQuestionContent()
 }
