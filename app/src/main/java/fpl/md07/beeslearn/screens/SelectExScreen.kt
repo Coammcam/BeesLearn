@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.screens
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,6 +27,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.TopBarComponent
+import fpl.md07.beeslearn.components.customFont
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -60,45 +60,34 @@ fun SelectExercise(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(
-            modifier = Modifier
-                // Fill the entire size of the parent
-                .padding(10.dp), // Optional padding for the box
-            contentAlignment = Alignment.Center // Center the content within the box
         ) {
-            // Use the Bee Animation Component at the top left
             TextBoxComponent(
                 modifier = Modifier
-                    .fillMaxWidth() // Fill the width of the parent
-                    .height(200.dp) // Set a specific height for the text box
-                    .padding(top = 50.dp) // Adjust padding to avoid overlap if needed
+                    .fillMaxWidth()
+                    .padding(top = 50.dp)
             )
             BeeAnimaComponent(
                 modifier = Modifier
-                    .align(Alignment.TopEnd) // Align to top end (right corner)
-                    .size(200.dp) // Increase the size of the bee image
-                    .padding(top = 10.dp, start = 100.dp) // Optional padding from the top and left
+                    .align(Alignment.TopEnd)
             )
         }
-
         Spacer(modifier = Modifier.height(200.dp))
 
-        // Center the hexagonal grid in the middle of the screen
         HexGridd(navController)
     }
 }
-
-
-
 @Composable
 fun HexGridd(navController: NavController) {
-    // Define the hexagon radius (size)
     val hexagonRadius = 40.dp
+    val hexagonCount = 10
+    // Tạo danh sách trạng thái cho các hexagon
+    val hexagonStates = remember { mutableStateListOf(*Array(hexagonCount) { false }) } // Sử dụng mutableStateListOf
 
     // Scrollable row to hold hexagons
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()), // Enables horizontal scrolling
+            .horizontalScroll(rememberScrollState()),
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in 1..10) {
@@ -108,14 +97,14 @@ fun HexGridd(navController: NavController) {
             }
 
             // Draw a connecting line (except for the last hexagon)
-            if (i < 10) {
-                Spacer(modifier = Modifier.width(8.dp)) // Adjust space between hexagon and line
-                Divider(
-                    color = Color.Gray,
+            if (i < hexagonCount - 1) {
+                Spacer(modifier = Modifier.width(8.dp))
+                HorizontalDivider(
                     modifier = Modifier
-                        .width(40.dp) // Adjust width of the connecting line
+                        .width(100.dp)
                         .height(2.dp)
-                        .align(Alignment.CenterVertically) // Center the line vertically with hexagons
+                        .align(Alignment.CenterVertically),
+                    color = Color.Gray
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Adjust space after line
             }
@@ -125,14 +114,17 @@ fun HexGridd(navController: NavController) {
 
 @Composable
 fun HexagonWithNumber(radius: Dp, number: Int, onClick: () -> Unit, ) {
-
     val outerColor = colorResource(id = R.color.outerColor_hexagon)
     val innerColor = colorResource(id = R.color.innerColor_hexagon)
 
+    // Màu sắc mới khi hexagon được nhấn
+    val newOuterColor = colorResource(id = R.color.newOuterColor)
+    val newInnerColor = colorResource(id = R.color.newInnerColor)
 
-    Box(modifier = Modifier
-        .size(radius * 2)
-        .clickable {  onClick()} // Handle click to navigate
+    Box(
+        modifier = Modifier
+            .size(radius * 2)
+            .clickable { onClick() } // Xử lý nhấp chuột
     ) {
         Canvas(
             modifier = Modifier
@@ -175,32 +167,29 @@ fun HexagonWithNumber(radius: Dp, number: Int, onClick: () -> Unit, ) {
                 close()
             }
 
-            // Draw outer hexagon
+            // Vẽ hexagon bên ngoài với màu sắc mới nếu đã nhấn
             drawPath(
                 path = hexPathOuter,
-                color = outerColor
+                color = if (isClicked) newOuterColor else outerColor
             )
 
-            // Draw inner hexagon
+            // Vẽ hexagon bên trong với màu sắc mới nếu đã nhấn
             drawPath(
                 path = hexPathInner,
-                color = innerColor
+                color = if (isClicked) newInnerColor else innerColor
             )
-
         }
 
-
-        // Add number to the center of the hexagon
+        // Thêm số vào giữa hexagon
         Text(
             text = number.toString(),
             modifier = Modifier.align(Alignment.Center),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 22.sp,
+            fontFamily = customFont,
+            color = colorResource(id = R.color.secondary_color)
         )
     }
 }
-
-
 @Preview
 @Composable
 fun PreviewSelectExercise() {

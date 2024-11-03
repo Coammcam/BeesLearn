@@ -117,7 +117,6 @@ fun SectionTitle(title: String) {
 
 @Composable
 fun IPAGrid(symbols: List<Pair<String, String>>) {
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier

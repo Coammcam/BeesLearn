@@ -21,12 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
-import fpl.md07.beeslearn.components.BackComponent
-import fpl.md07.beeslearn.components.IconTopComponent
 import kotlin.math.cos
 import kotlin.math.sin
 import fpl.md07.beeslearn.components.TextBoxComponent
 import fpl.md07.beeslearn.components.BeeAnimaComponent
+import fpl.md07.beeslearn.components.TopBarComponent
+
 
 //@Composable
 //fun PracticeOneScreen() {
@@ -51,25 +51,18 @@ fun PracticeOneScreen(navController: NavController) {
         TopBar(navController)
 
         Spacer(modifier = Modifier.height(16.dp))
-
-
-        Box(modifier = Modifier.padding(10.dp)) { // Adjust padding as needed
-            // Use the Bee Animation Component at the top left
+        Box() {
             TextBoxComponent(
                 modifier = Modifier
-                    .fillMaxWidth() // Fill the width of the parent
-                    .height(200.dp) // Set a specific height for the text box
-                    .padding(top = 50.dp) // Adjust padding to avoid overlap if needed
-                    
+                    .fillMaxWidth()
+                    .padding(top = 50.dp)
             )
             BeeAnimaComponent(
                 modifier = Modifier
-                    .align(Alignment.TopEnd) // Align to top end (right corner)
-                    .size(200.dp) // Increase the size of the bee image
-                    .padding(top = 10.dp, start = 100.dp) // Optional padding from the top and left
-
+                    .align(Alignment.TopEnd)
             )
         }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // Bee and hexagonal grid
@@ -99,25 +92,22 @@ fun BeeAndHexGrid() {
     HexGrid()
 }
 
-
 @Composable
 fun HexGrid() {
-    // Load colors using colorResource
     val outerColor = colorResource(id = R.color.outerColor_hexagon)
     val innerColor = colorResource(id = R.color.innerColor_hexagon)
-    val newOuterColor = colorResource(id = R.color.newOuterColor) // New color for outer hexagons
-    val newInnerColor = colorResource(id = R.color.newInnerColor) // New color for inner hexagons
+    val newOuterColor = colorResource(id = R.color.newOuterColor)
+    val newInnerColor = colorResource(id = R.color.newInnerColor)
 
-    // State for the colors of each hexagon using MutableState
     val hexagonColors = remember {
         mutableStateListOf(
             mutableStateOf(Pair(outerColor, innerColor)), // Hexagon 1
-            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 2
-            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 3
+            mutableStateOf(Pair(outerColor, innerColor)),
+            mutableStateOf(Pair(outerColor, innerColor)),
             mutableStateOf(Pair(outerColor, innerColor)),  // Center hexagon
-            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 4
-            mutableStateOf(Pair(outerColor, innerColor)),  // Hexagon 5
-            mutableStateOf(Pair(outerColor, innerColor))    // Hexagon 6
+            mutableStateOf(Pair(outerColor, innerColor)),
+            mutableStateOf(Pair(outerColor, innerColor)),
+            mutableStateOf(Pair(outerColor, innerColor))   // 6
         )
     }
 

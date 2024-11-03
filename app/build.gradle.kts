@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -62,5 +63,10 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.8.3")
 
+//    implementation("androidx.navigation:navigation-compose:2.7.6")
 
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-gif:2.5.0")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    kapt("com.github.bumptech.glide:compiler:4.12.0")
 }

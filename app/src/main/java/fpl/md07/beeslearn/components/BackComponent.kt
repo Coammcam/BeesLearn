@@ -6,6 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import fpl.md07.beeslearn.R
@@ -17,4 +18,9 @@ fun BackComponent(navController: NavController) {
         contentDescription = "Back",
         modifier = Modifier.size(24.dp).clickable {navController.popBackStack() }
     )
+}
+@Preview
+@Composable
+fun PreviewBackComponent() {
+    BackComponent()
 }
