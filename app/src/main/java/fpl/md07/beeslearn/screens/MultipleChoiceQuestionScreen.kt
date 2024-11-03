@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,14 +62,13 @@ fun MultipleChoiceScreen() {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            IconButton(onClick = { /* Back action */ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = "Back",
-                    tint = Color(0xFFB71C1C),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "Back",
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { /* Back action */ }
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -227,6 +228,6 @@ fun AnswerButton(
 @Composable
 fun MultipleChoicePreview() {
     BeesLearnTheme {
-        MultipleChoiceQuestionScreen()
+        MultipleChoiceScreen()
     }
 }
