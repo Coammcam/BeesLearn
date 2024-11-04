@@ -1,5 +1,7 @@
 package fpl.md07.beeslearn.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,10 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomPasswordField
 import fpl.md07.beeslearn.components.CustomTextField
@@ -37,7 +42,7 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -84,15 +89,18 @@ fun LoginScreen() {
                 color = Color(0xFF777777),
                 fontFamily = Nunito_Bold,
                 fontSize = 13.sp,
-                modifier = Modifier.clickable { })
+                modifier = Modifier.clickable { navController.navigate("quenMatKhauScreen")})
         }
+
+        val context = LocalContext.current
 
         Button(
             modifier = Modifier
                 .padding(top = 50.dp)
                 .fillMaxWidth()
                 .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
-            onClick = {},
+            onClick = { navController.navigate("HomeScreen")
+                Toast.makeText(context, "Chúc Bạn Học Tập Vui Vẻ !", Toast.LENGTH_SHORT).show()},
             colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -103,8 +111,18 @@ fun LoginScreen() {
 
 
         Row(modifier = Modifier.padding(top = 50.dp)) {
-            Text("Không có tài khoản?", fontFamily = Nunito_Bold, color = Color(0xFF777777))
-            Text(" Đăng Ký", fontFamily = Nunito_Bold, color = Color(0xFFF8A724))
+            Text(
+                "Không có tài khoản?",
+                fontFamily = Nunito_Bold,
+                color = Color(0xFF777777)
+            )
+            Text(
+                " Đăng Ký",
+                fontFamily = Nunito_Bold,
+                color = Color(0xFFF8A724),
+                modifier = Modifier
+                    .clickable {navController.navigate("signUpScreen")}
+            )
         }
     }
 }
@@ -112,5 +130,6 @@ fun LoginScreen() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    var navController = rememberNavController()
+    LoginScreen(navController)
 }

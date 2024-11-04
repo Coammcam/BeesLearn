@@ -24,11 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 
 @Composable
-fun PodcastScreen2 () {
+fun PodcastScreen2 (navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -39,8 +42,8 @@ fun PodcastScreen2 () {
             painter = painterResource(R.drawable.back_left),
             contentDescription = "Back",
             modifier = Modifier
-                .padding(top = 50.dp, start = 20.dp, bottom = 20.dp)
-                .clickable { /* Handle back navigation */ }
+                .padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
+                .clickable { navController.popBackStack() }
         )
 
         Box(
@@ -64,6 +67,7 @@ fun PodcastScreen2 () {
             "Learn English with PODCASTS When I Was Younger...",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
+            fontFamily = Nunito_Bold,
             modifier = Modifier
                 .padding(top = 44.dp, start = 20.dp, end = 20.dp),
             color = Color(0xff591429)
@@ -83,10 +87,12 @@ fun PodcastScreen2 () {
         ) {
             Text(
                 "2:30",
+                fontFamily = Nunito_Bold,
                 fontSize = 16.sp,
             )
             Text(
                 "-2:30",
+                fontFamily = Nunito_Bold,
                 fontSize = 16.sp,
             )
         }
@@ -162,6 +168,7 @@ fun PodcastScreen2 () {
             "Today, you'll learn advanced English vocabulary with Cassé telling stories from the old days when she was a child back in school!",
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
+            fontFamily = Nunito_Bold,
             modifier = Modifier
                 .padding(start = 40.dp, end = 40.dp, top = 10.dp),
             color = Color(0xff591429)
@@ -172,5 +179,6 @@ fun PodcastScreen2 () {
 @Preview (showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewPodcastScreen2 () {
-    PodcastScreen2()
+    var navController = rememberNavController()
+    PodcastScreen2(navController)
 }

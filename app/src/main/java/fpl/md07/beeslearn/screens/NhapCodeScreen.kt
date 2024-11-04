@@ -1,5 +1,6 @@
 package com.example.myapplication.Screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -22,10 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NhapMaCodeScreen() {
+fun NhapMaCodeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +90,9 @@ fun NhapMaCodeScreen() {
             Text(
                 text = "ĐĂNG NHẬP",
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier
+                    .clickable {navController.navigate("loginScreen")}
             )
         }
     }
@@ -96,5 +101,6 @@ fun NhapMaCodeScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CodeScreenPreview() {
-    NhapMaCodeScreen()
+    var navController = rememberNavController()
+    NhapMaCodeScreen(navController)
 }

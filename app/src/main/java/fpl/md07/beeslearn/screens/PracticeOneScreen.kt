@@ -18,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import kotlin.math.cos
 import kotlin.math.sin
@@ -25,17 +27,9 @@ import fpl.md07.beeslearn.components.TextBoxComponent
 import fpl.md07.beeslearn.components.BeeAnimaComponent
 import fpl.md07.beeslearn.components.TopBarComponent
 
-@Composable
-fun PracticeOneScreen() {
-    MaterialTheme {
-        Surface {
-            ChoosePractice()
-        }
-    }
-}
 
 @Composable
-fun ChoosePractice() {
+fun PracticeOneScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +37,7 @@ fun ChoosePractice() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBarComponent()
+        TopBarComponent(navController)
         Spacer(modifier = Modifier.height(16.dp))
         Box() {
             TextBoxComponent(
@@ -258,8 +252,9 @@ fun Hexagon(
     }
 }
 
-@Preview
+@Preview (showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewBeeGameScreen() {
-    ChoosePractice()
+    var navController = rememberNavController()
+    PracticeOneScreen(navController)
 }

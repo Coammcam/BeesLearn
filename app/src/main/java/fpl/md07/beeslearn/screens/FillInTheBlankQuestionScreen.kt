@@ -25,21 +25,21 @@ import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class FillInTheBlankQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    FillInTheBlankScreen()
-                }
-            }
-        }
-    }
-}
+//class FillInTheBlankQuestionScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            BeesLearnTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    FillInTheBlankScreen()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun FillInTheBlankScreen() {
@@ -62,11 +62,11 @@ fun FillInTheBlankScreen() {
                 .padding(8.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back",
+                painter = painterResource(R.drawable.back_left),
+                contentDescription = null,
                 modifier = Modifier
-                    .size(24.dp)
-                    .clickable { /* Back action */ }
+                    .size(30.dp)
+                    .clickable {}
             )
 
             Row(
@@ -192,10 +192,8 @@ fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun FillInTheBlankPreview() {
-    BeesLearnTheme {
-        FillInTheBlankScreen()
-    }
+    FillInTheBlankScreen()
 }

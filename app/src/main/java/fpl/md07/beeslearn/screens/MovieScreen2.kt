@@ -31,11 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun MovieScreen2 () {
+fun MovieScreen2 (navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -46,8 +48,9 @@ fun MovieScreen2 () {
             painter = painterResource(R.drawable.back_left),
             contentDescription = "Back",
             modifier = Modifier
-                .padding(top = 50.dp, start = 20.dp, bottom = 20.dp)
-                .clickable { /* Handle back navigation */ }
+                .padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
+                .size(30.dp)
+                .clickable { navController.popBackStack()}
         )
 
         Box(
@@ -75,6 +78,7 @@ fun MovieScreen2 () {
                 .fillMaxWidth()
                 .padding(top = 20.dp),
             fontWeight = FontWeight.Bold,
+            fontFamily = Nunito_Bold,
             textAlign = TextAlign.Center
         )
         Text(
@@ -85,6 +89,7 @@ fun MovieScreen2 () {
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             fontWeight = FontWeight.Bold,
+            fontFamily = Nunito_Bold,
             textAlign = TextAlign.Center
         )
         Row (
@@ -149,6 +154,7 @@ fun MovieScreen2 () {
                     text = "Play",
                     color = Color.White,
                     fontSize = 20.sp,
+                    fontFamily = Nunito_Bold,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -169,5 +175,6 @@ fun MovieScreen2 () {
 @Preview (showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewMovieScreen2 () {
-    MovieScreen2()
+    var navController = rememberNavController()
+    MovieScreen2(navController)
 }

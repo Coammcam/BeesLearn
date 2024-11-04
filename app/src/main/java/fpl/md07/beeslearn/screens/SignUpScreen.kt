@@ -30,6 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomPasswordField
 import fpl.md07.beeslearn.components.CustomTextField
@@ -37,7 +39,7 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -99,12 +101,27 @@ fun SignUpScreen() {
                 .padding(top = 50.dp)
                 .fillMaxWidth()
                 .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
-            onClick = {},
+            onClick = {navController.navigate("chaoHoiScreen")},
             colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
                 text = "ĐĂNG KÝ", color = Color.White, fontFamily = Nunito_Bold
+            )
+        }
+
+        Row(modifier = Modifier.padding(top = 50.dp)) {
+            Text(
+                "Bạn đã có tài khoản?",
+                fontFamily = Nunito_Bold,
+                color = Color(0xFF777777)
+            )
+            Text(
+                " Đăng Nhập",
+                fontFamily = Nunito_Bold,
+                color = Color(0xFFF8A724),
+                modifier = Modifier
+                    .clickable {navController.popBackStack()}
             )
         }
     }
@@ -113,5 +130,6 @@ fun SignUpScreen() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun SignUpScreenPreview() {
-    SignUpScreen()
+    var navController = rememberNavController()
+    SignUpScreen(navController)
 }

@@ -32,18 +32,6 @@ import fpl.md07.beeslearn.components.customFont
 import kotlin.math.cos
 import kotlin.math.sin
 
-class SelectExScreen : ComponentActivity() { // Use ComponentActivity instead of AppCompatActivity
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            val navController = rememberNavController()
-            NavHost(navController, startDestination = "select_exercise") {
-                composable("select_exercise") { SelectExercise(navController) }
-                composable("practice_one_screen") { PracticeOneScreen() }
-            }
-        }
-    }
-}
 
 @Composable
 fun SelectExercise(navController: NavController) {
@@ -54,7 +42,7 @@ fun SelectExercise(navController: NavController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBarComponent()
+        TopBarComponent(navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -97,7 +85,7 @@ fun HexGridd(navController: NavController) {
                 onClick = {
                     // Cập nhật trạng thái
                     hexagonStates[i] = !hexagonStates[i]
-                    navController.navigate("practice_one_screen")
+                    navController.navigate("practiceOneScreen")
                 }
             )
 

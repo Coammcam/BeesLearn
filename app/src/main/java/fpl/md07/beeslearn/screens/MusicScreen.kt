@@ -34,17 +34,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.Music
+import fpl.md07.beeslearn.navigation.BottomNavBar
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.musicList
 
 @Composable
-fun MusicScreen() {
+fun MusicScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 10.dp, end = 10.dp, top = 50.dp, bottom = 20.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -53,7 +57,8 @@ fun MusicScreen() {
             contentDescription = "Back",
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { /* Handle back navigation */ }
+                .size(30.dp)
+                .clickable { navController.popBackStack() }
         )
 
         Box(
@@ -79,6 +84,7 @@ fun MusicScreen() {
                         text = "Music",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
+                            fontFamily = Nunito_Bold,
                             color = Color(0xFF591429), // Màu nâu chữ
                             fontSize = 20.sp
                         )
@@ -87,6 +93,7 @@ fun MusicScreen() {
                         text = "",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color(0xFF6D4C41),
+                            fontFamily = Nunito_Bold,
                             fontSize = 14.sp
                         )
                     )
@@ -105,18 +112,19 @@ fun MusicScreen() {
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(musicList) { music ->
-                MusicItem(music)
+                MusicItem(music,navController)
             }
         }
     }
 }
 
 @Composable
-fun MusicItem (music: Music) {
+fun MusicItem (music: Music, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp,),
+            .padding(8.dp)
+            .clickable {navController.navigate("musicScreen2")},
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -139,6 +147,7 @@ fun MusicItem (music: Music) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 maxLines = Int.MAX_VALUE,
+                fontFamily = Nunito_Bold,
                 overflow = TextOverflow.Visible
             )
         }
@@ -148,5 +157,6 @@ fun MusicItem (music: Music) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewMusicScreen () {
-    MusicScreen()
+    var navController = rememberNavController()
+    MusicScreen(navController)
 }

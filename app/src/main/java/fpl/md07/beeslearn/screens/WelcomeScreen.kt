@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,12 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomButtonLogin
 
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .background(color = colorResource(id = R.color.primary_color))
@@ -43,7 +47,7 @@ fun WelcomeScreen() {
                 fontSize = 35.sp,
                 color = Color(0xFF591429),
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -52,7 +56,7 @@ fun WelcomeScreen() {
                 title = "Tiếp tục với Email",
                 backgroundColor = Color(0xFF591429),
                 textColor = Color.White,
-                onClick = {}
+                onClick = { navController.navigate("loginScreen")}
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -62,7 +66,7 @@ fun WelcomeScreen() {
                 title = "Tiếp tục với Apple",
                 backgroundColor = Color(0xFF130101),
                 textColor = Color.White,
-                onClick = {}
+                onClick = { navController.navigate("loginScreen")}
             )
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -71,7 +75,7 @@ fun WelcomeScreen() {
                 title = "Tiếp tục với Facebook",
                 backgroundColor = Color(0xFF475993),
                 textColor = Color.White,
-                onClick = {}
+                onClick = { navController.navigate("loginScreen")}
             )
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -80,7 +84,7 @@ fun WelcomeScreen() {
                 title = "Tiếp tục với Google",
                 backgroundColor = Color(0xFFFFFFFF),
                 textColor = Color.Black,
-                onClick = {}
+                onClick = { navController.navigate("loginScreen")}
             )
 
         }
@@ -90,5 +94,6 @@ fun WelcomeScreen() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    WelcomeScreen()
+    var navController = rememberNavController()
+    WelcomeScreen(navController)
 }

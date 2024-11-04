@@ -25,11 +25,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun ChaoHoiScreen() {
+fun ChaoHoiScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +70,7 @@ fun ChaoHoiScreen() {
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(10.dp),
-                        color = Color.Black, 
+                        color = Color.Black,
                         fontFamily = Nunito_Bold
                     )
                 }
@@ -77,7 +79,7 @@ fun ChaoHoiScreen() {
             Spacer(modifier = Modifier.height(55.dp))
 
             Button(
-                onClick = { /* TODO: handle login */ },
+                onClick = { navController.navigate("trinhDoScreen") },
                 modifier = Modifier
                     .height(48.dp)
                     .fillMaxWidth()
@@ -114,7 +116,7 @@ fun ChaoHoiScreen() {
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = { /* TODO: handle login */ },
+                onClick = { navController.navigate("trinhDoScreen") },
                 modifier = Modifier
                     .height(48.dp)
                     .fillMaxWidth()
@@ -154,5 +156,6 @@ fun ChaoHoiScreen() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ChaoHoiScreenPreview() {
-    ChaoHoiScreen()
+    var navController = rememberNavController()
+    ChaoHoiScreen(navController)
 }
