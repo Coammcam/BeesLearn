@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.main
 
-import android.net.wifi.hotspot2.pps.HomeSp
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,35 +8,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fpl.md07.beeslearn.models.Podcast
 import fpl.md07.beeslearn.navigation.BottomNavBar
-import fpl.md07.beeslearn.screens.HomeScreen
-import fpl.md07.beeslearn.screens.IPAExercise
-import fpl.md07.beeslearn.screens.IPAScreenPreview
-import fpl.md07.beeslearn.screens.LoginScreen
-import fpl.md07.beeslearn.screens.MovieScreen
-import fpl.md07.beeslearn.screens.MovieScreen2
-import fpl.md07.beeslearn.screens.MusicScreen
-import fpl.md07.beeslearn.screens.MusicScreen2
-import fpl.md07.beeslearn.screens.MusicScreen3
-import fpl.md07.beeslearn.screens.PodcastScreen
-import fpl.md07.beeslearn.screens.PodcastScreen2
-import fpl.md07.beeslearn.screens.SelectExercise
-import fpl.md07.beeslearn.screens.WelcomeScreen
+import fpl.md07.beeslearn.screens.tabs.HomeScreen
+import fpl.md07.beeslearn.screens.tabs.IPAExercise
+import fpl.md07.beeslearn.screens.movie.MovieListScreen
+import fpl.md07.beeslearn.screens.music.MusicListScreen
+import fpl.md07.beeslearn.screens.podcast.PodcastListScreen
+import fpl.md07.beeslearn.screens.lessons.SelectLessonScreen
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 
 class MainActivity : ComponentActivity() {
@@ -80,10 +65,10 @@ fun SetupNavGraph(navController: NavHostController) {
 
         composable("homeScreen") { HomeScreen(navController = navController) }
         composable("ipaExercise") { IPAExercise( navController = navController) }
-        composable("podcastScreen") {PodcastScreen( navController = navController)}
-        composable("movieScreen") {MovieScreen (navController = navController)}
-        composable("musicScreen") {MusicScreen (navController = navController)}
-        composable("selectExercise") {SelectExercise (navController = navController)}
+        composable("podcastScreen") { PodcastListScreen( navController = navController) }
+        composable("movieScreen") { MovieListScreen (navController = navController) }
+        composable("musicScreen") { MusicListScreen (navController = navController) }
+        composable("selectExercise") { SelectLessonScreen (navController = navController) }
 
         composable("bottomNavBar") { BottomNavBar(navController = navController) }
     }

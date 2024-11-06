@@ -2,10 +2,7 @@ package fpl.md07.beeslearn.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,16 +15,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -39,30 +32,28 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.Screen.NhapMaCodeScreen
+import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
-import fpl.md07.beeslearn.main.SetupNavGraph
-import fpl.md07.beeslearn.screens.ChaoHoiScreen
-import fpl.md07.beeslearn.screens.HomeScreen
-import fpl.md07.beeslearn.screens.IPAExercise
-import fpl.md07.beeslearn.screens.LoginScreen
-import fpl.md07.beeslearn.screens.MovieScreen
-import fpl.md07.beeslearn.screens.MovieScreen2
-import fpl.md07.beeslearn.screens.MusicScreen
-import fpl.md07.beeslearn.screens.MusicScreen2
-import fpl.md07.beeslearn.screens.MusicScreen3
-import fpl.md07.beeslearn.screens.PodcastScreen
-import fpl.md07.beeslearn.screens.PodcastScreen2
-import fpl.md07.beeslearn.screens.PracticeOneScreen
-import fpl.md07.beeslearn.screens.QuenMatKhauScreen
-import fpl.md07.beeslearn.screens.SelectExercise
-import fpl.md07.beeslearn.screens.SettingScreen
-import fpl.md07.beeslearn.screens.SignUpScreen
-import fpl.md07.beeslearn.screens.StatsScreen
-import fpl.md07.beeslearn.screens.TanSuatScreen
-import fpl.md07.beeslearn.screens.TrinhDoScreen
-import fpl.md07.beeslearn.screens.WelcomeScreen
-import fpl.md07.beeslearn.screens.WelcomeScreenPreview
+import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
+import fpl.md07.beeslearn.screens.tabs.HomeScreen
+import fpl.md07.beeslearn.screens.tabs.IPAExercise
+import fpl.md07.beeslearn.screens.auth.LoginScreen
+import fpl.md07.beeslearn.screens.movie.MovieListScreen
+import fpl.md07.beeslearn.screens.movie.MovieDetailScreen
+import fpl.md07.beeslearn.screens.music.MusicListScreen
+import fpl.md07.beeslearn.screens.music.MusicDetailScreen
+import fpl.md07.beeslearn.screens.music.MusicPlayerScreen
+import fpl.md07.beeslearn.screens.podcast.PodcastListScreen
+import fpl.md07.beeslearn.screens.podcast.PodcastDetailScreen
+import fpl.md07.beeslearn.screens.lessons.LessonScreen
+import fpl.md07.beeslearn.screens.auth.ForgotPasswordScreen
+import fpl.md07.beeslearn.screens.lessons.SelectLessonScreen
+import fpl.md07.beeslearn.screens.tabs.SettingScreen
+import fpl.md07.beeslearn.screens.auth.SignUpScreen
+import fpl.md07.beeslearn.screens.tabs.StatsScreen
+import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
+import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
+import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -135,34 +126,34 @@ fun NestedBottomTab(
             SettingScreen(navController)
         }
         composable("selectExercise") {
-            SelectExercise(navController)
+            SelectLessonScreen(navController)
         }
         composable("podcastScreen") {
-            PodcastScreen(navController)
+            PodcastListScreen(navController)
         }
         composable("movieScreen") {
-            MovieScreen(navController)
+            MovieListScreen(navController)
         }
         composable("podcastScreen2") {
-            PodcastScreen2(navController)
+            PodcastDetailScreen(navController)
         }
         composable("movieScreen2") {
-            MovieScreen2(navController)
+            MovieDetailScreen(navController)
         }
         composable("musicScreen") {
-            MusicScreen(navController)
+            MusicListScreen(navController)
         }
         composable("musicScreen2") {
-            MusicScreen2(navController)
+            MusicDetailScreen(navController)
         }
         composable("musicScreen3") {
-            MusicScreen3 (navController)
+            MusicPlayerScreen (navController)
         }
         composable("practiceOneScreen") {
-            PracticeOneScreen (navController)
+            LessonScreen (navController)
         }
         composable("welcomeScreen") {
-            WelcomeScreen(navController)
+            ChooseLoginScreen(navController)
         }
         composable("signUpScreen") {
             SignUpScreen(navController)
@@ -171,19 +162,19 @@ fun NestedBottomTab(
             LoginScreen(navController)
         }
         composable("quenMatKhauScreen") {
-            QuenMatKhauScreen(navController)
+            ForgotPasswordScreen(navController)
         }
         composable("nhapMaCodeScreen") {
-            NhapMaCodeScreen(navController)
+            InputOTPScreen(navController)
         }
         composable("chaoHoiScreen") {
-            ChaoHoiScreen(navController)
+            ChooseLanguagesScreen(navController)
         }
         composable("trinhDoScreen") {
-            TrinhDoScreen(navController)
+            SelectLevelScreen(navController)
         }
         composable("tanSuatScreen") {
-            TanSuatScreen(navController)
+            FrequencyScreen(navController)
         }
     }
 }
