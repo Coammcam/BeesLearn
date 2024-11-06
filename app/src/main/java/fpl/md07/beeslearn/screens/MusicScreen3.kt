@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,20 +35,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.Music3
+import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.music2List
 import fpl.md07.beeslearn.viewmodels.data.music3List
 
 @Composable
-fun MusicScreen3 () {
+fun MusicScreen3 (navController: NavController) {
     Column(
         modifier = Modifier
-            .padding(top = 60.dp, start = 20.dp, bottom = 20.dp, end = 20.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
+        Image(
+            painter = painterResource(R.drawable.back_left),
+            contentDescription = "Back",
+            modifier = Modifier
+                .padding(16.dp)
+                .size(30.dp)
+                .clickable { navController.popBackStack() }
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,11 +86,13 @@ fun MusicScreen3 () {
                 .fillMaxWidth()
                 .padding(top = 20.dp),
             fontWeight = FontWeight.Bold,
+            fontFamily = Nunito_Bold,
             textAlign = TextAlign.Center
         )
         Text(
             text = "Eminem",
             fontSize = 18.sp,
+            fontFamily = Nunito_Bold,
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
                 .fillMaxWidth()
@@ -100,11 +115,13 @@ fun MusicScreen3 () {
             Text(
                 "2:30",
                 fontSize = 16.sp,
+                fontFamily = Nunito_Bold,
                 color = colorResource(id = R.color.secondary_color)
             )
             Text(
                 "-2:30",
                 fontSize = 16.sp,
+                fontFamily = Nunito_Bold,
                 color = colorResource(id = R.color.secondary_color),
             )
         }
@@ -135,6 +152,7 @@ fun MusicScreen3 () {
             "Lyrics",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            fontFamily = Nunito_Bold,
             modifier = Modifier
                 .padding(top = 44.dp, start = 20.dp, end = 20.dp)
                 .fillMaxWidth(),
@@ -159,6 +177,7 @@ fun Music3Item (music3: Music3) {
         Text(
             text = music3.content,
             fontSize = 16.sp,
+            fontFamily = Nunito_Bold,
             color = colorResource(id = R.color.secondary_color),
         )
     }
@@ -167,5 +186,6 @@ fun Music3Item (music3: Music3) {
 @Preview (showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewMusicScreen3 () {
-    MusicScreen3()
+    var navController = rememberNavController()
+    MusicScreen3(navController)
 }

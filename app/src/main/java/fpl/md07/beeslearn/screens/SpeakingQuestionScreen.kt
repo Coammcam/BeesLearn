@@ -79,7 +79,6 @@ fun SpeakingQuestionContent() {
                         .clickable { /* Back action */ }
                 )
 
-
                 // Heart and coins row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

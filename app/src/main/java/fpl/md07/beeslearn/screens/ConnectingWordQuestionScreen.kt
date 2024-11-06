@@ -25,21 +25,21 @@ import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.connectingWordQuestions // Import fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class ConnectingWordQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ConnectingWordScreen()
-                }
-            }
-        }
-    }
-}
+//class ConnectingWordQuestionScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            BeesLearnTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    ConnectingWordScreen()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ConnectingWordScreen() {
@@ -62,11 +62,11 @@ fun ConnectingWordScreen() {
                 .padding(bottom = 16.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back",
+                painter = painterResource(R.drawable.back_left),
+                contentDescription = null,
                 modifier = Modifier
-                    .size(24.dp)
-                    .clickable { /* Back action */ }
+                    .size(30.dp)
+                    .clickable {}
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -203,7 +203,12 @@ fun ConnectingWordScreen() {
 }
 
 @Composable
-fun SelectableMatchingItem(text: String, isSelected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SelectableMatchingItem(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -228,10 +233,8 @@ fun SelectableMatchingItem(text: String, isSelected: Boolean, onClick: () -> Uni
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ConnectingWordPreview() {
-    BeesLearnTheme {
-        ConnectingWordScreen()
-    }
+    ConnectingWordScreen()
 }

@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
@@ -44,19 +46,19 @@ private val consonants = listOf(
     "ð" to "this", "ŋ" to "sing", "tʃ" to "cheese", "dʒ" to "judge"
 )
 
-class IPAScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                IPAExercise()
-            }
-        }
-    }
-}
+//class IPAScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            MaterialTheme {
+//                IPAExercise()
+//            }
+//        }
+//    }
+//}
 
 @Composable
-fun IPAExercise() {
+fun IPAExercise(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,11 +85,10 @@ fun SectionTitle(title: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Left horizontal line
-        Box(
-            modifier = Modifier
-                .height(1.dp)
-                .weight(1f)
-                .background(colorResource(id = R.color.secondary_color))
+        Box(modifier = Modifier
+            .height(1.dp)
+            .weight(1f)
+            .background(colorResource(id = R.color.secondary_color))
         )
 
         // Title text, using weight to fill available space
@@ -117,19 +118,19 @@ fun SectionTitle(title: String) {
 @Composable
 fun IPAGrid(symbols: List<Pair<String, String>>) {
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 800.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(symbols.size) { index ->
-                val (symbol, example) = symbols[index]
-                IPACard(symbol, example)
-            }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 800.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(symbols.size) { index ->
+            val (symbol, example) = symbols[index]
+            IPACard(symbol, example)
         }
+    }
 }
 
 @Composable
@@ -166,7 +167,6 @@ fun IPACard(symbol: String, example: String) {
 @Preview(showBackground = true)
 @Composable
 fun IPAScreenPreview() {
-    MaterialTheme {
-        IPAExercise()
-    }
+    var navController = rememberNavController()
+    IPAExercise(navController)
 }
