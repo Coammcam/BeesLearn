@@ -33,7 +33,7 @@ fun IconTopComponent() {
                 Image(
                     painter = painterResource(id = R.drawable.heart),
                     contentDescription = "Heart",
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
