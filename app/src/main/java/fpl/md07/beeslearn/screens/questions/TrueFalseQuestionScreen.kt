@@ -211,6 +211,6 @@ fun TrueFalseButton(
 @Composable
 fun TrueFalsePreview() {
     BeesLearnTheme {
-        TrueFalseQuestionScreen()
+        TrueFalseScreen()
     }
 }
