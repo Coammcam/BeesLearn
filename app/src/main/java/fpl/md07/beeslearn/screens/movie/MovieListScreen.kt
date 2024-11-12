@@ -36,27 +36,33 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Movie
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.movieList
 
 @Composable
 fun MovieListScreen(navController: NavController) {
-    Column(
+
+    Column (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            painter = painterResource(R.drawable.back_left),
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
-                .size(30.dp)
-                .clickable { navController.popBackStack()}
-        )
+        BackComponent(navController)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(top = 60.dp, start = 15.dp, end = 15.dp, bottom = 15.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
         Box(
             modifier = Modifier
                 .padding(16.dp, bottom = 10.dp, end = 16.dp)
@@ -66,7 +72,8 @@ fun MovieListScreen(navController: NavController) {
                 .align(Alignment.CenterHorizontally)
         ) {
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
+                    .padding(bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -106,8 +113,6 @@ fun MovieListScreen(navController: NavController) {
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.padding(8.dp),
-            contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -123,7 +128,6 @@ fun MovieItem(movie: Movie, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
             .background(Color.White, RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

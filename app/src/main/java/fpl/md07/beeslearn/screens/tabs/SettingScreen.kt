@@ -86,7 +86,7 @@ fun SettingScreen (navController: NavController) {
             Spacer(modifier = Modifier.height(25.dp))
 
             Button(
-                onClick = { /* Add your action here */ },
+                onClick = { navController.navigate("editProfile")},
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()

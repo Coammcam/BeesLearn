@@ -30,28 +30,33 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Music2
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.music2List
 
 @Composable
 fun MusicDetailScreen(navController: NavController) {
+
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        BackComponent(navController)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 20.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 70.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            painter = painterResource(R.drawable.back_left),
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(16.dp)
-                .size(30.dp)
-                .clickable { navController.popBackStack() }
-        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
