@@ -45,7 +45,6 @@ fun PodcastDetailScreen (navController: NavController) {
         BackComponent(navController)
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
