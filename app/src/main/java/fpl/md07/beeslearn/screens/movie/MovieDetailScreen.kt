@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,25 +34,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
 fun MovieDetailScreen (navController: NavController) {
+
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        BackComponent(navController)
+    }
+
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 60.dp),
         verticalArrangement = Arrangement.Top,
-//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(R.drawable.back_left),
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
-                .size(30.dp)
-                .clickable { navController.popBackStack()}
-        )
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,7 +176,7 @@ fun MovieDetailScreen (navController: NavController) {
     }
 }
 
-@Preview (showBackground = true, showSystemUi = true)
+@Preview (showSystemUi = true)
 @Composable
 fun PreviewMovieScreen2 () {
     var navController = rememberNavController()

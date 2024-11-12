@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Podcast
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.podcastList
@@ -50,13 +51,14 @@ fun PodcastListScreen(navController: NavController) {
         horizontalAlignment = Alignment.Start
     ) {
         // Back arrow
-        Image(
-            painter = painterResource(R.drawable.back_left),
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(16.dp)
-                .clickable { navController.popBackStack() }
-        )
+//        Image(
+//            painter = painterResource(R.drawable.back_left),
+//            contentDescription = "Back",
+//            modifier = Modifier
+//                .padding(16.dp)
+//                .clickable { navController.popBackStack() }
+//        )
+        BackComponent(navController)
 
         Box(
             modifier = Modifier

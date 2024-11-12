@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,25 +28,31 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 
 @Composable
 fun PodcastDetailScreen (navController: NavController) {
-    Column(
+    Column (
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            painter = painterResource(R.drawable.back_left),
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
-                .clickable { navController.popBackStack() }
-        )
+        BackComponent(navController)
+    }
 
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 70.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import android.widget.Toast
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -40,7 +41,7 @@ fun HomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 40.dp),
+            .padding(top = 15.dp, start = 15.dp, end = 15.dp, bottom = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconRowFirst(
@@ -210,16 +211,15 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
         )
 
         // Icon 2 (Calendar): Chuyển đổi giữa `calendar` và `calendarcn`
+
         Image(
             painter = painterResource(if (isCalendarPressed) R.drawable.calendar else R.drawable.calendarcn),
             contentDescription = "Icon 2",
             modifier = Modifier
                 .size(30.dp)
                 .clickable {
-                    isCalendarPressed =
-                        !isCalendarPressed // Chuyển đổi trạng thái khi nhấn vào icon
-                    isTranslatePressed =
-                        false // Đặt lại translate về trạng thái ban đầu khi nhấn icon này
+                    isCalendarPressed = !isCalendarPressed // Chuyển đổi trạng thái khi nhấn vào icon
+                    isTranslatePressed = false // Đặt lại translate về trạng thái ban đầu khi nhấn icon này
                     Toast
                         .makeText(context, "Icon Calendar Clicked", Toast.LENGTH_SHORT)
                         .show()  // Hiển thị Toast
@@ -242,6 +242,22 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
                         .makeText(context, "Icon Translate Clicked", Toast.LENGTH_SHORT)
                         .show()  // Hiển thị Toast
                     onIcon3Click()
+                }
+        )
+        // Icon 4 (User): Khi nhấn vào icon này, calendar và translate trở về trạng thái ban đầu
+        Image(
+            painter = painterResource(R.drawable.user),
+            contentDescription = "Icon 4",
+            modifier = Modifier
+                .size(40.dp)
+                .clickable {
+                    isCalendarPressed =
+                        false // Đặt lại calendar về trạng thái ban đầu khi nhấn icon này
+                    isTranslatePressed =
+                        false // Đặt lại translate về trạng thái ban đầu khi nhấn icon này
+                    Toast
+                        .makeText(context, "Icon 4 Clicked", Toast.LENGTH_SHORT)
+                        .show()  // Hiển thị Toast
                 }
         )
     }
@@ -475,7 +491,7 @@ fun FunctionButtonsGrid(navController: NavController) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.Center
         ) {
             ActionButton(navController = navController, item = listItems[0])
             ActionButton(navController = navController, item = listItems[1])
@@ -483,7 +499,7 @@ fun FunctionButtonsGrid(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.Center
         ) {
             ActionButton(navController = navController, item = listItems[2])
             ActionButton(navController = navController, item = listItems[3])
@@ -518,14 +534,14 @@ fun ActionButton(navController: NavController, item: ListItem) {
         modifier = Modifier
             .width(190.dp) // Tăng chiều rộng của Card
             .height(130.dp)
-            .padding(start = 10.dp)// Giữ nguyên chiều cao
+            .padding(start = 10.dp, end = 10.dp)// Giữ nguyên chiều cao
     ) {
         Card(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable { navController.navigate(item.funtion) },
             shape = RectangleShape, // Đặt góc vuông cho Card
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF192)), // Màu nền #FFF192
         ) {
             Column(

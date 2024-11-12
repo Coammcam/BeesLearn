@@ -54,6 +54,7 @@ import fpl.md07.beeslearn.screens.tabs.StatsScreen
 import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
+import fpl.md07.beeslearn.screens.tabs.EditProfile
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -175,6 +176,9 @@ fun NestedBottomTab(
         }
         composable("tanSuatScreen") {
             FrequencyScreen(navController)
+        }
+        composable("editProfile") {
+            EditProfile(navController)
         }
     }
 }
