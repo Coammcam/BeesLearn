@@ -42,7 +42,8 @@ import fpl.md07.beeslearn.viewmodels.data.podcastList
 
 @Composable
 fun PodcastListScreen(navController: NavController) {
-    Column(
+
+    Column (
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -50,16 +51,17 @@ fun PodcastListScreen(navController: NavController) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        // Back arrow
-//        Image(
-//            painter = painterResource(R.drawable.back_left),
-//            contentDescription = "Back",
-//            modifier = Modifier
-//                .padding(16.dp)
-//                .clickable { navController.popBackStack() }
-//        )
         BackComponent(navController)
+    }
 
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(start = 10.dp, end = 10.dp, top = 60.dp, bottom = 20.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
         Box(
             modifier = Modifier
                 .padding(16.dp, bottom = 10.dp)
@@ -137,7 +139,7 @@ fun PodcastListScreen(navController: NavController) {
         }
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(podcastList) { podcast ->
                 PodcastItem(podcast, navController)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,9 +42,13 @@ fun EditProfile(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var dateOfBirth by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 40.dp, vertical = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -53,7 +58,7 @@ fun EditProfile(navController: NavController) {
             BackComponent(navController)
             Text(
                 "Edit Profile",
-                fontSize = 15.sp,
+                fontSize = 18.sp,
                 fontFamily = NunitoBold,
                 color = colorResource(id = R.color.secondary_color),
                 modifier = Modifier.padding(end = 30.dp)
@@ -61,7 +66,12 @@ fun EditProfile(navController: NavController) {
             )
             Text("") // blank for SpaceBetween
         }
+    }
 
+    Column(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 40.dp, vertical = 70.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Spacer(modifier = Modifier.height(50.dp))
 
         Image(
