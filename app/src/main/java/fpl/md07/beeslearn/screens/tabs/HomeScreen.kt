@@ -46,7 +46,7 @@ fun HomeScreen(navController: NavController) {
     ) {
         IconRowFirst(
             onIcon1Click = {
-                // Không thay đổi trạng thái gì khi nhấn vào Icon EN
+
             },
             onIcon2Click = {
                 // Khi người dùng nhấn vào Icon 2, hiển thị lịch
@@ -66,9 +66,9 @@ fun HomeScreen(navController: NavController) {
 
         // Điều kiện để hiển thị hình ảnh, lịch hoặc giao diện dịch
         when {
-            showCalendar -> RealCalendarView() // Hiển thị lịch
-            showTranslationBox -> TranslationBox() // Hiển thị giao diện dịch
-            showImage -> BeeImage() // Hiển thị hình ảnh
+            showCalendar -> RealCalendarView()
+            showTranslationBox -> TranslationBox()
+            showImage -> BeeImage()
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -181,9 +181,9 @@ fun TranslationBox() {
 
 @Composable
 fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Click: () -> Unit) {
-    val context = LocalContext.current  // Lấy context từ Compose
-    var isCalendarPressed by remember { mutableStateOf(false) }  // Trạng thái theo dõi icon calendar đã nhấn hay chưa
-    var isTranslatePressed by remember { mutableStateOf(false) }  // Trạng thái theo dõi icon translate đã nhấn hay chưa
+    val context = LocalContext.current
+    var isCalendarPressed by remember { mutableStateOf(false) }
+    var isTranslatePressed by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -199,51 +199,47 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
-                    isCalendarPressed =
-                        false // Đặt lại calendar về trạng thái ban đầu khi nhấn icon này
-                    isTranslatePressed =
-                        false // Đặt lại translate về trạng thái ban đầu khi nhấn icon này
+                    isCalendarPressed = false
+                    isTranslatePressed = false
                     Toast
                         .makeText(context, "Icon 1 (EN) Clicked", Toast.LENGTH_SHORT)
-                        .show()  // Hiển thị Toast
+                        .show()
                     onIcon1Click()
                 }
         )
 
-        // Icon 2 (Calendar): Chuyển đổi giữa `calendar` và `calendarcn`
-
+        // Icon 2 (Calendar)
         Image(
             painter = painterResource(if (isCalendarPressed) R.drawable.calendar else R.drawable.calendarcn),
             contentDescription = "Icon 2",
             modifier = Modifier
                 .size(30.dp)
                 .clickable {
-                    isCalendarPressed = !isCalendarPressed // Chuyển đổi trạng thái khi nhấn vào icon
-                    isTranslatePressed = false // Đặt lại translate về trạng thái ban đầu khi nhấn icon này
-                    Toast
-                        .makeText(context, "Icon Calendar Clicked", Toast.LENGTH_SHORT)
-                        .show()  // Hiển thị Toast
-                    onIcon2Click()
+                    if (!isCalendarPressed) {
+                        isCalendarPressed = true // Chuyển sang chế độ hiển thị lịch
+                        isTranslatePressed = false // Đặt lại trạng thái của icon dịch
+                        Toast.makeText(context, "Icon Calendar Clicked", Toast.LENGTH_SHORT).show()
+                        onIcon2Click()
+                    }
                 }
         )
 
-        // Icon 3 (Translate): Chuyển đổi giữa `translate` và `translatecn`
+        // Icon 3 (Translate)
         Image(
-            painter = painterResource(if (isTranslatePressed) R.drawable.translate else R.drawable.translatecn),
+            painter = painterResource(if (isTranslatePressed) R.drawable.translate else R.drawable.translatecnn),
             contentDescription = "Icon 3",
             modifier = Modifier
                 .size(30.dp)
                 .clickable {
-                    isTranslatePressed =
-                        !isTranslatePressed // Chuyển đổi trạng thái khi nhấn vào icon
-                    isCalendarPressed =
-                        false // Đặt lại calendar về trạng thái ban đầu khi nhấn icon này
-                    Toast
-                        .makeText(context, "Icon Translate Clicked", Toast.LENGTH_SHORT)
-                        .show()  // Hiển thị Toast
-                    onIcon3Click()
+                    if (!isTranslatePressed) {
+                        isTranslatePressed = true // Chuyển sang chế độ hiển thị giao diện dịch
+                        isCalendarPressed = false // Đặt lại trạng thái của icon lịch
+                        Toast.makeText(context, "Icon Translate Clicked", Toast.LENGTH_SHORT).show()
+                        onIcon3Click()
+                    }
                 }
         )
+
         // Icon 4 (User): Khi nhấn vào icon này, calendar và translate trở về trạng thái ban đầu
         Image(
             painter = painterResource(R.drawable.user),
@@ -251,17 +247,14 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
-                    isCalendarPressed =
-                        false // Đặt lại calendar về trạng thái ban đầu khi nhấn icon này
-                    isTranslatePressed =
-                        false // Đặt lại translate về trạng thái ban đầu khi nhấn icon này
-                    Toast
-                        .makeText(context, "Icon 4 Clicked", Toast.LENGTH_SHORT)
-                        .show()  // Hiển thị Toast
+                    isCalendarPressed = false // Đặt lại trạng thái của icon lịch
+                    isTranslatePressed = false // Đặt lại trạng thái của icon dịch
+                    Toast.makeText(context, "Icon 4 Clicked", Toast.LENGTH_SHORT).show()
                 }
         )
     }
 }
+
 
 @Composable
 fun RealCalendarView() {
@@ -532,20 +525,23 @@ val listItems = listOf(
 fun ActionButton(navController: NavController, item: ListItem) {
     Box(
         modifier = Modifier
-            .width(190.dp) // Tăng chiều rộng của Card
+            .width(184.dp)
             .height(130.dp)
-            .padding(start = 10.dp, end = 10.dp)// Giữ nguyên chiều cao
+            .padding(7.dp)
+
     ) {
         Card(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable { navController.navigate(item.funtion) },
             shape = RectangleShape, // Đặt góc vuông cho Card
-            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF192)), // Màu nền #FFF192
         ) {
             Column(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 7.dp),
                 verticalArrangement = Arrangement.SpaceBetween // Sắp xếp icon và chữ cách đều nhau
             ) {
                 // Văn bản căn lên trên cùng và lề trái
@@ -558,30 +554,27 @@ fun ActionButton(navController: NavController, item: ListItem) {
                         color = Color(0xFF000000)
                     ),
                     modifier = Modifier.align(Alignment.Start)
+                        .padding(top = 8.dp)
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
 
+
                 // Icon được căn giữa nhưng dịch sang trái
-                Box(
+
+                Image(
+                    painterResource(id = item.iconResIdgs),
+                    contentDescription = null,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(end = 24.dp) // Thêm padding từ phía phải để dịch icon sang trái
-                ) {
-                    Image(
-                        painterResource(id = item.iconResIdgs),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(80.dp)
-                            .align(Alignment.CenterEnd), // Đặt icon căn từ bên phải và dịch sang trái
-                        contentScale = ContentScale.Fit
-                    )
-                }
+                        .size(100.dp)
+                        .align(Alignment.End)
+                    , // Đặt icon căn từ bên phải và dịch sang trái
+                    contentScale = ContentScale.Fit
+                )
             }
         }
     }
 }
+
 
 
 @Preview(showBackground = true, showSystemUi = true)
