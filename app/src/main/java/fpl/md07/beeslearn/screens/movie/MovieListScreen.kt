@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,12 +40,17 @@ import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Movie
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import fpl.md07.beeslearn.viewmodels.data.movieList
-
+import fpl.md07.beeslearn.viewmodels.MovieViewModel
+//import fpl.md07.beeslearn.viewmodels.data.movieList
 @Composable
-fun MovieListScreen(navController: NavController) {
+fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel) {
 
-    Column (
+    // Directly access the properties from ViewModel
+    val movieList = movieViewModel.movieList.value
+    val isLoading = movieViewModel.isLoading.value
+    val errorMessage = movieViewModel.errorMessage.value
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -83,7 +89,7 @@ fun MovieListScreen(navController: NavController) {
                         .weight(1f)
                 ) {
                     Text(
-                        text = "Podcast",
+                        text = "Movie",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF591429), // Màu nâu chữ
@@ -92,7 +98,7 @@ fun MovieListScreen(navController: NavController) {
                         )
                     )
                     Text(
-                        text = "excellent way for\nstudents to practice\nself-study",
+                        text = "Learning English\nby watching moview",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color(0xFF591429),
                             fontSize = 14.sp,
@@ -111,13 +117,33 @@ fun MovieListScreen(navController: NavController) {
                 )
             }
         }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(movieList.size) { index ->
-                MovieItem(movie = movieList[index], navController)
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else if (errorMessage.isNotEmpty()) {
+            // Show error message if there was an issue loading the movies
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = errorMessage, color = Color.Red)
+            }
+        } else {
+//            Text(text = "Data loaded successfully!", color = Color.Green)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(movieList.size) { index ->
+                    MovieItem(movie = movieList[index], navController)
+                }
             }
         }
     }
@@ -131,30 +157,36 @@ fun MovieItem(movie: Movie, navController: NavController) {
             .background(Color.White, RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            modifier = Modifier
-                .width(200.dp)
-                .height(250.dp)
-                .clip(shape = RoundedCornerShape(8.dp))
-                .clickable {navController.navigate("movieScreen2") },
-            painter = painterResource(id = movie.imageResMovie),
-            contentDescription = null,
-            contentScale = ContentScale.Crop // Thay đổi sang Crop nếu bạn muốn cắt ảnh
-        )
+//        Image(
+//            modifier = Modifier
+//                .width(200.dp)
+//                .height(250.dp)
+//                .clip(shape = RoundedCornerShape(8.dp))
+//                .clickable { navController.navigate("movieScreen2") },
+//            painter = painterResource(id = movie.imageResMovie),
+//            contentDescription = null,
+//            contentScale = ContentScale.Crop
+//        )
         Text(
-            text = movie.titleMovie,
+            text = movie.title,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             fontFamily = Nunito_Bold,
-            modifier = Modifier
-                .padding(8.dp),
+            modifier = Modifier.padding(8.dp),
         )
     }
 }
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreViewMovieScreen() {
-    var navController = rememberNavController()
-    MovieListScreen(navController)
+    // Tạo một navController giả cho preview
+    val navController = rememberNavController()
+
+    // Tạo một MovieViewModel giả (mock) cho preview
+    val movieViewModel = MovieViewModel()
+
+    // Gọi MovieListScreen với cả navController và movieViewModel
+    MovieListScreen(navController = navController, movieViewModel = movieViewModel)
 }
+
+
