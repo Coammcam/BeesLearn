@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
 object HttpRequest {
-    private const val URL = "http://167.71.173.13:9000"
+    private const val URL = "http://beelearns.duckdns.org:9000"
     fun getInstance(): ApiService {
         return Retrofit
             .Builder()
