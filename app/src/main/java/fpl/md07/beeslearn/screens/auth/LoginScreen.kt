@@ -19,6 +19,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,18 +34,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomPasswordField
 import fpl.md07.beeslearn.components.CustomTextField
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel = viewModel()
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val loginMessage by viewModel.loginMessage.collectAsState()
 
     Column(
         modifier = Modifier
@@ -88,26 +97,38 @@ fun LoginScreen(navController: NavController) {
                 color = Color(0xFF777777),
                 fontFamily = Nunito_Bold,
                 fontSize = 13.sp,
-                modifier = Modifier.clickable { navController.navigate("quenMatKhauScreen")})
+                modifier = Modifier.clickable { navController.navigate("quenMatKhauScreen") })
         }
-
-        val context = LocalContext.current
 
         Button(
             modifier = Modifier
                 .padding(top = 50.dp)
                 .fillMaxWidth()
                 .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
-            onClick = { navController.navigate("HomeScreen")
-                Toast.makeText(context, "Chúc Bạn Học Tập Vui Vẻ !", Toast.LENGTH_SHORT).show()},
+            onClick = {
+                if (email.isNotBlank() && password.isNotBlank()) {
+                    viewModel.login(email, password)
+                } else {
+                    Toast.makeText(context, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show()
+                }
+            },
             colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(
-                text = "ĐĂNG NHẬP", color = Color.White, fontFamily = Nunito_Bold
-            )
+            Text(text = "ĐĂNG NHẬP", color = Color.White)
         }
 
+        // Hiển thị thông báo nếu có
+        LaunchedEffect(loginMessage) {
+            loginMessage?.let { message ->
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                if (message == "Đăng nhập thành công!") {
+                    navController.navigate("HomeScreen") {
+                        popUpTo("LoginScreen") { inclusive = true }
+                    }
+                }
+            }
+        }
 
         Row(modifier = Modifier.padding(top = 50.dp)) {
             Text(
@@ -120,7 +141,7 @@ fun LoginScreen(navController: NavController) {
                 fontFamily = Nunito_Bold,
                 color = Color(0xFFF8A724),
                 modifier = Modifier
-                    .clickable {navController.navigate("signUpScreen")}
+                    .clickable { navController.navigate("signUpScreen") }
             )
         }
     }
