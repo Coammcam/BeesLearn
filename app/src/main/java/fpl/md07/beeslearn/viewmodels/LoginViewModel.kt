@@ -56,7 +56,7 @@ class LoginViewModel : ViewModel() {
                 val response =
                     HttpRequest.getInstance().Register(RegisterRequest(username, email, password))
                 if (response.isSuccessful) {
-                    _registerMessage.value = "Đăng ký thành công!, Chúc bạn học tập vui vẻ!"
+                    _registerMessage.value = "Đăng ký thành công!"
                 } else {
                     if (response.code() == 409) {
                         _registerMessage.value = "Email này đã tồn tại!"

@@ -145,7 +145,7 @@ fun SignUpScreen(
         LaunchedEffect(registerMessage) {
             registerMessage?.let { message ->
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                if (message == "Đăng ký thành công! Chúc bạn học tập vui vẻ!") {
+                if (message == "Đăng ký thành công!") {
                     navController.navigate("chaoHoiScreen") {
                         popUpTo("SignUpScreen") { inclusive = true }
                     }
