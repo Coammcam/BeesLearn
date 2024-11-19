@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,33 +17,52 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomPasswordField
 import fpl.md07.beeslearn.components.CustomTextField
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.LoginViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(
+    navController: NavController,
+    viewModel: LoginViewModel = viewModel()
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+
+    // Lấy trạng thái thông báo từ ViewModel
+    val registerMessage by viewModel.registerMessage.collectAsState()
+
 
     Column(
         modifier = Modifier
@@ -100,7 +120,19 @@ fun SignUpScreen(navController: NavController) {
                 .padding(top = 50.dp)
                 .fillMaxWidth()
                 .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
-            onClick = {navController.navigate("chaoHoiScreen")},
+            onClick = {
+                when {
+                    name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
+                        Toast.makeText(context, "Vui lòng nhập đầy đủ dữ liệu!", Toast.LENGTH_SHORT).show()
+                    }
+                    password != confirmPassword -> {
+                        Toast.makeText(context, "Mật khẩu không khớp!", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        viewModel.register(email, password, name)
+                    }
+                }
+            },
             colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -108,6 +140,33 @@ fun SignUpScreen(navController: NavController) {
                 text = "ĐĂNG KÝ", color = Color.White, fontFamily = Nunito_Bold
             )
         }
+
+        // Lắng nghe thông báo từ ViewModel
+        LaunchedEffect(registerMessage) {
+            registerMessage?.let { message ->
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                if (message == "Đăng ký thành công! Chúc bạn học tập vui vẻ!") {
+                    navController.navigate("chaoHoiScreen") {
+                        popUpTo("SignUpScreen") { inclusive = true }
+                    }
+                }
+            }
+        }
+
+//        LaunchedEffect(registerResponse) {
+//            if (registerResponse == null) {
+//                Toast.makeText(context, "Không thể kết nối tới máy chủ. Vui lòng thử lại sau.", Toast.LENGTH_LONG).show()
+//            } else {
+//                if (registerResponse!!.isSuccessful) {
+//                    Toast.makeText(context, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
+//                    navController.navigate("chaoHoiScreen")
+//                } else {
+//                    val errorMessage =
+//                        registerResponse!!.errorBody()?.string() ?: "Đăng ký thất bại."
+//                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
 
         Row(modifier = Modifier.padding(top = 50.dp)) {
             Text(
@@ -120,7 +179,7 @@ fun SignUpScreen(navController: NavController) {
                 fontFamily = Nunito_Bold,
                 color = Color(0xFFF8A724),
                 modifier = Modifier
-                    .clickable {navController.popBackStack()}
+                    .clickable { navController.popBackStack() }
             )
         }
     }

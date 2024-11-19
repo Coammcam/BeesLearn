@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.music
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -42,8 +44,10 @@ import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.musicList
 
+
 @Composable
 fun MusicListScreen(navController: NavController) {
+
 
     Column (
         modifier = Modifier
@@ -55,6 +59,7 @@ fun MusicListScreen(navController: NavController) {
     ) {
         BackComponent(navController)
     }
+
 
     Column(
         modifier = Modifier
@@ -102,6 +107,7 @@ fun MusicListScreen(navController: NavController) {
                     )
                 }
 
+
                 Image(
                     painter = painterResource(R.drawable.bee_wink),
                     contentDescription = "Bee with headphones",
@@ -120,6 +126,7 @@ fun MusicListScreen(navController: NavController) {
         }
     }
 }
+
 
 @Composable
 fun MusicItem (music: Music, navController: NavController) {
@@ -142,6 +149,7 @@ fun MusicItem (music: Music, navController: NavController) {
         )
         Spacer(modifier = Modifier.width(16.dp))
 
+
         Column(
             verticalArrangement = Arrangement.Center
         ) {
@@ -156,6 +164,7 @@ fun MusicItem (music: Music, navController: NavController) {
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
