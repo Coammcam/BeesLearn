@@ -28,10 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
@@ -55,6 +57,7 @@ import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
+import fpl.md07.beeslearn.viewmodels.MovieViewModel
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -91,13 +94,14 @@ val tabItems = listOf(
 )
 
 @Composable
-fun BottomNavBar(navController: NavController) {
+fun BottomNavBar(navController: NavController, movieViewModel: MovieViewModel) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(modifier = Modifier.fillMaxSize(),
             bottomBar = { TabView(tabItems, navController = navController) }) {
             Box(modifier = Modifier.padding(it)) {
                 NestedBottomTab(
                     navController = navController as NavHostController,
+                    movieViewModel = movieViewModel
                 )
             }
         }
@@ -108,6 +112,7 @@ fun BottomNavBar(navController: NavController) {
 @Composable
 fun NestedBottomTab(
     navController: NavHostController,
+    movieViewModel: MovieViewModel,
 ) {
     NavHost(
         navController, "welcomeScreen"
@@ -133,14 +138,34 @@ fun NestedBottomTab(
             PodcastListScreen(navController)
         }
         composable("movieScreen") {
-            MovieListScreen(navController)
+            MovieListScreen(navController = navController, movieViewModel = movieViewModel)
+
         }
         composable("podcastScreen2") {
             PodcastDetailScreen(navController)
         }
-        composable("movieScreen2") {
-            MovieDetailScreen(navController)
+        composable(
+            "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}",
+            arguments = listOf(
+                navArgument("title") { type = NavType.StringType },
+                navArgument("duration") { type = NavType.StringType },
+                navArgument("genre") { type = NavType.StringType },
+                navArgument("year") { type = NavType.StringType },
+                navArgument("rating") { type = NavType.StringType },
+                navArgument("description") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            MovieDetailScreen(
+                navController = navController,
+                title = backStackEntry.arguments?.getString("title") ?: "",
+                duration = backStackEntry.arguments?.getString("duration") ?: "",
+                genre = backStackEntry.arguments?.getString("genre") ?: "",
+                year = backStackEntry.arguments?.getString("year") ?: "",
+                rating = backStackEntry.arguments?.getString("rating") ?: "",
+                description = backStackEntry.arguments?.getString("description") ?: ""
+            )
         }
+
         composable("musicScreen") {
             MusicListScreen(navController)
         }
@@ -260,6 +285,12 @@ fun TabBarBadgeView(count: Int? = null) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewMusicScreen() {
-    var navController = rememberNavController()
-    BottomNavBar(navController)
+    // Tạo navController giả cho Preview
+    val navController = rememberNavController()
+
+    // Tạo movieViewModel giả
+    val movieViewModel = MovieViewModel()
+
+    // Gọi MovieListScreen với cả navController và movieViewModel
+    MovieListScreen(navController = navController, movieViewModel = movieViewModel)
 }

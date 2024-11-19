@@ -38,7 +38,14 @@ import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun MovieDetailScreen (navController: NavController) {
+fun MovieDetailScreen (
+    navController: NavController,
+    title: String,
+    duration: String,
+    genre: String,
+    year: String,
+    rating: String,
+    description: String ) {
 
     Column (
         modifier = Modifier
@@ -75,7 +82,7 @@ fun MovieDetailScreen (navController: NavController) {
             )
         }
         Text(
-            text = "Lion King",
+            text = title,
             fontSize = 35.sp,
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
@@ -86,7 +93,7 @@ fun MovieDetailScreen (navController: NavController) {
             textAlign = TextAlign.Center
         )
         Text(
-            text = "1994 - Adventure, Drama - 1h 58m",
+            text = "$year - $genre - $duration - $rating",  // Hiển thị năm phát hành
             fontSize = 18.sp,
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
@@ -164,7 +171,7 @@ fun MovieDetailScreen (navController: NavController) {
             }
         }
         Text(
-            text = "After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.",
+            text = description,
             fontSize = 18.sp,
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
@@ -179,6 +186,14 @@ fun MovieDetailScreen (navController: NavController) {
 @Preview (showSystemUi = true)
 @Composable
 fun PreviewMovieScreen2 () {
-    var navController = rememberNavController()
-    MovieDetailScreen(navController)
+    val navController = rememberNavController() // Khởi tạo navController giả
+    MovieDetailScreen(
+        navController = navController,
+        title = "The Dark Knight",
+        duration = "2h 32m",
+        genre = "Action, Drama",
+        year = "2008",
+        rating = "9.0",
+        description = "In Gotham City, the Joker emerges from his mysterious past to wreak havoc and chaos on the people of Gotham."
+    )
 }
