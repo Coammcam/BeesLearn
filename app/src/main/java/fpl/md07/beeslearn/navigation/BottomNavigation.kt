@@ -28,10 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
@@ -142,9 +144,28 @@ fun NestedBottomTab(
         composable("podcastScreen2") {
             PodcastDetailScreen(navController)
         }
-        composable("movieScreen2") {
-            MovieDetailScreen(navController)
+        composable(
+            "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}",
+            arguments = listOf(
+                navArgument("title") { type = NavType.StringType },
+                navArgument("duration") { type = NavType.StringType },
+                navArgument("genre") { type = NavType.StringType },
+                navArgument("year") { type = NavType.StringType },
+                navArgument("rating") { type = NavType.StringType },
+                navArgument("description") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            MovieDetailScreen(
+                navController = navController,
+                title = backStackEntry.arguments?.getString("title") ?: "",
+                duration = backStackEntry.arguments?.getString("duration") ?: "",
+                genre = backStackEntry.arguments?.getString("genre") ?: "",
+                year = backStackEntry.arguments?.getString("year") ?: "",
+                rating = backStackEntry.arguments?.getString("rating") ?: "",
+                description = backStackEntry.arguments?.getString("description") ?: ""
+            )
         }
+
         composable("musicScreen") {
             MusicListScreen(navController)
         }

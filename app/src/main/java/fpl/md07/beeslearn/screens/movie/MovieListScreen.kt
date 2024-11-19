@@ -34,7 +34,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
@@ -157,16 +159,17 @@ fun MovieItem(movie: Movie, navController: NavController) {
             .background(Color.White, RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        Image(
-//            modifier = Modifier
-//                .width(200.dp)
-//                .height(250.dp)
-//                .clip(shape = RoundedCornerShape(8.dp))
-//                .clickable { navController.navigate("movieScreen2") },
+        Image(
+            modifier = Modifier
+                .width(200.dp)
+                .height(250.dp)
+                .clip(shape = RoundedCornerShape(8.dp))
+                .clickable { navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}") },
 //            painter = painterResource(id = movie.imageResMovie),
-//            contentDescription = null,
-//            contentScale = ContentScale.Crop
-//        )
+            painter = painterResource(id = R.drawable.posterphim1),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
         Text(
             text = movie.title,
             fontWeight = FontWeight.Bold,
@@ -188,5 +191,4 @@ fun PreViewMovieScreen() {
     // Gọi MovieListScreen với cả navController và movieViewModel
     MovieListScreen(navController = navController, movieViewModel = movieViewModel)
 }
-
 
