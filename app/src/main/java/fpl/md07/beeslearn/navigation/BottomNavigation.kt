@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -56,6 +57,9 @@ import fpl.md07.beeslearn.screens.tabs.StatsScreen
 import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
+import fpl.md07.beeslearn.screens.questions.ArrangeSentenceScreen
+import fpl.md07.beeslearn.screens.questions.MultipleChoiceScreen
+import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
 
@@ -114,6 +118,7 @@ fun NestedBottomTab(
     navController: NavHostController,
     movieViewModel: MovieViewModel,
 ) {
+
     NavHost(
         navController, "welcomeScreen"
 
@@ -139,11 +144,15 @@ fun NestedBottomTab(
         }
         composable("movieScreen") {
             MovieListScreen(navController = navController, movieViewModel = movieViewModel)
+        }
+        composable(
+            route = "podcastDetail/{podcastId}",
+            arguments = listOf(navArgument("podcastId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val podcastId = backStackEntry.arguments?.getInt("podcastId")
+            PodcastDetailScreen(navController, podcastId)
+        }
 
-        }
-        composable("podcastScreen2") {
-            PodcastDetailScreen(navController)
-        }
         composable(
             "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}",
             arguments = listOf(
@@ -204,6 +213,16 @@ fun NestedBottomTab(
         }
         composable("editProfile") {
             EditProfile(navController)
+        }
+
+        // question list
+        composable("questionList") {
+            NavHost(
+                navController = navController,
+                startDestination = "multipleChoice"
+            ) {
+//                addQuestionNavGraph(navController)
+            }
         }
     }
 }
