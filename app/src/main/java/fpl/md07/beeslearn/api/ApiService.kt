@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.api
 
 import fpl.md07.beeslearn.models.Movie
+import fpl.md07.beeslearn.models.Podcast
 import fpl.md07.beeslearn.requests.LoginRequest
 import fpl.md07.beeslearn.requests.RegisterRequest
 import fpl.md07.beeslearn.models.UserModel
@@ -24,5 +25,10 @@ interface ApiService {
 
     @GET("/movies")
     suspend fun getMovies(): Response<List<Movie>>
+
+    @GET("/podcast")
+    suspend fun getPodcasts(): Response<List<Podcast>>
+
+
 
 }

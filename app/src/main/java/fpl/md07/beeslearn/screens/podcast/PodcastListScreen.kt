@@ -1,5 +1,9 @@
 package fpl.md07.beeslearn.screens.podcast
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,10 +21,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,18 +39,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
+import fpl.md07.beeslearn.main.MainScreen
 import fpl.md07.beeslearn.models.Podcast
+import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import fpl.md07.beeslearn.viewmodels.data.podcastList
+import fpl.md07.beeslearn.viewmodels.MovieViewModel
+import fpl.md07.beeslearn.viewmodels.PodcastViewModel
 
 @Composable
-fun PodcastListScreen(navController: NavController) {
+fun PodcastListScreen(
+    navController: NavController,
+    podcastViewModel: PodcastViewModel = viewModel()
+) {
+    val podcasts by podcastViewModel.podcasts
+    val loading by podcastViewModel.loading
+    val error by podcastViewModel.error
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -137,12 +155,31 @@ fun PodcastListScreen(navController: NavController) {
                     .size(28.dp)
             )
         }
+        // Podcast List
+        when {
+            loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            items(podcastList) { podcast ->
-                PodcastItem(podcast, navController)
+            error != null -> {
+                Text(
+                    text = "Error: $error",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+
+            else -> {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    items(podcasts) { podcast ->
+                        PodcastItem(podcast, navController)
+                    }
+                }
             }
         }
     }
@@ -150,16 +187,20 @@ fun PodcastListScreen(navController: NavController) {
 
 @Composable
 fun PodcastItem(podcast: Podcast, navController: NavController) {
+    val podcastId = podcast.id
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable {navController.navigate("podcastScreen2")},
+            .clickable {
+                navController.navigate("podcastDetail/$podcastId")
+            },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(podcast.imageRes),
+        // Use Coil for loading images from URLs
+        AsyncImage(
+            model = podcast.imageRes,
             contentDescription = null,
             modifier = Modifier
                 .size(80.dp)
@@ -192,7 +233,7 @@ fun PodcastItem(podcast: Podcast, navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = podcast.view + " view",
+                    text = "${podcast.view} view",
                     fontWeight = FontWeight.W300,
                     fontFamily = Nunito_Bold,
                     fontSize = 10.sp
