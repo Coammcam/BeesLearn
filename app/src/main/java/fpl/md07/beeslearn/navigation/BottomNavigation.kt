@@ -114,6 +114,7 @@ fun NestedBottomTab(
     navController: NavHostController,
     movieViewModel: MovieViewModel,
 ) {
+
     NavHost(
         navController, "welcomeScreen"
 
@@ -141,9 +142,14 @@ fun NestedBottomTab(
             MovieListScreen(navController = navController, movieViewModel = movieViewModel)
 
         }
-        composable("podcastScreen2") {
-            PodcastDetailScreen(navController)
+        composable(
+            route = "podcastDetail/{podcastId}",
+            arguments = listOf(navArgument("podcastId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val podcastId = backStackEntry.arguments?.getInt("podcastId")
+            PodcastDetailScreen(navController, podcastId)
         }
+
         composable(
             "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}",
             arguments = listOf(
