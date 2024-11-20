@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -57,6 +58,9 @@ import fpl.md07.beeslearn.screens.tabs.StatsScreen
 import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
+import fpl.md07.beeslearn.screens.questions.ArrangeSentenceScreen
+import fpl.md07.beeslearn.screens.questions.MultipleChoiceScreen
+import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
 
@@ -141,7 +145,6 @@ fun NestedBottomTab(
         }
         composable("movieScreen") {
             MovieListScreen(navController = navController, movieViewModel = movieViewModel)
-
         }
         composable(
             route = "podcastDetail/{podcastId}",
@@ -212,6 +215,16 @@ fun NestedBottomTab(
         }
         composable("editProfile") {
             EditProfile(navController)
+        }
+
+        // question list
+        composable("questionList") {
+            NavHost(
+                navController = navController,
+                startDestination = "multipleChoice"
+            ) {
+//                addQuestionNavGraph(navController)
+            }
         }
     }
 }

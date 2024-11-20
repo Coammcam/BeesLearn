@@ -1,8 +1,5 @@
 package fpl.md07.beeslearn.screens.questions
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,29 +16,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
-import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.multipleChoiceQuestions // Import the fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class MultipleChoiceQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MultipleChoiceScreen()
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun MultipleChoiceScreen() {
+fun MultipleChoiceScreen(navController: NavController) {
     var selectedAnswer by remember { mutableStateOf("") }
     val currentQuestion = multipleChoiceQuestions[0]
 
@@ -225,7 +207,6 @@ fun AnswerButton(
 @Preview(showBackground = true)
 @Composable
 fun MultipleChoicePreview() {
-    BeesLearnTheme {
-        MultipleChoiceQuestionScreen()
-    }
+    val navController = rememberNavController()
+    MultipleChoiceScreen(navController)
 }

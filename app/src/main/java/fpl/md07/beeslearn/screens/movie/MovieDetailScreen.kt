@@ -38,16 +38,17 @@ import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun MovieDetailScreen (
+fun MovieDetailScreen(
     navController: NavController,
     title: String,
     duration: String,
     genre: String,
     year: String,
     rating: String,
-    description: String ) {
+    description: String
+) {
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -87,55 +88,47 @@ fun MovieDetailScreen (
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp),
+                .padding(top = 10.dp),
             fontWeight = FontWeight.Bold,
             fontFamily = Nunito_Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            lineHeight = 40.sp
         )
-        Text(
-            text = "$year - $genre - $duration - $rating",  // Hiển thị năm phát hành
-            fontSize = 18.sp,
-            color = colorResource(id = R.color.secondary_color),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            fontWeight = FontWeight.Bold,
-            fontFamily = Nunito_Bold,
-            textAlign = TextAlign.Center
-        )
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 40.dp, end = 40.dp, top = 10.dp)
-                .align(Alignment.CenterHorizontally),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.star),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.star),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.star),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.star),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.star_dis),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-        }
+
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(start = 40.dp, end = 40.dp, top = 10.dp)
+//                .align(Alignment.CenterHorizontally),
+//            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+//        )
+//        {
+//            Image(
+//                painter = painterResource(R.drawable.star),
+//                contentDescription = null,
+//                modifier = Modifier.size(30.dp)
+//            )
+//            Image(
+//                painter = painterResource(R.drawable.star),
+//                contentDescription = null,
+//                modifier = Modifier.size(30.dp)
+//            )
+//            Image(
+//                painter = painterResource(R.drawable.star),
+//                contentDescription = null,
+//                modifier = Modifier.size(30.dp)
+//            )
+//            Image(
+//                painter = painterResource(R.drawable.star),
+//                contentDescription = null,
+//                modifier = Modifier.size(30.dp)
+//            )
+//            Image(
+//                painter = painterResource(R.drawable.star_dis),
+//                contentDescription = null,
+//                modifier = Modifier.size(30.dp)
+//            )
+//        }
         Box(
             modifier = Modifier
                 .fillMaxWidth() // Chiếm toàn bộ màn hình
@@ -169,23 +162,113 @@ fun MovieDetailScreen (
                     fontWeight = FontWeight.Bold
                 )
             }
+
         }
-        Text(
-            text = description,
-            fontSize = 18.sp,
-            color = colorResource(id = R.color.secondary_color),
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, start = 40.dp, end = 40.dp),
-            textAlign = TextAlign.Center
-        )
+                .padding(top = 10.dp, start = 15.dp, end = 15.dp),  // Thêm padding phía trên và dưới
+            horizontalAlignment = Alignment.Start,  // Căn lề trái cho các phần tử
+            verticalArrangement = Arrangement.spacedBy(2.dp) // Giảm khoảng cách giữa các dòng
+        ) {
+            // Year
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Năm phát hành: ",
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary2_color),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Nunito_Bold,
+                )
+                Text(
+                    text = year,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary_color),
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Nunito_Bold,
+                )
+            }
+
+            // Genre
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Thể loại: ",
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary2_color),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Nunito_Bold,
+                )
+                Text(
+                    text = genre,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary_color),
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Nunito_Bold,
+                )
+            }
+
+            // Duration
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Thời gian: ",
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary2_color),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Nunito_Bold,
+                )
+                Text(
+                    text = duration,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary_color),
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Nunito_Bold,
+                )
+            }
+
+            // Rating
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Đánh giá: ",
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary2_color),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Nunito_Bold,
+                )
+                Text(
+                    text = rating,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary_color),
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Nunito_Bold,
+                )
+            }
+
+            // Description
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Mô tả: ",
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary2_color),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Nunito_Bold,
+                )
+                Text(
+                    text = description,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.secondary_color),
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Nunito_Bold,
+                )
+            }
+        }
 
     }
 }
 
-@Preview (showSystemUi = true)
+@Preview(showSystemUi = true)
 @Composable
-fun PreviewMovieScreen2 () {
+fun PreviewMovieScreen2() {
     val navController = rememberNavController() // Khởi tạo navController giả
     MovieDetailScreen(
         navController = navController,
