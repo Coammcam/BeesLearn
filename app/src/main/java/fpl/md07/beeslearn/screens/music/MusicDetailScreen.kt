@@ -125,7 +125,7 @@ fun Music2Item(music: Music, navController: NavController) {
             .padding(start = 30.dp, top = 10.dp)
             .clickable {
                 navController.navigate(
-                    "musicScreen3/${music.duration}/${music.title}/${music.image_url}/${music.description}/${music.link_on_youtube}"
+                    "musicScreen3"
                 )
             },
         horizontalArrangement = Arrangement.Start,
