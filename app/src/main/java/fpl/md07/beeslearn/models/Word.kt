@@ -1,7 +1,7 @@
 package fpl.md07.beeslearn.models
 
 data class Word(
-    val word: String,
-    val meaning: String,
-    val topic: String
+    val english_word: String,
+    val vietnamese_meaning: String,
+//    val topic: String
 )

@@ -11,6 +11,7 @@
     <!--custom color-->
     <color name="primary_color">#FFF192</color>
     <color name="secondary_color">#591429</color>
+    <color name="secondary2_color">#880000</color>
     <color name="third_color">#999999</color>
     <color name="fourth_color">#FFF8CC</color>
     <color name="outerColor_hexagon">#D3D3D3</color>

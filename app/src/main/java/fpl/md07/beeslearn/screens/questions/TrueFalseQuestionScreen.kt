@@ -1,8 +1,5 @@
 package fpl.md07.beeslearn.screens.questions
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,29 +16,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.data.trueFalseQuestions // Import the fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class TrueFalseQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    TrueFalseScreen()
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun TrueFalseScreen() {
+fun TrueFalseScreen(navController: NavController) {
     var currentQuestionIndex by remember { mutableStateOf(0) }
 
     val currentQuestion = trueFalseQuestions[currentQuestionIndex]
@@ -211,6 +194,7 @@ fun TrueFalseButton(
 @Composable
 fun TrueFalsePreview() {
     BeesLearnTheme {
-        TrueFalseScreen()
+        val navController = rememberNavController()
+        TrueFalseScreen(navController)
     }
 }
