@@ -125,6 +125,7 @@ fun Music2Item(music: Music, navController: NavController) {
             .padding(start = 30.dp, top = 10.dp)
             .clickable {
                 navController.navigate(
+                    /////
                     "musicScreen3"
                 )
             },
