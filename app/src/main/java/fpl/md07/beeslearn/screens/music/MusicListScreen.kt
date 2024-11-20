@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Music
+import fpl.md07.beeslearn.models.Music1
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.musicList
 
@@ -129,7 +130,7 @@ fun MusicListScreen(navController: NavController) {
 
 
 @Composable
-fun MusicItem (music: Music, navController: NavController) {
+fun MusicItem (music1: Music1, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -139,7 +140,7 @@ fun MusicItem (music: Music, navController: NavController) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(music.imageRes),
+            painter = painterResource(music1.imageRes),
             contentDescription = null,
             modifier = Modifier
                 .width(172.dp)
@@ -154,7 +155,7 @@ fun MusicItem (music: Music, navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = music.title,
+                text = music1.title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 maxLines = Int.MAX_VALUE,

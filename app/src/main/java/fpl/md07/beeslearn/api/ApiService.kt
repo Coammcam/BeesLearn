@@ -2,6 +2,7 @@ package fpl.md07.beeslearn.api
 
 import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.models.Movie
+import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
 import fpl.md07.beeslearn.models.Podcast
 import fpl.md07.beeslearn.requests.LoginRequest
@@ -49,6 +50,8 @@ interface ApiService {
     @GET("/podcast")
     suspend fun getPodcasts(): Response<List<Podcast>>
 
+    @GET("/music")
+    suspend fun getMusicList(): Response<List<Music>>
 
 
 }

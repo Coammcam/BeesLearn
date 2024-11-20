@@ -37,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
@@ -182,8 +183,9 @@ fun NestedBottomTab(
             MusicDetailScreen(navController)
         }
         composable("musicScreen3") {
-            MusicPlayerScreen (navController)
+            MusicPlayerScreen(navController = navController)
         }
+
         composable("practiceOneScreen") {
             LessonScreen (navController)
         }
