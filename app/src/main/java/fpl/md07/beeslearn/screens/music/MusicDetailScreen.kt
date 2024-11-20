@@ -124,10 +124,7 @@ fun Music2Item(music: Music, navController: NavController) {
             .fillMaxWidth()
             .padding(start = 30.dp, top = 10.dp)
             .clickable {
-                navController.navigate(
-                    /////
-                    "musicScreen3"
-                )
+                navController.navigate("musicScreen3")
             },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
