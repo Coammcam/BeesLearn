@@ -17,6 +17,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,18 +31,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
-import fpl.md07.beeslearn.models.Music2
+import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import fpl.md07.beeslearn.viewmodels.data.music2List
+import fpl.md07.beeslearn.viewmodels.MusicViewModel
+
 
 @Composable
-fun MusicDetailScreen(navController: NavController) {
+fun MusicDetailScreen(
+    navController: NavController,
+    musicViewModel: MusicViewModel = viewModel()
+) {
+    val musicList = musicViewModel.musicList.observeAsState(emptyList())
 
-    Column (
+    if (musicList.value.isEmpty()) {
+        musicViewModel.fetchMusicList()
+    }
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -96,44 +110,47 @@ fun MusicDetailScreen(navController: NavController) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(music2List) { music2 ->
-                Music2Item(music2, navController)
+            items(musicList.value) { music ->
+                Music2Item(music, navController)
             }
         }
     }
 }
 
 @Composable
-fun Music2Item (music2: Music2, navController: NavController) {
-    Row (
+fun Music2Item(music: Music, navController: NavController) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 30.dp, top = 10.dp)
-            .clickable {navController.navigate("musicScreen3")},
+            .clickable {
+                navController.navigate(
+                    "musicScreen3/${music.duration}/${music.title}/${music.image_url}/${music.description}/${music.link_on_youtube}"
+                )
+            },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
+//        Text(
         Text(
-            text = music2.number.toString(),
+            text = music.duration,
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = Nunito_Bold,
-            modifier = Modifier
-                .padding(end = 30.dp)
+            modifier = Modifier.padding(end = 30.dp)
         )
-        Column (
+        Column(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = music2.title,
+                text = music.title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = Nunito_Bold,
                 color = colorResource(id = R.color.secondary_color),
             )
             Text(
-                text = music2.content,
+                text = music.description,
                 fontSize = 18.sp,
                 color = colorResource(id = R.color.secondary_color),
             )
