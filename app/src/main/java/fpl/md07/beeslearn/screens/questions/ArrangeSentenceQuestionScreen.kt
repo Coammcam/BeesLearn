@@ -1,8 +1,5 @@
 package fpl.md07.beeslearn.screens.questions
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,28 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.data.arrangeSentenceQuestions // Import fake data
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-class ArrangeSentenceQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ArrangeSentenceScreen()
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun ArrangeSentenceScreen() {
+fun ArrangeSentenceScreen(navController: NavController) {
     val currentQuestion = arrangeSentenceQuestions[0]
     var sentenceParts by remember { mutableStateOf(currentQuestion.sentenceParts) }
     var selectedParts by remember { mutableStateOf(mutableListOf<String>()) }
@@ -69,7 +51,9 @@ fun ArrangeSentenceScreen() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
+                        .background(
+                            Color(0xFFFFF59D), shape = RoundedCornerShape(50)
+                        )
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -94,7 +78,9 @@ fun ArrangeSentenceScreen() {
 
                 Box(
                     modifier = Modifier
-                        .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
+                        .background(
+                            Color(0xFFFFF59D), shape = RoundedCornerShape(50)
+                        )
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -117,19 +103,18 @@ fun ArrangeSentenceScreen() {
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .graphicsLayer {
-                    shadowElevation = 8.dp.toPx()
-                    shape = RoundedCornerShape(16.dp)
-                    clip = true
-                    translationY = -8.dp.toPx()
-                }
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center
-        ) {
+
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .graphicsLayer {
+                shadowElevation = 8.dp.toPx()
+                shape = RoundedCornerShape(16.dp)
+                clip = true
+                translationY = -8.dp.toPx()
+            }
+            .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.Center) {
             if (selectedParts.isEmpty()) {
                 Divider(
                     color = Color(0xFF5D4037),
@@ -144,18 +129,18 @@ fun ArrangeSentenceScreen() {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     selectedParts.forEach { part ->
-                        DraggableWordOption(
-                            word = part,
-                            isSelected = false,
-                            onClick = {
-                                selectedParts.remove(part)
-                                sentenceParts = sentenceParts + part
-                            }
-                        )
+                        DraggableWordOption(word = part, isSelected = false, onClick = {
+                            selectedParts.remove(part)
+                            sentenceParts = sentenceParts + part
+                        })
                     }
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Text("abc")
 
         Spacer(modifier = Modifier.height(48.dp))
 
@@ -172,14 +157,10 @@ fun ArrangeSentenceScreen() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     chunk.forEach { word ->
-                        DraggableWordOption(
-                            word = word,
-                            isSelected = false,
-                            onClick = {
-                                selectedParts.add(word)
-                                sentenceParts = sentenceParts - word
-                            }
-                        )
+                        DraggableWordOption(word = word, isSelected = false, onClick = {
+                            selectedParts.add(word)
+                            sentenceParts = sentenceParts - word
+                        })
                     }
                 }
             }
@@ -189,15 +170,13 @@ fun ArrangeSentenceScreen() {
 
 @Composable
 fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .clickable { onClick() }
-            .padding(horizontal = 4.dp, vertical = 4.dp)
-    ) {
+    Box(modifier = Modifier
+        .background(
+            color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D),
+            shape = RoundedCornerShape(8.dp)
+        )
+        .clickable { onClick() }
+        .padding(horizontal = 4.dp, vertical = 4.dp)) {
         Text(
             text = word,
             fontSize = 16.sp,
@@ -211,7 +190,6 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
 @Preview(showBackground = true)
 @Composable
 fun ArrangeSentencePreview() {
-    BeesLearnTheme {
-        ArrangeSentenceScreen()
-    }
+    val navController = rememberNavController()
+    ArrangeSentenceScreen(navController)
 }
