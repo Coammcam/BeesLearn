@@ -31,9 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
-import fpl.md07.beeslearn.models.Music3
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import fpl.md07.beeslearn.viewmodels.data.music3List
 
 @Composable
 fun MusicPlayerScreen (navController: NavController) {
@@ -154,30 +152,30 @@ fun MusicPlayerScreen (navController: NavController) {
                 .fillMaxWidth(),
             color = colorResource(id = R.color.secondary_color),
         )
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            items(music3List) { music3 ->
-                Music3Item(music3)
-            }
-        }
+//        LazyColumn(
+//            verticalArrangement = Arrangement.spacedBy(20.dp)
+//        ) {
+//            items(music3List) { music3 ->
+//                Music3Item(music3)
+//            }
+//        }
     }
 }
 
-@Composable
-fun Music3Item (music3: Music3) {
-    Column (
-        modifier = Modifier
-            .padding(top = 10.dp, start = 5.dp, end = 5.dp)
-    ) {
-        Text(
-            text = music3.content,
-            fontSize = 16.sp,
-            fontFamily = Nunito_Bold,
-            color = colorResource(id = R.color.secondary_color),
-        )
-    }
-}
+//@Composable
+//fun Music3Item (music3: Music3) {
+//    Column (
+//        modifier = Modifier
+//            .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+//    ) {
+//        Text(
+//            text = music3.content,
+//            fontSize = 16.sp,
+//            fontFamily = Nunito_Bold,
+//            color = colorResource(id = R.color.secondary_color),
+//        )
+//    }
+//}
 
 @Preview (showBackground = true, showSystemUi = true)
 @Composable
