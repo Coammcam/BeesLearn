@@ -38,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Movie
@@ -159,14 +160,21 @@ fun MovieItem(movie: Movie, navController: NavController) {
             .background(Color.White, RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        val posterPainter = rememberImagePainter(
+            data = movie.poster,
+            builder = {
+                crossfade(true) // Add transition effect when loading
+            }
+        )
+
         Image(
             modifier = Modifier
                 .width(200.dp)
                 .height(250.dp)
                 .clip(shape = RoundedCornerShape(8.dp))
-                .clickable { navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}") },
-//            painter = painterResource(id = movie.imageResMovie),
-            painter = painterResource(id = R.drawable.posterphim1),
+                .clickable { navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}/${movie.banner}") },
+            painter = posterPainter,
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
