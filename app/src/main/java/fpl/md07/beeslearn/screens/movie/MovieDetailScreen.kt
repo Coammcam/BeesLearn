@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
@@ -45,7 +46,8 @@ fun MovieDetailScreen(
     genre: String,
     year: String,
     rating: String,
-    description: String
+    description: String,
+    banner: String,
 ) {
 
     Column(
@@ -65,18 +67,24 @@ fun MovieDetailScreen(
             .padding(top = 60.dp),
         verticalArrangement = Arrangement.Top,
     ) {
+        val bannerPainter = rememberImagePainter(
+            data = banner,
+            builder = {
+                crossfade(true) // Add transition effect when loading
+            }
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(24.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.posterphim5_1),
+                painter = bannerPainter,
                 contentDescription = null,
                 modifier = Modifier.fillMaxWidth()
             )
             Image(
-                painter = painterResource(R.drawable.posterphim5_2),
+                painter = bannerPainter,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, top = 10.dp)
@@ -277,6 +285,7 @@ fun PreviewMovieScreen2() {
         genre = "Action, Drama",
         year = "2008",
         rating = "9.0",
-        description = "In Gotham City, the Joker emerges from his mysterious past to wreak havoc and chaos on the people of Gotham."
+        description = "In Gotham City, the Joker emerges from his mysterious past to wreak havoc and chaos on the people of Gotham.",
+        banner = "jdsdajd"
     )
 }

@@ -44,6 +44,9 @@ import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Movie
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 //import fpl.md07.beeslearn.viewmodels.data.movieList
 @Composable
 fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel) {
@@ -154,6 +157,7 @@ fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel
 
 @Composable
 fun MovieItem(movie: Movie, navController: NavController) {
+    val encodedBanner = URLEncoder.encode(movie.banner, StandardCharsets.UTF_8.toString())
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,7 +177,8 @@ fun MovieItem(movie: Movie, navController: NavController) {
                 .width(200.dp)
                 .height(250.dp)
                 .clip(shape = RoundedCornerShape(8.dp))
-                .clickable { navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}/${movie.banner}") },
+                .clickable {
+                    navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}/$encodedBanner") },
             painter = posterPainter,
             contentDescription = null,
             contentScale = ContentScale.Crop
