@@ -1,7 +1,9 @@
 package fpl.md07.beeslearn.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.api.HttpRequest
 import fpl.md07.beeslearn.models.UserModel
 import fpl.md07.beeslearn.requests.LoginRequest
@@ -24,6 +26,9 @@ class LoginViewModel : ViewModel() {
     private val _registerResponse = MutableStateFlow<Response<UserModel>?>(null)
     val registerResponse: StateFlow<Response<UserModel>?> = _registerResponse
 
+    private val _userData = MutableStateFlow<UserModel?>(null)
+    val userData: StateFlow<UserModel?> = _userData
+
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
@@ -34,6 +39,12 @@ class LoginViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _loginResponse.value = response
                     _loginMessage.value = "Đăng nhập thành công!"
+                    _userData.value = response.body()
+                    Log.d("LoginViewModel", "User data: ${_userData.value}")
+
+                    UserSession.currentUser = response.body()
+                    Log.d("currentUser", "User data: ${_userData.value}")
+
                 } else {
                     if (response.code() == 404) {
                         _loginMessage.value = "Tài khoản hoặc mật khẩu không chính xác."
@@ -52,7 +63,6 @@ class LoginViewModel : ViewModel() {
             try {
                 _registerResponse.value = null
                 _registerMessage.value = null
-
                 val response =
                     HttpRequest.getInstance().Register(RegisterRequest(username, email, password))
                 if (response.isSuccessful) {
