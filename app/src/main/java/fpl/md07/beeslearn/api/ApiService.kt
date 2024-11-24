@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.api
 
+import com.google.gson.JsonObject
 import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.models.Movie
 import fpl.md07.beeslearn.models.Music
@@ -11,11 +12,13 @@ import fpl.md07.beeslearn.models.UserModel
 import fpl.md07.beeslearn.models.Word
 import fpl.md07.beeslearn.models.responseModel.QuestionResponseModel
 import fpl.md07.beeslearn.requests.ChangePasswordRequest
+import fpl.md07.beeslearn.requests.UpdateUserRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -27,7 +30,7 @@ interface ApiService {
     suspend fun Register(@Body request: RegisterRequest): Response<UserModel>
 
     @PUT("/auth/change-password")
-    suspend fun ChangePassword(@Body request: ChangePasswordRequest): Response<String>
+    suspend fun ChangePassword(@Body request: ChangePasswordRequest): Response<JsonObject>
 
     // get question by amount
 
@@ -49,9 +52,14 @@ interface ApiService {
 
     @GET("/podcast")
     suspend fun getPodcasts(): Response<List<Podcast>>
+    @PUT("user")
+    suspend fun EditProfile(@Body request: UpdateUserRequest): Response<UserModel>
 
     @GET("/music")
     suspend fun getMusicList(): Response<List<Music>>
-
-
 }
+
+
+
+
+
