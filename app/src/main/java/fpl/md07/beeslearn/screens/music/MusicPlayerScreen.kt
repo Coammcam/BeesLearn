@@ -110,6 +110,7 @@ fun MusicPlayerScreen(navController: NavController, musicId: Int?) {
         val music = musics.firstOrNull {
             it.id == musicId.toString()
         }
+
         if (music != null) {
             Column(
                 modifier = Modifier

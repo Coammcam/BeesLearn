@@ -38,6 +38,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
+import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
@@ -170,7 +172,8 @@ fun NestedBottomTab(
                 genre = backStackEntry.arguments?.getString("genre") ?: "",
                 year = backStackEntry.arguments?.getString("year") ?: "",
                 rating = backStackEntry.arguments?.getString("rating") ?: "",
-                description = backStackEntry.arguments?.getString("description") ?: ""
+                description = backStackEntry.arguments?.getString("description") ?: "",
+                banner = backStackEntry.arguments?.getString("banner") ?: ""
             )
         }
 
@@ -182,6 +185,7 @@ fun NestedBottomTab(
         ) {
             MusicDetailScreen(navController)
         }
+
         composable(
             "musicScreen3/{musicId}",
             arguments = listOf(navArgument("musicId") { type = NavType.IntType })
@@ -189,7 +193,6 @@ fun NestedBottomTab(
             val musicId = backStackEntry.arguments?.getInt("musicId")
             MusicPlayerScreen(navController, musicId)
         }
-
         composable("practiceOneScreen") {
             LessonScreen(navController)
         }
@@ -220,6 +223,10 @@ fun NestedBottomTab(
         composable("editProfile") {
             EditProfile(navController)
         }
+        composable("changePasswordScreen") {
+            ChangePasswordScreen(navController)
+        }
+
 
         // question list
         composable("questionList") {

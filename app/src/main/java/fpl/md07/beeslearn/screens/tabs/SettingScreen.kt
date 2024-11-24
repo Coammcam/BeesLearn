@@ -1,22 +1,17 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,36 +22,45 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.LoginViewModel
 
 @Composable
-fun SettingScreen (navController: NavController) {
+fun SettingScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel()
+) {
+//    val userData by loginViewModel.userData.collectAsState()
+   val user = UserSession.currentUser
+
     Column(
         modifier = Modifier
             .background(Color(0xffffffff))
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Setting",
             fontFamily = Nunito_Bold,
             fontSize = 35.sp,
             color = colorResource(id = R.color.secondary_color),
-            modifier = Modifier.fillMaxWidth().align(alignment = Alignment.Start).padding(20.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(alignment = Alignment.Start)
+                .padding(20.dp)
         )
 
-        Column (
+        Column(
             modifier = Modifier
                 .background(Color(0xffffffff))
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Spacer(modifier = Modifier.height(50.dp))
 
             Image(
@@ -69,30 +73,40 @@ fun SettingScreen (navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Text(
-                text = "BeesLearn",
+            user?.let { userInfo ->
+                Text(
+                    text = userInfo.username,
+                    fontFamily = Nunito_Bold,
+                    fontSize = 38.sp,
+                    color = colorResource(id = R.color.secondary_color)
+                )
+
+                Text(
+                    text = userInfo.email,
+                    fontFamily = Nunito_Bold,
+                    fontSize = 13.sp,
+                    color = colorResource(id = R.color.secondary_color)
+                )
+            } ?: Text(
+                text = "No user logged in",
                 fontFamily = Nunito_Bold,
-                fontSize = 38.sp,
-                color = colorResource(id = R.color.secondary_color)
+                fontSize = 20.sp,
+                color = Color.Red
             )
 
-            Text(
-                text = "beeslearn1@gmail.com",
-                fontFamily = Nunito_Bold,
-                fontSize = 13.sp,
-                color = colorResource(id = R.color.secondary_color)
-            )
 
             Spacer(modifier = Modifier.height(25.dp))
 
             Button(
-                onClick = { navController.navigate("editProfile")},
+                onClick = { navController.navigate("editProfile") },
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 80.dp)
                     .shadow(
-                        elevation = 10.dp, shape = RoundedCornerShape(25.dp), clip = false
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(25.dp),
+                        clip = false
                     ),
                 shape = RoundedCornerShape(25.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.secondary_color))
@@ -114,7 +128,9 @@ fun SettingScreen (navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .shadow(
-                        elevation = 10.dp, shape = RoundedCornerShape(12.dp), clip = false
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        clip = false
                     ),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
@@ -122,7 +138,9 @@ fun SettingScreen (navController: NavController) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth().padding(start = 50.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 50.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.favorite),
@@ -147,7 +165,9 @@ fun SettingScreen (navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .shadow(
-                        elevation = 10.dp, shape = RoundedCornerShape(12.dp), clip = false
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        clip = false
                     ),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
@@ -155,11 +175,13 @@ fun SettingScreen (navController: NavController) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth().padding(start = 50.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 50.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.download),
-                        contentDescription = "download",
+                        contentDescription = "Download",
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
@@ -180,7 +202,9 @@ fun SettingScreen (navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .shadow(
-                        elevation = 10.dp, shape = RoundedCornerShape(12.dp), clip = false
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        clip = false
                     ),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
@@ -188,11 +212,13 @@ fun SettingScreen (navController: NavController) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth().padding(start = 50.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 50.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.world),
-                        contentDescription = "languages",
+                        contentDescription = "Languages",
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
@@ -207,9 +233,9 @@ fun SettingScreen (navController: NavController) {
     }
 }
 
-@Preview (showSystemUi = true, showBackground = true)
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun PreviewSettingScreen () {
-    var navController = rememberNavController()
+fun PreviewSettingScreen() {
+    val navController = rememberNavController()
     SettingScreen(navController)
 }
