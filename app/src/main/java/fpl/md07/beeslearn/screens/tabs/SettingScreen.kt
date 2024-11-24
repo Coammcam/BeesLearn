@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -36,7 +38,9 @@ fun SettingScreen(
     loginViewModel: LoginViewModel = viewModel()
 ) {
 //    val userData by loginViewModel.userData.collectAsState()
-   val user = UserSession.currentUser
+
+    val user = UserSession.currentUser
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -58,6 +62,7 @@ fun SettingScreen(
         Column(
             modifier = Modifier
                 .background(Color(0xffffffff))
+                .verticalScroll(scrollState)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

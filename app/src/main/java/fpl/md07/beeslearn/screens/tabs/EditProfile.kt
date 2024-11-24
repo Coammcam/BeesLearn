@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -61,9 +63,6 @@ fun EditProfile(
     navController: NavController,
     editProfileViewModel: EditProfileViewModel = viewModel()
 ) {
-
-
-
     var userr = UserSession.currentUser
     Log.d("cde", userr.toString())
     var name by remember { mutableStateOf(userr?.username ?: "") }
@@ -72,11 +71,11 @@ fun EditProfile(
     var phoneNumber by remember { mutableStateOf(userr?.phoneNumber ?: "") }
 
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxSize()
             .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
@@ -97,11 +96,10 @@ fun EditProfile(
             )
             Text("")
         }
-
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 40.dp, vertical = 70.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(horizontal = 40.dp, vertical = 70.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(50.dp))
