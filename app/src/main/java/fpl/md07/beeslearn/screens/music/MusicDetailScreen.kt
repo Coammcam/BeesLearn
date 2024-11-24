@@ -14,13 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,19 +39,16 @@ import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.MusicViewModel
 
-
 @Composable
 fun MusicDetailScreen(
     navController: NavController,
-    musicViewModel: MusicViewModel = viewModel()
+    musicViewModel: MusicViewModel= viewModel()
 ) {
-    val musicList = musicViewModel.musicList.observeAsState(emptyList())
+    val musics by musicViewModel.musics
+    val loading by musicViewModel.loading
+    val error by musicViewModel.error
 
-    if (musicList.value.isEmpty()) {
-        musicViewModel.fetchMusicList()
-    }
-
-    Column(
+    Column (
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -107,39 +103,56 @@ fun MusicDetailScreen(
                     .size(35.dp)
             )
         }
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            items(musicList.value) { music ->
-                Music2Item(music, navController)
+        when {
+            loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+
+            error != null -> {
+                Text(
+                    text = "Error: $error",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+
+            else -> {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    items(musics) { music ->
+                        Music2Item(music, navController)
+                    }
+                }
             }
         }
+
     }
 }
 
 @Composable
-fun Music2Item(music: Music, navController: NavController) {
-    Row(
+fun Music2Item (music: Music, navController: NavController) {
+    val musicId = music.id
+    Row (
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 30.dp, top = 10.dp)
-            .clickable {
-                navController.navigate(
-                    "musicScreen3/${music.duration}/${music.title}/${music.image_url}/${music.description}/${music.link_on_youtube}"
-                )
-            },
+            .clickable {navController.navigate("musicScreen3/$musicId")},
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-//        Text(
         Text(
-            text = music.duration,
+            text = music.stt,
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(end = 30.dp)
+            fontFamily = Nunito_Bold,
+            modifier = Modifier
+                .padding(end = 30.dp)
         )
-        Column(
+        Column (
             verticalArrangement = Arrangement.Center
         ) {
             Text(
@@ -150,7 +163,7 @@ fun Music2Item(music: Music, navController: NavController) {
                 color = colorResource(id = R.color.secondary_color),
             )
             Text(
-                text = music.description,
+                text = music.author,
                 fontSize = 18.sp,
                 color = colorResource(id = R.color.secondary_color),
             )

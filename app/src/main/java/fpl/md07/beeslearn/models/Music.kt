@@ -1,11 +1,12 @@
 package fpl.md07.beeslearn.models
 
 data class Music(
-    val duration: String,
-    val title: String,
-    val image_url: String,
+    val id: String,
+    val title : String,
+    val stt : String,
     val description: String,
-    val link_on_youtube: String
-)
-
-
+    val imageRes: Int,
+    val time : String ,
+    val youtubeUrl : String,
+    val author: String
+    )

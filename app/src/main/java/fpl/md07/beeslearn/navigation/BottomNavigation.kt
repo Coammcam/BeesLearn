@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,8 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -59,11 +60,9 @@ import fpl.md07.beeslearn.screens.tabs.StatsScreen
 import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
-import fpl.md07.beeslearn.screens.questions.ArrangeSentenceScreen
-import fpl.md07.beeslearn.screens.questions.MultipleChoiceScreen
-import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
+import fpl.md07.beeslearn.viewmodels.MusicViewModel
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -181,14 +180,21 @@ fun NestedBottomTab(
         composable("musicScreen") {
             MusicListScreen(navController)
         }
-        composable("musicScreen2") {
+        composable(
+            "musicScreen2"
+        ) {
             MusicDetailScreen(navController)
         }
-        composable("musicScreen3") {
-            MusicPlayerScreen (navController)
+
+        composable(
+            "musicScreen3/{musicId}",
+            arguments = listOf(navArgument("musicId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val musicId = backStackEntry.arguments?.getInt("musicId")
+            MusicPlayerScreen(navController, musicId)
         }
         composable("practiceOneScreen") {
-            LessonScreen (navController)
+            LessonScreen(navController)
         }
         composable("welcomeScreen") {
             ChooseLoginScreen(navController)
