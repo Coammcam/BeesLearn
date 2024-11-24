@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.screens.music
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,8 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-
-
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -40,7 +37,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
-import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.models.Music1
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.data.musicList
@@ -165,7 +161,6 @@ fun MusicItem (music1: Music1, navController: NavController) {
         }
     }
 }
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
