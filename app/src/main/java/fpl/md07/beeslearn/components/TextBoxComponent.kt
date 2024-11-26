@@ -27,7 +27,7 @@ fun TextBoxComponent(modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(16.dp))
     ) {
         Text(
-            text = "Đây là đoạn văn bản trong khung có viền và nền màu vàng.",
+            text = "Xin mời chọn level",
             textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.Center),
             fontFamily = customFont,
