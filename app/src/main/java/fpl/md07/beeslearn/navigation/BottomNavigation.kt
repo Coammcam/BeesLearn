@@ -155,14 +155,15 @@ fun NestedBottomTab(
         }
 
         composable(
-            "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}",
+            "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}/{banner}",
             arguments = listOf(
                 navArgument("title") { type = NavType.StringType },
                 navArgument("duration") { type = NavType.StringType },
                 navArgument("genre") { type = NavType.StringType },
                 navArgument("year") { type = NavType.StringType },
                 navArgument("rating") { type = NavType.StringType },
-                navArgument("description") { type = NavType.StringType }
+                navArgument("description") { type = NavType.StringType },
+                navArgument("banner") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             MovieDetailScreen(
