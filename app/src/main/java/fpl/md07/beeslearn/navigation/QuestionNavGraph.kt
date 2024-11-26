@@ -30,24 +30,24 @@ import fpl.md07.beeslearn.viewmodels.QuestionViewModel
 @Composable
 fun QuestionNavGraph(navController: NavController) {
     val viewModel: QuestionViewModel = viewModel()
-    val questionState = remember { mutableStateOf<QuestionResponseModel?>(null) }
+//    val questionState = remember { mutableStateOf<QuestionResponseModel?>(null) }
 
-    LaunchedEffect(Unit) {
-        viewModel.getRandomQuestions(total = 10,
-            onSuccess = { response -> questionState.value = response },
-            onError = { error ->
-                Log.e("NavGraph", "Error: $error")
-            })
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.getRandomQuestions(total = 10,
+//            onSuccess = { response -> questionState.value = response },
+//            onError = { error ->
+//                Log.e("NavGraph", "Error: $error")
+//            })
+//    }
 
-    questionState.value?.let { questionResponse ->
-        val startDestination = if (questionResponse.grammarQuestions.isNotEmpty()) {
-            "grammarQuestion/${questionResponse.grammarQuestions[0].question}"
-        } else {
-            "multipleChoice"
-        }
-
-
-
-    }
+//    questionState.value?.let { questionResponse ->
+//        val startDestination = if (questionResponse.grammarQuestions.isNotEmpty()) {
+//            "grammarQuestion/${questionResponse.grammarQuestions[0].question}"
+//        } else {
+//            "multipleChoice"
+//        }
+//
+//
+//
+//    }
 }
