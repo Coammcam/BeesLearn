@@ -147,7 +147,9 @@ fun TrueFalseScreen(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = textColor,
-                fontFamily = Nunito_Bold
+                fontFamily = Nunito_Bold,
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp)
             )
         }
 
