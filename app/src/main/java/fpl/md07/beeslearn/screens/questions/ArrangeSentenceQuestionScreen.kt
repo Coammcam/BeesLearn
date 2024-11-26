@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fpl.md07.beeslearn.components.ConfirmQuestionNo
@@ -140,7 +141,10 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Text(grammarQuestionModel.meaning)
+        Text(
+            grammarQuestionModel.meaning,
+            fontSize = 18.sp
+        )
 
         Spacer(modifier = Modifier.height(48.dp))
 
@@ -213,7 +217,9 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
 
 @Composable
 fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) {
-    Box(modifier = Modifier
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
         .background(
             color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D),
             shape = RoundedCornerShape(8.dp)
@@ -222,10 +228,12 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
         .padding(horizontal = 4.dp, vertical = 4.dp)) {
         Text(
             text = word,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             color = Color(0xFF5D4037),
             fontWeight = FontWeight.Bold,
-            fontFamily = Nunito_Bold
+            fontFamily = Nunito_Bold,
+            modifier = Modifier
+                .padding(10.dp)
         )
     }
 }
