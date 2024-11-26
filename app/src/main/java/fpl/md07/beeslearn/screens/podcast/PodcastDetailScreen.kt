@@ -46,7 +46,12 @@ import android.widget.Toast
 import android.content.ActivityNotFoundException
 import android.util.Log
 import androidx.compose.ui.graphics.ColorFilter
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import fpl.md07.beeslearn.models.Podcast
+import java.net.URLEncoder
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
@@ -54,11 +59,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
     val viewModel: PodcastViewModel = viewModel()
     val podcasts = viewModel.podcasts.value
     val loading = viewModel.loading.value
-
     val error = viewModel.error.value
-    var currentPodcastIndex by remember {
-        mutableStateOf(podcasts.indexOfFirst { it.id == podcastId.toString() })
-    }
 
     var isLiked by remember { mutableStateOf(false) }
     var isDisliked by remember { mutableStateOf(false) }
@@ -75,7 +76,6 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
 
     fun handleShare() {
         isShared = true
-        // Thực hiện hành động chia sẻ, ví dụ qua Intent
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, "Check out this podcast!")
@@ -92,7 +92,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
     fun openYouTube(podcast: Podcast) {
 
         try {
-            val youtubeUrl = podcast.youtubeUrl
+            val youtubeUrl = podcast.link_on_youtube
             Log.d("YouTube", "Opening URL: $youtubeUrl")
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(youtubeUrl)
@@ -111,33 +111,14 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
         }
     }
 
-    fun navigateToNextPodcast() {
-        if (currentPodcastIndex < podcasts.size - 1) {
-            currentPodcastIndex++
-            navController.navigate("podcastDetail/${podcasts[currentPodcastIndex].id}") {
-                popUpTo("podcastDetail/${podcastId}") { inclusive = true }
-            }
-        }
-    }
-
-    fun navigateToPreviousPodcast() {
-        if (currentPodcastIndex > 0) {
-            currentPodcastIndex--
-            navController.navigate("podcastDetail/${podcasts[currentPodcastIndex].id}") {
-                popUpTo("podcastDetail/${podcastId}") { inclusive = true }
-            }
-        }
-    }
-
     if (loading) {
         Text("Loading...")
     } else if (error != null) {
         Text("Error: $error")
     } else {
-        // Hiển thị chi tiết của podcast dựa trên id
-        val podcast = podcasts.firstOrNull {
-            it.id == podcastId.toString()
-        }
+
+        // Display podcast details based on ID
+        val podcast = podcasts.firstOrNull { it.title.hashCode() == podcastId }
         if (podcast != null) {
 
             Column(
@@ -164,7 +145,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         .shadow(24.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = podcast.imageRes),
+                        painter = rememberAsyncImagePainter(model = podcast.image_url),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,7 +154,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         contentScale = ContentScale.Crop
                     )
                     Image(
-                        painter = painterResource(id = podcast.imageRes),
+                        painter = rememberAsyncImagePainter(model = podcast.image_url),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp, top = 10.dp)
@@ -204,12 +185,12 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = podcast.time,
+                        text = podcast.duration,
                         fontFamily = Nunito_Bold,
                         fontSize = 16.sp,
                     )
                     Text(
-                        text = podcast.time,
+                        text = podcast.duration,
                         fontFamily = Nunito_Bold,
                         fontSize = 16.sp,
                     )
@@ -229,11 +210,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         contentDescription = null,
                         modifier = Modifier
                             .size(40.dp)
-                            .clickable(
-                                enabled = currentPodcastIndex > 0,
-                                onClick = { navigateToPreviousPodcast() }
-                            )
-                            .alpha(if (currentPodcastIndex > 0) 1f else 0.5f)
+
                     )
                     Image(
                         painter = painterResource(R.drawable.play),
@@ -249,11 +226,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         contentDescription = null,
                         modifier = Modifier
                             .size(40.dp)
-                            .clickable(
-                                enabled = currentPodcastIndex < podcasts.size - 1,
-                                onClick = { navigateToNextPodcast() }
-                            )
-                            .alpha(if (currentPodcastIndex < podcasts.size - 1) 1f else 0.5f)
+
                     )
                 }
                 Row(
