@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,11 +36,15 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 fun ConfirmQuestionYes () {
     Box(
         modifier = Modifier
-            .zIndex(1f)
-            .fillMaxSize()
-            .background(Color(0x00B8B8B8))
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .padding(top = 15.dp)
+            .shadow(
+                elevation = 36.dp, // Tăng độ cao để tạo bóng rõ hơn
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                clip = false // Không cắt để bóng hiển thị mượt
+            )
+            .background(Color(0xFFB8B8B8))
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
     ) {
         Column(
             modifier = Modifier

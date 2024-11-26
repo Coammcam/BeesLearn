@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,10 +20,15 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 fun ComfirmQuestion () {
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .padding(top = 15.dp)
+            .shadow(
+                elevation = 32.dp, // Tăng độ cao bóng để rõ hơn
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                clip = false // Đảm bảo bóng không bị cắt
+            )
             .background(Color(0xFFB8B8B8))
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
     ) {
         Column(
             modifier = Modifier
