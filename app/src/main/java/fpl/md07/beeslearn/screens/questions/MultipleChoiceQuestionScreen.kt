@@ -9,6 +9,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -16,16 +18,44 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.ConfirmQuestionNo
+import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.data.multipleChoiceQuestions // Import the fake data
+import fpl.md07.beeslearn.models.AnswerResult
+import fpl.md07.beeslearn.models.Word
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import kotlinx.coroutines.delay
+import kotlin.random.Random
+
+var randomInt = Random.nextInt(0,3)
 
 @Composable
-fun MultipleChoiceScreen(navController: NavController) {
+fun MultipleChoiceScreen(words: List<Word>, onComplete: () -> Unit, goBack: () -> Unit) {
     var selectedAnswer by remember { mutableStateOf("") }
-    val currentQuestion = multipleChoiceQuestions[0]
+    val questionWord = words[randomInt]
+    var result: AnswerResult? by remember { mutableStateOf(null) }
+    var showResult by remember { mutableStateOf(false) }
+
+    LaunchedEffect(selectedAnswer) {
+        if(selectedAnswer == questionWord.englishWord){
+            println("correct")
+            result = AnswerResult.CORRECT
+        }else{
+            println("incorrect")
+            result = AnswerResult.INCORRECT
+        }
+        if(selectedAnswer.isNotEmpty()){
+            showResult = true
+            delay(1000)
+            onComplete()
+            result = null
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -41,7 +71,7 @@ fun MultipleChoiceScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            IconButton(onClick = { /* Back action */ }) {
+            IconButton(onClick = { goBack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back",
@@ -108,43 +138,66 @@ fun MultipleChoiceScreen(navController: NavController) {
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .graphicsLayer {
-                    shadowElevation = 8.dp.toPx()
-                    shape = RoundedCornerShape(16.dp)
-                    clip = true
-                    translationY = -8.dp.toPx()
-                }
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = currentQuestion.questionText,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF5D4037),
-                fontFamily = Nunito_Bold
-            )
-        }
+        Text(
+            text = "Choose the right option",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF5D4037),
+            fontFamily = Nunito_Bold,
+            modifier = Modifier.padding(top = 16.dp)
+        )
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
-            currentQuestion.answers.chunked(2).forEach { rowAnswers ->
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    rowAnswers.forEach { answer ->
-                        AnswerButton(
-                            label = answer.label,
-                            answerText = answer.answerText,
-                            isSelected = selectedAnswer == answer.label,
-                            onClick = { selectedAnswer = answer.label },
-                            modifier = Modifier.weight(1f)
-                        )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .graphicsLayer {
+                        shadowElevation = 8.dp.toPx()
+                        shape = RoundedCornerShape(16.dp)
+                        clip = true
+                        translationY = -8.dp.toPx()
+                    }
+                    .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = questionWord.vietnameseMeaning,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF5D4037),
+                    fontFamily = Nunito_Bold
+                )
+            }
+            Box(
+                modifier = Modifier.height(230.dp)
+            ){
+                if(showResult){
+                    if(result == AnswerResult.CORRECT){
+                        ConfirmQuestionYes()
+                    }else if(result == AnswerResult.INCORRECT){
+                        ConfirmQuestionNo()
+                    }
+                }
+                Column(
+                    modifier = Modifier.fillMaxWidth().zIndex(-1f),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    words.chunked(2).shuffled().forEach { rowAnswers ->
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            rowAnswers.shuffled().forEach { answer ->
+                                AnswerButton(
+                                    answerText = answer.englishWord,
+                                    isSelected = selectedAnswer == answer.englishWord,
+                                    onClick = { selectedAnswer = answer.englishWord },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -154,7 +207,6 @@ fun MultipleChoiceScreen(navController: NavController) {
 
 @Composable
 fun AnswerButton(
-    label: String,
     answerText: String,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -175,22 +227,22 @@ fun AnswerButton(
             }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(Color.White, shape = CircleShape)
-                    .align(Alignment.TopStart)
-                    .padding(4.dp)
-            ) {
-                Text(
-                    text = label,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF5D4037),
-                    fontFamily = Nunito_Bold,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .size(24.dp)
+//                    .background(Color.White, shape = CircleShape)
+//                    .align(Alignment.TopStart)
+//                    .padding(4.dp)
+//            ) {
+//                Text(
+//                    text = label,
+//                    fontSize = 12.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color(0xFF5D4037),
+//                    fontFamily = Nunito_Bold,
+//                    modifier = Modifier.align(Alignment.Center)
+//                )
+//            }
 
             Text(
                 text = answerText,
@@ -203,10 +255,10 @@ fun AnswerButton(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun MultipleChoicePreview() {
-    val navController = rememberNavController()
-    MultipleChoiceScreen(navController)
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun MultipleChoicePreview() {
+//    val navController = rememberNavController()
+//    MultipleChoiceScreen(navController)
+//}

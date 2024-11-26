@@ -16,18 +16,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.compose.ui.zIndex
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.ConfirmQuestionNo
+import fpl.md07.beeslearn.components.ConfirmQuestionYes
+import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
-import fpl.md07.beeslearn.data.trueFalseQuestions // Import the fake data
+import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import kotlinx.coroutines.delay
 
 @Composable
-fun TrueFalseScreen(navController: NavController) {
-    var currentQuestionIndex by remember { mutableStateOf(0) }
+fun TrueFalseScreen(
+    truefalsequestion: TrueFalseQuestionModel_A,
+    goBack: ()->Unit,
+    onComplete: ()->Unit
+) {
+    var result: AnswerResult? by remember { mutableStateOf(null) }
+    var textColor by remember { mutableStateOf(Color(0xFF5D4037)) }
 
-    val currentQuestion = trueFalseQuestions[currentQuestionIndex]
+    LaunchedEffect(result) {
+        if(result != null){
+            println("done with true false")
+            delay(1000)
+            onComplete()
+            textColor = Color(0xFF5D4037)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -43,7 +59,7 @@ fun TrueFalseScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            IconButton(onClick = { /* Back action */ }) {
+            IconButton(onClick = { goBack() }) {
                 Icon(
                     painter = painterResource(id = fpl.md07.beeslearn.R.drawable.ic_back),
                     contentDescription = "Back",
@@ -105,7 +121,7 @@ fun TrueFalseScreen(navController: NavController) {
         }
 
         Text(
-            text = "Swipe to the left or right",
+            text = "Choose the right option",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),
@@ -127,42 +143,64 @@ fun TrueFalseScreen(navController: NavController) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = currentQuestion.questionText,
+                text = truefalsequestion.content,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF5D4037),
+                color = textColor,
                 fontFamily = Nunito_Bold
             )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 32.dp)
-        ) {
-            TrueFalseButton(
-                icon = R.drawable.ic_false,
-                backgroundColor = Color(0xFFFFEB3B),
-                iconTint = Color(0xFFFF1744),
-                onClick = {
-                    if (!currentQuestion.isTrue) {
-                        currentQuestionIndex = (currentQuestionIndex + 1) % trueFalseQuestions.size
+        Box (
+            modifier = Modifier.height(200.dp)
+        ){
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.zIndex(-1f)
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                TrueFalseButton(
+                    icon = R.drawable.ic_false,
+                    backgroundColor = Color(0xFFFFEB3B),
+                    iconTint = Color(0xFFFF1744),
+                    onClick = {
+                        if(truefalsequestion.answer == "0"){
+                            println("${truefalsequestion.answer} is correct")
+                            result = AnswerResult.CORRECT
+                            textColor = Color.Green
+                        }else{
+                            result = AnswerResult.INCORRECT
+                            textColor = Color.Red
+                            println("WRONG")
+                        }
+
                     }
-                }
-            )
-            TrueFalseButton(
-                icon = R.drawable.ic_true,
-                backgroundColor = Color(0xFFFFEB3B),
-                iconTint = Color(0xFF00E676),
-                onClick = {
-                    if (currentQuestion.isTrue) {
-                        currentQuestionIndex = (currentQuestionIndex + 1) % trueFalseQuestions.size
+                )
+                TrueFalseButton(
+                    icon = R.drawable.ic_true,
+                    backgroundColor = Color(0xFFFFEB3B),
+                    iconTint = Color(0xFF00E676),
+                    onClick = {
+                        if(truefalsequestion.answer == "1"){
+                            println("${truefalsequestion.answer} is correct")
+                            result = AnswerResult.CORRECT
+                            textColor = Color.Green
+                        }else{
+                            println("WRONG")
+                            result = AnswerResult.INCORRECT
+                            textColor = Color.Red
+                        }
                     }
-                }
-            )
+                )
+            }
+            if(result == AnswerResult.CORRECT){
+                ConfirmQuestionYes()
+            }else if(result == AnswerResult.INCORRECT){
+                ConfirmQuestionNo()
+            }
         }
     }
 }
@@ -195,6 +233,8 @@ fun TrueFalseButton(
 fun TrueFalsePreview() {
     BeesLearnTheme {
         val navController = rememberNavController()
-        TrueFalseScreen(navController)
+//        TrueFalseScreen(){
+//
+//        }
     }
 }

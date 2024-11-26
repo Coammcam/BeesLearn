@@ -12,19 +12,45 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import fpl.md07.beeslearn.data.arrangeSentenceQuestions // Import fake data
+import fpl.md07.beeslearn.components.ConfirmQuestionNo
+import fpl.md07.beeslearn.components.ConfirmQuestionYes
+import fpl.md07.beeslearn.models.AnswerResult
+import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import kotlinx.coroutines.delay
 
 @Composable
-fun ArrangeSentenceScreen(navController: NavController) {
-    val currentQuestion = arrangeSentenceQuestions[0]
-    var sentenceParts by remember { mutableStateOf(currentQuestion.sentenceParts) }
-    var selectedParts by remember { mutableStateOf(mutableListOf<String>()) }
+fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit, goBack: () -> Unit) {
+    var sentenceParts by remember { mutableStateOf(emptyList<String>()) }
+    val selectedParts by remember { mutableStateOf(emptyList<String>().toMutableList()) }
+    var result: AnswerResult? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(grammarQuestionModel) {
+        sentenceParts = grammarQuestionModel.question.split(" ").shuffled()
+        println(sentenceParts)
+    }
+
+    LaunchedEffect(sentenceParts) {
+        if(sentenceParts.isEmpty()){
+            val completeSentence = selectedParts.joinToString(" ")
+            println(completeSentence)
+
+            if(completeSentence == grammarQuestionModel.question){
+                println("correct")
+                result = AnswerResult.CORRECT
+            }else{
+                println("incorrect")
+                result = AnswerResult.INCORRECT
+            }
+            println("Donezo")
+            delay(1000)
+            onComplete()
+            selectedParts.clear()
+            result = null
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -39,7 +65,7 @@ fun ArrangeSentenceScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         ) {
-            IconButton(onClick = { /* Back action */ }) {
+            IconButton(onClick = { goBack() }) {
                 Icon(
                     painter = painterResource(id = fpl.md07.beeslearn.R.drawable.ic_back),
                     contentDescription = "Back",
@@ -103,6 +129,20 @@ fun ArrangeSentenceScreen(navController: NavController) {
             }
         }
 
+        Text(
+            text = "Arrange the words in correct order",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF5D4037),
+            fontFamily = Nunito_Bold,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Text(grammarQuestionModel.meaning)
+
+        Spacer(modifier = Modifier.height(48.dp))
 
         Box(modifier = Modifier
             .fillMaxWidth()
@@ -140,29 +180,32 @@ fun ArrangeSentenceScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Text("abc")
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            sentenceParts.chunked(3).forEach { chunk ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    chunk.forEach { word ->
-                        DraggableWordOption(word = word, isSelected = false, onClick = {
-                            selectedParts.add(word)
-                            sentenceParts = sentenceParts - word
-                        })
+        Box {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                sentenceParts.chunked(3).forEach { chunk ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        chunk.forEach { word ->
+                            DraggableWordOption(word = word, isSelected = false, onClick = {
+                                selectedParts.add(word)
+                                sentenceParts = sentenceParts - word
+                            })
+                        }
                     }
                 }
+            }
+            if (result == AnswerResult.CORRECT){
+                ConfirmQuestionYes()
+            }else if (result == AnswerResult.INCORRECT){
+                ConfirmQuestionNo()
             }
         }
     }
@@ -186,10 +229,10 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun ArrangeSentencePreview() {
-    val navController = rememberNavController()
-    ArrangeSentenceScreen(navController)
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun ArrangeSentencePreview() {
+//    val navController = rememberNavController()
+//    ArrangeSentenceScreen(){}
+//}
