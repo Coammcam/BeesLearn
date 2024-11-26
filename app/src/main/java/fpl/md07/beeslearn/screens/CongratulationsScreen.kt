@@ -24,7 +24,7 @@ val NunitoBold = FontFamily(
 )
 
 @Composable
-fun CongratulationsScreen() {
+fun CongratulationsScreen( goBack: () -> Unit ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -32,7 +32,7 @@ fun CongratulationsScreen() {
     ) {
         // Nút Back ở góc trên bên trái
         IconButton(
-            onClick = { /* Xử lý sự kiện back */ },
+            onClick = { goBack() },
             modifier = Modifier.align(Alignment.TopStart)
         ) {
             Icon(
@@ -93,7 +93,7 @@ fun InfoBoxes() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Box đầu tiên cho "Total XP"
-        InfoBox(title = "Total XP", value = "+30", icon = null)
+//        InfoBox(title = "Total XP", value = "+30", icon = null)
 
         // Box thứ hai cho "Reward" với biểu tượng
         InfoBox(title = "Reward", value = "+5", icon = R.drawable.honey_picture) // Thay "honey_picture" bằng ID của biểu tượng của bạn
@@ -162,8 +162,10 @@ fun InfoBox(title: String, value: String, icon: Int?) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun PreviewCongratulationsScreen() {
-    CongratulationsScreen()
+    CongratulationsScreen(){
+
+    }
 }
