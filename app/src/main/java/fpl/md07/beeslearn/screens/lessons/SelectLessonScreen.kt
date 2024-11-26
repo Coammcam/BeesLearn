@@ -1,5 +1,7 @@
 package fpl.md07.beeslearn.screens.lessons
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import fpl.md07.beeslearn.components.BeeAnimaComponent
 import fpl.md07.beeslearn.components.TextBoxComponent
@@ -24,46 +27,156 @@ import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.TopBarComponent
 import fpl.md07.beeslearn.components.customFont
+import fpl.md07.beeslearn.models.GrammarQuestionModel
+import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
+import fpl.md07.beeslearn.models.responseModel.QuestionResponseModel
+import fpl.md07.beeslearn.screens.CongratulationsScreen
+import fpl.md07.beeslearn.screens.questions.ArrangeSentenceScreen
+import fpl.md07.beeslearn.screens.questions.FillInTheBlankScreen
+import fpl.md07.beeslearn.screens.questions.MultipleChoiceScreen
+import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
+import fpl.md07.beeslearn.viewmodels.QuestionViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
+enum class QuestionMode{
+    TRUEFALSE, GRAMMAR, MULTIPLECHOICE, FILLIN, FINISH
+}
 
 @Composable
 fun SelectLessonScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TopBarComponent(navController)
+    var isLessonSelected by remember { mutableStateOf(false) }
 
-        Spacer(modifier = Modifier.height(16.dp))
+    val questionViewModel: QuestionViewModel = viewModel()
+    var questions by remember { mutableStateOf(QuestionResponseModel(
+        words = null,
+        trueFalseQuestions = null,
+        grammarQuestions = null
+    )) }
 
-        Box(
-        ) {
-            TextBoxComponent(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 50.dp)
+    val totalAmountOfQuestion = 10
+    var questionIndex by remember { mutableIntStateOf(1) }
+    var questionMode by remember { mutableStateOf( QuestionMode.FILLIN ) }
+
+    var trueFalseQuestions = questions.trueFalseQuestions
+    var trueFalseQuestionIndex by remember { mutableIntStateOf(0) }
+
+    var grammarQuestions = questions.grammarQuestions
+    var grammarQuestionIndex by remember { mutableIntStateOf(0) }
+
+    var multipleChoiceQuestion = questions.words
+    var multipleChoiceQuestionIndex by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(isLessonSelected) {
+        if(!isLessonSelected){
+            questionViewModel.getRandomQuestions(
+                total = totalAmountOfQuestion,
+                onSuccess = {questions = it},
+                onError = {println(it)}
             )
-            BeeAnimaComponent(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-            )
+            trueFalseQuestions = questions.trueFalseQuestions
+            grammarQuestions = questions.grammarQuestions
+            multipleChoiceQuestion = questions.words
+            questionIndex = 1
+            questionMode = QuestionMode.GRAMMAR
+            trueFalseQuestionIndex = 0
+            grammarQuestionIndex = 0
+            multipleChoiceQuestionIndex = 0
         }
-        Spacer(modifier = Modifier.height(200.dp))
+    }
 
-        HexGridd(navController)
+    LaunchedEffect(questionIndex) {
+        if(questionIndex == 5 || questionIndex == 7){
+            questionMode = QuestionMode.TRUEFALSE
+        }else if(questionIndex == 3 || questionIndex == 9){
+            questionMode = QuestionMode.MULTIPLECHOICE
+        } else{
+            questionMode = QuestionMode.GRAMMAR
+        }
+
+        if(questionIndex == totalAmountOfQuestion + 1){
+            questionIndex = 0
+            trueFalseQuestionIndex = 0
+            isLessonSelected = false
+            questionMode = QuestionMode.FINISH
+        }
+    }
+
+    BackHandler (enabled = isLessonSelected) {
+        isLessonSelected = false
+    }
+
+    if(!isLessonSelected){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TopBarComponent(navController)
+            Spacer(modifier = Modifier.height(16.dp))
+            Box(
+            ) {
+                TextBoxComponent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 50.dp)
+                )
+//            BeeAnimaComponent(
+//                modifier = Modifier
+//                    .align(Alignment.TopEnd)
+//            )
+            }
+            Spacer(modifier = Modifier.height(200.dp))
+
+            HexGridd(){
+                isLessonSelected = true
+            }
+        }
+    }else{
+        if(questionMode == QuestionMode.TRUEFALSE) {
+            TrueFalseScreen(
+                trueFalseQuestions!![trueFalseQuestionIndex],
+                goBack = { isLessonSelected = false },
+                onComplete = {
+                    questionIndex += 1;
+                    if (trueFalseQuestionIndex != trueFalseQuestions!!.size-1) trueFalseQuestionIndex += 1
+                               },
+            )
+        }else if(questionMode == QuestionMode.GRAMMAR){
+            ArrangeSentenceScreen(
+                grammarQuestions!![grammarQuestionIndex],
+                onComplete = {
+                    questionIndex += 1;
+                    if (grammarQuestionIndex != grammarQuestions!!.size-1) grammarQuestionIndex += 1
+                             },
+                goBack = { isLessonSelected = false }
+            )
+        }else if(questionMode == QuestionMode.MULTIPLECHOICE){
+            MultipleChoiceScreen(
+                words = multipleChoiceQuestion!!.chunked(4)[multipleChoiceQuestionIndex],
+                onComplete = {
+                    questionIndex += 1;
+                    if (multipleChoiceQuestionIndex != multipleChoiceQuestion!!.chunked(4).size-1) multipleChoiceQuestionIndex += 1
+                             },
+                goBack = { isLessonSelected = false }
+            )
+//        }else if(questionMode == QuestionMode.FILLIN){
+//            FillInTheBlankScreen(grammarQuestions!![0])
+        }else if(questionMode == QuestionMode.FINISH){
+            CongratulationsScreen(){
+                isLessonSelected = false
+            }
+        }
     }
 }
 @Composable
-fun HexGridd(navController: NavController) {
+fun HexGridd(onPress: () -> Unit) {
     val hexagonRadius = 40.dp
     val hexagonCount = 10
     // Tạo danh sách trạng thái cho các hexagon
-    val hexagonStates = remember { mutableStateListOf(*Array(hexagonCount) { false }) } // Sử dụng mutableStateListOf
+    val hexagonStates = remember { mutableStateListOf(*Array(hexagonCount) { true }) } // Sử dụng mutableStateListOf
 
     // Scrollable row to hold hexagons
     Row(
@@ -80,7 +193,7 @@ fun HexGridd(navController: NavController) {
                 onClick = {
                     // Cập nhật trạng thái
                     hexagonStates[i] = !hexagonStates[i]
-                    navController.navigate("practiceOneScreen")
+                    onPress()
                 }
             )
 
@@ -181,6 +294,7 @@ fun HexagonWithNumber(
         )
     }
 }
+
 @Preview
 @Composable
 fun PreviewSelectExercise() {
