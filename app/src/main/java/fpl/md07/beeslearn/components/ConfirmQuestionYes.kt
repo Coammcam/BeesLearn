@@ -28,14 +28,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
 fun ConfirmQuestionYes () {
     Box(
         modifier = Modifier
+            .zIndex(1f)
             .fillMaxSize()
-            .background(Color(0xFFB8B8B8))
+            .background(Color(0x00B8B8B8))
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {

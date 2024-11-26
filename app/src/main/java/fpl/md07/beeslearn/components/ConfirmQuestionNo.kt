@@ -25,14 +25,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
 fun ConfirmQuestionNo() {
     Box(
         modifier = Modifier
+            .zIndex(1f)
             .fillMaxSize()
-            .background(Color(0xFFB8B8B8))
+            .background(Color(0x00B8B8B8))
             .padding(1.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -85,18 +87,18 @@ fun ConfirmQuestionNo() {
             Spacer(modifier = Modifier.height(16.dp))
 
             // Nội dung
-            Text(
-                text = "Book: Cuốn sách",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = Nunito_Bold,
-                color = Color(0xFFFE4D47),
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(start = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
+//            Text(
+//                text = "Book: Cuốn sách",
+//                fontSize = 16.sp,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = Nunito_Bold,
+//                color = Color(0xFFFE4D47),
+//                modifier = Modifier
+//                    .align(Alignment.Start)
+//                    .padding(start = 16.dp)
+//            )
+//
+//            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = { /* Xử lý khi nhấn nút */ },
