@@ -154,6 +154,7 @@ fun NestedBottomTab(
             PodcastDetailScreen(navController, podcastId)
         }
 
+
         composable(
             "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}/{banner}",
             arguments = listOf(

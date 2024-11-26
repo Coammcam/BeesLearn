@@ -1,9 +1,5 @@
 package fpl.md07.beeslearn.screens.podcast
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,11 +40,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
-import fpl.md07.beeslearn.main.MainScreen
 import fpl.md07.beeslearn.models.Podcast
-import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import fpl.md07.beeslearn.viewmodels.MovieViewModel
 import fpl.md07.beeslearn.viewmodels.PodcastViewModel
 
 @Composable
@@ -187,20 +179,20 @@ fun PodcastListScreen(
 
 @Composable
 fun PodcastItem(podcast: Podcast, navController: NavController) {
-    val podcastId = podcast.id
+//    val podcastId = podcast.id
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                navController.navigate("podcastDetail/$podcastId")
+                navController.navigate("podcastDetail/${podcast.title.hashCode()}")
             },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Use Coil for loading images from URLs
         AsyncImage(
-            model = podcast.imageRes,
+            model = podcast.image_url,
             contentDescription = null,
             modifier = Modifier
                 .size(80.dp)
@@ -233,13 +225,13 @@ fun PodcastItem(podcast: Podcast, navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "${podcast.view} view",
+                    text = podcast.duration,
                     fontWeight = FontWeight.W300,
                     fontFamily = Nunito_Bold,
                     fontSize = 10.sp
                 )
                 Text(
-                    text = podcast.time,
+                    text = podcast.duration,
                     fontWeight = FontWeight.W300,
                     fontSize = 10.sp,
                     fontFamily = Nunito_Bold,
