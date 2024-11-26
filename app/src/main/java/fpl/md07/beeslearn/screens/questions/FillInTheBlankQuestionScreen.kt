@@ -50,29 +50,7 @@ fun FillInTheBlankScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.back_left),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable {}
-            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                ScoreItem(iconResId = R.drawable.heart, value = "5", tint = Color(0xFFFF1744))
-                ScoreItem(iconResId = R.drawable.honey, value = "100", tint = Color(0xFFFFD700))
-            }
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
