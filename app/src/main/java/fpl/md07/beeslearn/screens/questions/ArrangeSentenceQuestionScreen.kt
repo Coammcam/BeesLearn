@@ -34,14 +34,14 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
     }
 
     LaunchedEffect(sentenceParts) {
-        if(sentenceParts.isEmpty()){
+        if (sentenceParts.isEmpty()) {
             val completeSentence = selectedParts.joinToString(" ")
             println(completeSentence)
 
-            if(completeSentence == grammarQuestionModel.question){
+            if (completeSentence == grammarQuestionModel.question) {
                 println("correct")
                 result = AnswerResult.CORRECT
-            }else{
+            } else {
                 println("incorrect")
                 result = AnswerResult.INCORRECT
             }
@@ -59,8 +59,6 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-
         Text(
             text = "Arrange the words in correct order",
             fontSize = 20.sp,
@@ -79,17 +77,20 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .graphicsLayer {
-                shadowElevation = 8.dp.toPx()
-                shape = RoundedCornerShape(16.dp)
-                clip = true
-                translationY = -8.dp.toPx()
-            }
-            .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center) {
+        // Box to hold the arranged sentence
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .graphicsLayer {
+                    shadowElevation = 8.dp.toPx()
+                    shape = RoundedCornerShape(16.dp)
+                    clip = true
+                    translationY = -8.dp.toPx()
+                }
+                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.Center
+        ) {
             if (selectedParts.isEmpty()) {
                 Divider(
                     color = Color(0xFF5D4037),
@@ -99,15 +100,32 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                         .padding(horizontal = 8.dp)
                 )
             } else {
-                Row(
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    horizontalArrangement = Arrangement.Center
+                // Using a Column to arrange words in a flow-like manner
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .fillMaxWidth()
                 ) {
-                    selectedParts.forEach { part ->
-                        DraggableWordOption(word = part, isSelected = false, onClick = {
-                            selectedParts.remove(part)
-                            sentenceParts = sentenceParts + part
-                        })
+                    var rowWords = mutableListOf<String>()
+                    selectedParts.forEachIndexed { index, part ->
+                        rowWords.add(part)
+                        // When 3 words are collected, create a new row
+                        if (rowWords.size == 3 || index == selectedParts.size - 1) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)  // Reduced space between words
+                            ) {
+                                rowWords.forEach { word ->
+                                    DraggableWordOption(word = word, isSelected = false, onClick = {
+                                        selectedParts.remove(word)
+                                        sentenceParts = sentenceParts + word
+                                    })
+                                }
+                            }
+                            rowWords.clear()  // Reset the list for the next row
+                        }
                     }
                 }
             }
@@ -120,13 +138,13 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),  // Reduced space between word rows
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 sentenceParts.chunked(3).forEach { chunk ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)  // Reduced space between words
                     ) {
                         chunk.forEach { word ->
                             DraggableWordOption(word = word, isSelected = false, onClick = {
@@ -137,9 +155,9 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                     }
                 }
             }
-            if (result == AnswerResult.CORRECT){
+            if (result == AnswerResult.CORRECT) {
                 ConfirmQuestionYes()
-            }else if (result == AnswerResult.INCORRECT){
+            } else if (result == AnswerResult.INCORRECT) {
                 ConfirmQuestionNo()
             }
         }
@@ -151,23 +169,24 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-        .background(
-            color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D),
-            shape = RoundedCornerShape(8.dp)
-        )
-        .clickable { onClick() }
-        .padding(horizontal = 4.dp, vertical = 4.dp)) {
+            .background(
+                color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 4.dp, vertical = 2.dp)  // Reduced padding between the word and border
+    ) {
         Text(
             text = word,
             fontSize = 18.sp,
             color = Color(0xFF5D4037),
             fontWeight = FontWeight.Bold,
             fontFamily = Nunito_Bold,
-            modifier = Modifier
-                .padding(10.dp)
+            modifier = Modifier.padding(6.dp)  // Adjust padding for text inside the box
         )
     }
 }
+
 //
 //@Preview(showBackground = true)
 //@Composable
