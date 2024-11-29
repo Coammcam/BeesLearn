@@ -61,71 +61,7 @@ fun ConnectingWordScreen() {
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.back_left),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable {}
-            )
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(id = fpl.md07.beeslearn.R.drawable.heart),
-                            contentDescription = "Heart",
-                            tint = Color(0xFFFF1744),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            "5",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = Color(0xFF5D4037),
-                            fontFamily = Nunito_Bold
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(id = fpl.md07.beeslearn.R.drawable.honey),
-                            contentDescription = "Coins",
-                            tint = Color(0xFFFFD700),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            "100",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = Color(0xFF5D4037),
-                            fontFamily = Nunito_Bold
-                        )
-                    }
-                }
-            }
-        }
 
         Text(
             text = "Match column A with column B",
