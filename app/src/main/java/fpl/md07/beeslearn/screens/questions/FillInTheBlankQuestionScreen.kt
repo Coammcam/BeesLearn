@@ -25,21 +25,21 @@ import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import androidx.compose.foundation.lazy.grid.items
 
-class FillInTheBlankQuestionScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            BeesLearnTheme  {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    FillInTheBlankScreen()
-                }
-            }
-        }
-    }
-}
+//class FillInTheBlankQuestionScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            BeesLearnTheme  {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    FillInTheBlankScreen()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun FillInTheBlankScreen() {
