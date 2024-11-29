@@ -1,10 +1,13 @@
 package fpl.md07.beeslearn.screens.questions
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,35 +15,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
+import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import androidx.compose.foundation.lazy.grid.items
 
-//class FillInTheBlankQuestionScreen : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            BeesLearnTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    FillInTheBlankScreen()
-//                }
-//            }
-//        }
-//    }
-//}
+class FillInTheBlankQuestionScreen : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            BeesLearnTheme  {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    FillInTheBlankScreen()
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun FillInTheBlankScreen() {
     var selectedWord by remember { mutableStateOf("") }
 
+    // Lấy câu hỏi đầu tiên từ dữ liệu
     val currentQuestion = fillInTheBlankQuestions[0]
 
     Column(
@@ -50,7 +55,6 @@ fun FillInTheBlankScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -67,6 +71,7 @@ fun FillInTheBlankScreen() {
                 .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
+            // Thay thế "____" bằng từ đã chọn hoặc dấu "______" nếu chưa chọn
             Text(
                 text = currentQuestion.questionText.replace("____", if (selectedWord.isEmpty()) "______" else selectedWord),
                 fontSize = 20.sp,
@@ -78,25 +83,19 @@ fun FillInTheBlankScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Column(
+        // LazyVerticalGrid để hiển thị các từ điền trong dạng lưới
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3), // 3 cột trong lưới
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            currentQuestion.wordOptions.chunked(3).forEach { rowWords ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    rowWords.forEach { word ->
-                        WordOptionButton(
-                            word,
-                            selectedWord == word,
-                            onClick = { toggleWordSelection(word, selectedWord, onSelect = { selectedWord = it }) },
-                            Modifier.weight(1f)
-                        )
-                    }
-                }
+            items(currentQuestion.wordOptions) { word ->
+                WordOptionButton(
+                    word = word, // Truyền từ vào WordOptionButton
+                    isSelected = selectedWord == word, // Kiểm tra nếu từ đã được chọn
+                    onClick = { toggleWordSelection(word, selectedWord, onSelect = { selectedWord = it }) }
+                )
             }
         }
 
@@ -130,39 +129,11 @@ fun WordOptionButton(
     }
 }
 
-@Composable
-fun ScoreItem(iconResId: Int, value: String, tint: Color) {
-    Box(
-        modifier = Modifier
-            .background(Color(0xFFFFF59D), shape = RoundedCornerShape(50))
-            .padding(horizontal = 12.dp, vertical = 4.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = iconResId),
-                contentDescription = null,
-                tint = tint,
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = value,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = Color(0xFF5D4037),
-                fontFamily = Nunito_Bold
-            )
-        }
-    }
-}
-
 fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -> Unit) {
     if (word == selectedWord) {
-        onSelect("")
+        onSelect("") // Hủy chọn nếu từ đã được chọn
     } else {
-        onSelect(word)
+        onSelect(word) // Chọn từ nếu chưa chọn
     }
 }
 

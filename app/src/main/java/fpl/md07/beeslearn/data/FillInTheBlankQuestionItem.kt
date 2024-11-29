@@ -6,6 +6,6 @@ import fpl.md07.beeslearn.models.FillInTheBlankQuestionModel
 val fillInTheBlankQuestions = listOf(
     FillInTheBlankQuestionModel(
         questionText = "Lorem ipsum ____ dolor sit amet",
-        wordOptions = listOf("Lorem", "ipsum", "amet", "sit", "dolor", "aha")
+        wordOptions = listOf("Lorem", "ipsum", "amet", "sit", "dolor", "aha","Lorem", "ipsum", "amet", "sit", "dolor", "aha","Lorem", "ipsum", "amet", "sit", "dolor", "aha","Lorem", "ipsum", "amet", "sit", "dolor", "aha","Lorem", "ipsum", "amet", "sit", "dolor", "aha")
     )
 )
