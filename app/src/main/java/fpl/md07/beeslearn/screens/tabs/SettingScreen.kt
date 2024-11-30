@@ -63,7 +63,8 @@ fun SettingScreen(
             modifier = Modifier
                 .background(Color(0xffffffff))
                 .verticalScroll(scrollState)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(bottom = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
