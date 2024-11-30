@@ -21,6 +21,8 @@ import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import kotlinx.coroutines.delay
+import com.google.accompanist.flowlayout.FlowRow
+
 
 @Composable
 fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit, goBack: () -> Unit) {
@@ -100,32 +102,17 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                         .padding(horizontal = 8.dp)
                 )
             } else {
-                // Using a Column to arrange words in a flow-like manner
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .fillMaxWidth()
+                // Using FlowRow to arrange words with reduced spacing
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    mainAxisSpacing = 2.dp, // Reduced horizontal space between words
+                    crossAxisSpacing = 2.dp // Reduced vertical space between words
                 ) {
-                    var rowWords = mutableListOf<String>()
-                    selectedParts.forEachIndexed { index, part ->
-                        rowWords.add(part)
-                        // When 3 words are collected, create a new row
-                        if (rowWords.size == 3 || index == selectedParts.size - 1) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)  // Reduced space between words
-                            ) {
-                                rowWords.forEach { word ->
-                                    DraggableWordOption(word = word, isSelected = false, onClick = {
-                                        selectedParts.remove(word)
-                                        sentenceParts = sentenceParts + word
-                                    })
-                                }
-                            }
-                            rowWords.clear()  // Reset the list for the next row
-                        }
+                    selectedParts.forEach { word ->
+                        DraggableWordOption(word = word, isSelected = false, onClick = {
+                            selectedParts.remove(word)
+                            sentenceParts = sentenceParts + word
+                        })
                     }
                 }
             }
@@ -138,20 +125,19 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),  // Reduced space between word rows
+                verticalArrangement = Arrangement.spacedBy(4.dp),  // Further reduced space between rows
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                sentenceParts.chunked(3).forEach { chunk ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)  // Reduced space between words
-                    ) {
-                        chunk.forEach { word ->
-                            DraggableWordOption(word = word, isSelected = false, onClick = {
-                                selectedParts.add(word)
-                                sentenceParts = sentenceParts - word
-                            })
-                        }
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    mainAxisSpacing = 2.dp,  // Reduced space between words horizontally
+                    crossAxisSpacing = 2.dp // Reduced space between words vertically
+                ) {
+                    sentenceParts.forEach { word ->
+                        DraggableWordOption(word = word, isSelected = false, onClick = {
+                            selectedParts.add(word)
+                            sentenceParts = sentenceParts - word
+                        })
                     }
                 }
             }
@@ -174,7 +160,7 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 4.dp, vertical = 2.dp)  // Reduced padding between the word and border
+            .padding(horizontal = 2.dp, vertical = 2.dp)  // Reduced padding to bring words closer
     ) {
         Text(
             text = word,
@@ -182,10 +168,11 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
             color = Color(0xFF5D4037),
             fontWeight = FontWeight.Bold,
             fontFamily = Nunito_Bold,
-            modifier = Modifier.padding(6.dp)  // Adjust padding for text inside the box
+            modifier = Modifier.padding(6.dp)  // Reduced padding inside the word box
         )
     }
 }
+
 
 //
 //@Preview(showBackground = true)
