@@ -53,7 +53,8 @@ class LoginViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                _loginMessage.value = "Không thể kết nối đến server: ${e.message}"
+                _loginMessage.value = "Không thể kết nối đến server!"
+//                ${e.message}
             }
         }
     }
