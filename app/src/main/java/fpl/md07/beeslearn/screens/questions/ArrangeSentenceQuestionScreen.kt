@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.screens.questions
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -99,14 +100,14 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                     thickness = 2.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .padding(horizontal = 8.dp)
+                        .padding(8.dp)
                 )
             } else {
                 // Using FlowRow to arrange words with reduced spacing
                 FlowRow(
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
-                    mainAxisSpacing = 2.dp, // Reduced horizontal space between words
-                    crossAxisSpacing = 2.dp // Reduced vertical space between words
+                    mainAxisSpacing = 4.dp, // Reduced horizontal space between words
+                    crossAxisSpacing = 4.dp // Reduced vertical space between words
                 ) {
                     selectedParts.forEach { word ->
                         DraggableWordOption(word = word, isSelected = false, onClick = {
@@ -149,18 +150,22 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
         }
     }
 }
-
 @Composable
 fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
+            .border(
+                width = 2.dp, // Độ dày của viền
+                color = if (isSelected) Color(0xFF795548) else Color(0xFFBCAAA4), // Màu viền tùy thuộc vào trạng thái
+                shape = RoundedCornerShape(8.dp) // Hình dạng của viền
+            )
             .background(
                 color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
             )
             .clickable { onClick() }
-            .padding(horizontal = 2.dp, vertical = 2.dp)  // Reduced padding to bring words closer
+            .padding(10.dp)
     ) {
         Text(
             text = word,
@@ -168,10 +173,10 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
             color = Color(0xFF5D4037),
             fontWeight = FontWeight.Bold,
             fontFamily = Nunito_Bold,
-            modifier = Modifier.padding(6.dp)  // Reduced padding inside the word box
         )
     }
 }
+
 
 
 //
