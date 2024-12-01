@@ -29,18 +29,18 @@ import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.models.Word
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import kotlinx.coroutines.delay
+import java.security.SecureRandom
 import kotlin.random.Random
 
-var randomInt = Random.nextInt(0,3)
-
 @Composable
-fun MultipleChoiceScreen(words: List<Word>, onComplete: () -> Unit, goBack: () -> Unit) {
+fun MultipleChoiceScreen(words: List<Word>, randomNumber: Int, onComplete: () -> Unit) {
     var selectedAnswer by remember { mutableStateOf("") }
-    val questionWord = words[randomInt]
+    val questionWord = words[randomNumber]
     var result: AnswerResult? by remember { mutableStateOf(null) }
     var showResult by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedAnswer) {
+        println(randomNumber)
         if(selectedAnswer == questionWord.englishWord){
             println("correct")
             result = AnswerResult.CORRECT
@@ -50,39 +50,31 @@ fun MultipleChoiceScreen(words: List<Word>, onComplete: () -> Unit, goBack: () -
         }
         if(selectedAnswer.isNotEmpty()){
             showResult = true
-            delay(1000)
-            onComplete()
-            result = null
         }
     }
 
-
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-
+//        Spacer(Modifier.height(50.dp))
         Text(
             text = "Choose the right option",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),
             fontFamily = Nunito_Bold,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.height(100.dp).padding(top = 16.dp)
         )
-
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .fillMaxHeight(0.25f)
                     .graphicsLayer {
                         shadowElevation = 8.dp.toPx()
                         shape = RoundedCornerShape(16.dp)
@@ -101,13 +93,28 @@ fun MultipleChoiceScreen(words: List<Word>, onComplete: () -> Unit, goBack: () -
                 )
             }
             Box(
-                modifier = Modifier.height(230.dp)
+                modifier = Modifier.fillMaxHeight(0.8f),
+//                contentAlignment = Alignment.Center
             ){
                 if(showResult){
                     if(result == AnswerResult.CORRECT){
-                        ConfirmQuestionYes()
+                        ConfirmQuestionYes(
+                            Continue = {
+                                onComplete()
+                                result = null
+                                showResult = false
+                                selectedAnswer = ""
+                            }
+                        )
                     }else if(result == AnswerResult.INCORRECT){
-                        ConfirmQuestionNo()
+                        ConfirmQuestionNo(
+                            Continue = {
+                                onComplete()
+                                result = null
+                                showResult = false
+                                selectedAnswer = ""
+                            }
+                        )
                     }
                 }
                 Column(
@@ -115,12 +122,12 @@ fun MultipleChoiceScreen(words: List<Word>, onComplete: () -> Unit, goBack: () -
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    words.chunked(2).shuffled().forEach { rowAnswers ->
+                    words.chunked(2).forEach { rowAnswers ->
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            rowAnswers.shuffled().forEach { answer ->
+                            rowAnswers.forEach { answer ->
                                 AnswerButton(
                                     answerText = answer.englishWord,
-                                    isSelected = selectedAnswer == answer.englishWord,
+                                    isSelected = answer.englishWord == selectedAnswer,
                                     onClick = { selectedAnswer = answer.englishWord },
                                     modifier = Modifier.weight(1f)
                                 )
