@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,8 +52,22 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isRememberMeChecked by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val loginMessage by viewModel.loginMessage.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadRememberedCredentials(context)
+        email = viewModel.rememberedEmail
+        password = viewModel.rememberedPassword
+        isRememberMeChecked = viewModel.isRemembered
+
+        if (isRememberMeChecked && email.isNotBlank() && password.isNotBlank()) {
+            navController.navigate("HomeScreen") {
+                popUpTo("LoginScreen") { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -90,14 +105,37 @@ fun LoginScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp),
-            horizontalArrangement = Arrangement.End
+                .padding(top = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Quên mật khẩu?",
+            Text(
+                text = "Remember Me",
+                color = if (isRememberMeChecked) Color(0xFFFFD528) else Color(0xFF777777), // Vàng hoặc xám
+                fontFamily = Nunito_Bold,
+                fontSize = 13.sp,
+                modifier = Modifier.clickable {
+                    isRememberMeChecked = !isRememberMeChecked // Đổi trạng thái
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                "Quên mật khẩu?",
                 color = Color(0xFF777777),
                 fontFamily = Nunito_Bold,
                 fontSize = 13.sp,
-                modifier = Modifier.clickable { navController.navigate("quenMatKhauScreen") })
+                modifier = Modifier.clickable { navController.navigate("quenMatKhauScreen") }
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
         }
 
         Button(
@@ -107,9 +145,10 @@ fun LoginScreen(
                 .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
             onClick = {
                 if (email.isNotBlank() && password.isNotBlank()) {
-                    viewModel.login(email, password)
+                    viewModel.login(context, email, password, isRememberMeChecked)
                 } else {
-                    Toast.makeText(context, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT)
+                        .show()
                 }
             },
             colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
