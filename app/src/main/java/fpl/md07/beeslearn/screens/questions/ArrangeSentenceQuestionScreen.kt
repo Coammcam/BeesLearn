@@ -64,14 +64,17 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037),
                 fontFamily = Nunito_Bold,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = 16.dp),
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
                 grammarQuestionModel.meaning,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -122,12 +125,12 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),  // Further reduced space between rows
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
-                        mainAxisSpacing = 2.dp,  // Reduced space between words horizontally
-                        crossAxisSpacing = 2.dp // Reduced space between words vertically
+                        mainAxisSpacing = 4.dp,  // Reduced space between words horizontally
+                        crossAxisSpacing = 4.dp // Reduced space between words vertically
                     ) {
                         sentenceParts.forEach { word ->
                             DraggableWordOption(word = word, isSelected = false, onClick = {
@@ -174,7 +177,8 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
                 shape = RoundedCornerShape(8.dp),
             )
             .clickable { onClick() }
-            .padding(10.dp)
+            .padding(10.dp),
+
     ) {
         Text(
             text = word,

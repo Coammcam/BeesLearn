@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -27,25 +29,11 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import androidx.compose.foundation.lazy.grid.items
 import fpl.md07.beeslearn.models.Word
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.style.TextAlign
 import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
-
-//class FillInTheBlankQuestionScreen : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            BeesLearnTheme  {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    FillInTheBlankScreen()
-//                }
-//            }
-//        }
-//    }
-//}
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word>, onComplete: () -> Unit) {
@@ -81,28 +69,46 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
         Column(
             modifier = Modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Instruction Text
+            Text(
+                text = "Choose the word to complete the sentence",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF5D4037),
+                fontFamily = Nunito_Bold,
+                modifier = Modifier.padding(top = 16.dp),
+                textAlign = TextAlign.Center
+            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(48.dp)) // Adjusted space after instruction
 
+            // Meaning of the question
+            Text(
+                question.meaning,
+                fontSize = 18.sp,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(48.dp)) // Adjusted space after meaning
+
+            // Box for the sentence with blank placeholder
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(200.dp) // Adjusted height to make it more compact
                     .graphicsLayer {
                         shadowElevation = 8.dp.toPx()
                         shape = RoundedCornerShape(16.dp)
                         clip = true
-                        translationY = -8.dp.toPx()
+                        translationY = -8.dp.toPx() // Move the question box up slightly
                     }
                     .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                // Thay thế "____" bằng từ đã chọn hoặc dấu "______" nếu chưa chọn
                 Text(
-//                text = currentQuestion.questionText.replace("____", if (selectedWord.isEmpty()) "______" else selectedWord),
                     text = currentQuestion,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -111,25 +117,26 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp)) // Adjusted space between question box and word options
 
-            // LazyVerticalGrid để hiển thị các từ điền trong dạng lưới
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3), // 3 cột trong lưới
+            // FlowRow for displaying word options
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                mainAxisSpacing = 10.dp,  // Horizontal spacing between words
+                crossAxisSpacing = 10.dp, // Vertical spacing between rows
             ) {
-                items(listOfAnswer) { word ->
+                listOfAnswer.forEach { word ->
                     WordOptionButton(
-                        word = word, // Truyền từ vào WordOptionButton
-                        isSelected = selectedWord == word, // Kiểm tra nếu từ đã được chọn
+                        word = word,
+                        isSelected = selectedWord == word,
                         onClick = { toggleWordSelection(word, selectedWord, onSelect = { selectedWord = it }) }
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp)) // Adjusted space after word options
+
+            // Show confirmation buttons based on result
         }
         if(result == AnswerResult.CORRECT){
             ConfirmQuestionYes(){
@@ -143,6 +150,7 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
     }
 }
 
+
 @Composable
 fun WordOptionButton(
     word: String,
@@ -150,14 +158,20 @@ fun WordOptionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFF59D)),
-        border = if (isSelected) BorderStroke(2.dp, Color(0xFF5D4037)) else null,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
-            .height(60.dp)
-            .padding(4.dp)
+            .border(
+                width = 2.dp, // Border thickness
+                color = if (isSelected) Color(0xFF5D4037) else Color(0xFFBCAAA4), // Border color based on selection
+                shape = RoundedCornerShape(12.dp) // Rounded corners
+            )
+            .background(
+                color = if (isSelected) Color(0xFFFFE082) else Color(0xFFFFF59D), // Background color based on selection
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { onClick() } // On click behavior
+            .padding(10.dp) // Padding inside the Box
     ) {
         Text(
             text = word,
@@ -171,11 +185,12 @@ fun WordOptionButton(
 
 fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -> Unit) {
     if (word == selectedWord) {
-        onSelect("") // Hủy chọn nếu từ đã được chọn
+        onSelect("") // Deselect the word if it's already selected
     } else {
-        onSelect(word) // Chọn từ nếu chưa chọn
+        onSelect(word) // Select the word if it's not selected
     }
 }
+
 
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable
