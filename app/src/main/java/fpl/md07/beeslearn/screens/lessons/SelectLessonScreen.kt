@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import fpl.md07.beeslearn.components.BeeAnimaComponent
@@ -26,6 +28,7 @@ import fpl.md07.beeslearn.components.TextBoxComponent
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.TopBarComponent
+import fpl.md07.beeslearn.components.TopBarComponent_A
 import fpl.md07.beeslearn.components.customFont
 import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
@@ -36,8 +39,10 @@ import fpl.md07.beeslearn.screens.questions.FillInTheBlankScreen
 import fpl.md07.beeslearn.screens.questions.MultipleChoiceScreen
 import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
 import fpl.md07.beeslearn.viewmodels.QuestionViewModel
+import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 enum class QuestionMode{
     TRUEFALSE, GRAMMAR, MULTIPLECHOICE, FILLIN, FINISH
@@ -45,6 +50,7 @@ enum class QuestionMode{
 
 @Composable
 fun SelectLessonScreen(navController: NavController) {
+    var isQuestionLoaded by remember { mutableStateOf(false) }
     var isLessonSelected by remember { mutableStateOf(false) }
 
     val questionViewModel: QuestionViewModel = viewModel()
@@ -56,49 +62,36 @@ fun SelectLessonScreen(navController: NavController) {
 
     val totalAmountOfQuestion = 10
     var questionIndex by remember { mutableIntStateOf(1) }
-    var questionMode by remember { mutableStateOf( QuestionMode.FILLIN ) }
-
-    var trueFalseQuestions = questions.trueFalseQuestions
-    var trueFalseQuestionIndex by remember { mutableIntStateOf(0) }
-
-    var grammarQuestions = questions.grammarQuestions
-    var grammarQuestionIndex by remember { mutableIntStateOf(0) }
-
-    var multipleChoiceQuestion = questions.words
-    var multipleChoiceQuestionIndex by remember { mutableIntStateOf(0) }
+    var questionMode by remember { mutableStateOf( QuestionMode.GRAMMAR ) }
 
     LaunchedEffect(isLessonSelected) {
         if(!isLessonSelected){
+            isQuestionLoaded = false
             questionViewModel.getRandomQuestions(
                 total = totalAmountOfQuestion,
-                onSuccess = {questions = it},
+                onSuccess = { isQuestionLoaded = true; questions = it},
                 onError = {println(it)}
             )
-            trueFalseQuestions = questions.trueFalseQuestions
-            grammarQuestions = questions.grammarQuestions
-            multipleChoiceQuestion = questions.words
             questionIndex = 1
             questionMode = QuestionMode.GRAMMAR
-            trueFalseQuestionIndex = 0
-            grammarQuestionIndex = 0
-            multipleChoiceQuestionIndex = 0
         }
     }
 
     LaunchedEffect(questionIndex) {
-        if(questionIndex == 5 || questionIndex == 7){
-            questionMode = QuestionMode.TRUEFALSE
-        }else if(questionIndex == 3 || questionIndex == 9){
-            questionMode = QuestionMode.MULTIPLECHOICE
-        } else{
-            questionMode = QuestionMode.GRAMMAR
-        }
-
         if(questionIndex == totalAmountOfQuestion + 1){
-            questionIndex = 0
-            trueFalseQuestionIndex = 0
-            isLessonSelected = false
+//            questionIndex = 0
+//            isLessonSelected = false
             questionMode = QuestionMode.FINISH
+        }else{
+            if(questionIndex == 5 || questionIndex == 7){
+                questionMode = QuestionMode.TRUEFALSE
+            }else if(questionIndex == 3 || questionIndex == 9){
+                questionMode = QuestionMode.MULTIPLECHOICE
+            }else if(questionIndex == 2 || questionIndex == 6){
+                questionMode = QuestionMode.FILLIN
+            }else{
+                questionMode = QuestionMode.GRAMMAR
+            }
         }
     }
 
@@ -106,15 +99,21 @@ fun SelectLessonScreen(navController: NavController) {
         isLessonSelected = false
     }
 
-    if(!isLessonSelected){
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TopBarComponent(navController)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        TopBarComponent_A {
+            if(isLessonSelected){
+                isLessonSelected = false
+            }else{
+                navController.popBackStack()
+            }
+        }
+        if(!isLessonSelected){
             Spacer(modifier = Modifier.height(16.dp))
             Box(
             ) {
@@ -133,44 +132,88 @@ fun SelectLessonScreen(navController: NavController) {
             HexGridd(){
                 isLessonSelected = true
             }
-        }
-    }else{
-        if(questionMode == QuestionMode.TRUEFALSE) {
-            TrueFalseScreen(
-                trueFalseQuestions!![trueFalseQuestionIndex],
-                goBack = { isLessonSelected = false },
-                onComplete = {
-                    questionIndex += 1;
-                    if (trueFalseQuestionIndex != trueFalseQuestions!!.size-1) trueFalseQuestionIndex += 1
-                               },
-            )
-        }else if(questionMode == QuestionMode.GRAMMAR){
-            ArrangeSentenceScreen(
-                grammarQuestions!![grammarQuestionIndex],
-                onComplete = {
-                    questionIndex += 1;
-                    if (grammarQuestionIndex != grammarQuestions!!.size-1) grammarQuestionIndex += 1
-                             },
-                goBack = { isLessonSelected = false }
-            )
-        }else if(questionMode == QuestionMode.MULTIPLECHOICE){
-            MultipleChoiceScreen(
-                words = multipleChoiceQuestion!!.chunked(4)[multipleChoiceQuestionIndex],
-                onComplete = {
-                    questionIndex += 1;
-                    if (multipleChoiceQuestionIndex != multipleChoiceQuestion!!.chunked(4).size-1) multipleChoiceQuestionIndex += 1
-                             },
-                goBack = { isLessonSelected = false }
-            )
-//        }else if(questionMode == QuestionMode.FILLIN){
-//            FillInTheBlankScreen(grammarQuestions!![0])
-        }else if(questionMode == QuestionMode.FINISH){
-            CongratulationsScreen(){
-                isLessonSelected = false
+        }else{
+            if(isQuestionLoaded){
+                ShowQuestionScreens(
+                    questionMode = questionMode,
+                    questions = questions,
+                    goBack = { isLessonSelected = false },
+                    onCompleteQuestion = { questionIndex += 1 }
+                )
+            }else{
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    CircularProgressIndicator(
+                        modifier = Modifier.width(64.dp).height(64.dp),
+                        color = colorResource(R.color.primary_color),
+                        trackColor = colorResource(R.color.secondary_color)
+                    )
+                }
             }
         }
     }
 }
+
+@Composable
+fun ShowQuestionScreens(
+    questionMode: QuestionMode,
+    questions: QuestionResponseModel,
+    goBack: () -> Unit,
+    onCompleteQuestion: () -> Unit)
+{
+
+    val trueFalseQuestions = questions.trueFalseQuestions
+    var trueFalseQuestionIndex by remember { mutableIntStateOf(0) }
+
+    val grammarQuestions = questions.grammarQuestions
+    var grammarQuestionIndex by remember { mutableIntStateOf(0) }
+
+    val multipleChoiceQuestion = questions.words
+    var multipleChoiceQuestionIndex by remember { mutableIntStateOf(0) }
+
+    if(questionMode == QuestionMode.TRUEFALSE) {
+        TrueFalseScreen(
+            trueFalseQuestions!![trueFalseQuestionIndex],
+            onComplete = {
+                onCompleteQuestion()
+                if (trueFalseQuestionIndex != trueFalseQuestions.size-1) trueFalseQuestionIndex += 1
+            },
+        )
+    }else if(questionMode == QuestionMode.GRAMMAR){
+        ArrangeSentenceScreen(
+            grammarQuestions!![grammarQuestionIndex],
+            onComplete = {
+                onCompleteQuestion()
+                if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
+            }
+        )
+    }else if(questionMode == QuestionMode.MULTIPLECHOICE){
+        MultipleChoiceScreen(
+            words = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
+            randomNumber = Random.nextInt(4),
+            onComplete = {
+                onCompleteQuestion()
+                if (multipleChoiceQuestionIndex != multipleChoiceQuestion.chunked(4).size-1) multipleChoiceQuestionIndex += 1
+            }
+        )
+    }else if(questionMode == QuestionMode.FILLIN){
+        FillInTheBlankScreen(
+            question = grammarQuestions!![grammarQuestionIndex],
+            noiseAnswers = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
+            onComplete = {
+                onCompleteQuestion()
+                if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
+            }
+        )
+    }else if(questionMode == QuestionMode.FINISH){
+        CongratulationsScreen(){
+            goBack()
+        }
+    }
+}
+
 @Composable
 fun HexGridd(onPress: () -> Unit) {
     val hexagonRadius = 40.dp
