@@ -30,17 +30,17 @@ import androidx.compose.ui.zIndex
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun ConfirmQuestionNo() {
+fun ConfirmQuestionNo(Continue: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(top = 15.dp)
-            .shadow(
-                elevation = 32.dp, // Tăng độ cao bóng để rõ hơn
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                clip = false // Đảm bảo bóng không bị cắt
-            )
-            .background(Color(0xFFB8B8B8))
-            .fillMaxWidth(),
+//            .shadow(
+//                elevation = 32.dp, // Tăng độ cao bóng để rõ hơn
+//                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+//                clip = false // Đảm bảo bóng không bị cắt
+//            )
+//            .background(Color(0xFFB8B8B8))
+            .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(
@@ -87,9 +87,9 @@ fun ConfirmQuestionNo() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Nội dung
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            // Nội dung
 //            Text(
 //                text = "Book: Cuốn sách",
 //                fontSize = 16.sp,
@@ -104,7 +104,7 @@ fun ConfirmQuestionNo() {
 //            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* Xử lý khi nhấn nút */ },
+                onClick = { Continue() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5A5A)),
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
@@ -125,5 +125,7 @@ fun ConfirmQuestionNo() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewConfirmQuestion() {
-    ConfirmQuestionNo()
+    ConfirmQuestionNo(){
+
+    }
 }

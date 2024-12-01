@@ -33,17 +33,17 @@ import androidx.compose.ui.zIndex
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
-fun ConfirmQuestionYes () {
+fun ConfirmQuestionYes (Continue: ()->Unit) {
     Box(
         modifier = Modifier
             .padding(top = 15.dp)
-            .shadow(
-                elevation = 36.dp, // Tăng độ cao để tạo bóng rõ hơn
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                clip = false // Không cắt để bóng hiển thị mượt
-            )
-            .background(Color(0xFFB8B8B8))
-            .fillMaxWidth(),
+//            .shadow(
+//                elevation = 36.dp, // Tăng độ cao để tạo bóng rõ hơn
+//                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+//                clip = false // Không cắt để bóng hiển thị mượt
+//            )
+//            .background(Color(0xFFB8B8B8))
+            .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(
@@ -91,7 +91,7 @@ fun ConfirmQuestionYes () {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = { Continue() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF59CB01)),
                 shape = RoundedCornerShape(8.dp), // Rounded button
                 modifier = Modifier.fillMaxWidth()
@@ -106,8 +106,10 @@ fun ConfirmQuestionYes () {
     }
 }
 
-@Preview (showBackground = true, showSystemUi = true)
+@Preview (showBackground = true, showSystemUi = false)
 @Composable
 fun PreviewConfirmQuestionYes () {
-    ConfirmQuestionYes()
+    ConfirmQuestionYes(){
+
+    }
 }
