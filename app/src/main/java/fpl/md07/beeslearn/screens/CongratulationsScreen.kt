@@ -28,20 +28,7 @@ fun CongratulationsScreen( goBack: () -> Unit ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
-        // Nút Back ở góc trên bên trái
-        IconButton(
-            onClick = { goBack() },
-            modifier = Modifier.align(Alignment.TopStart)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back",
-                tint = Color.Black
-            )
-        }
-
         // Nội dung chính ở giữa màn hình
         Column(
             modifier = Modifier.align(Alignment.Center),
