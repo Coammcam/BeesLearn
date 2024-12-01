@@ -103,7 +103,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 } else {
                     // Using FlowRow to arrange words with reduced spacing
                     FlowRow(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
                         mainAxisSpacing = 4.dp, // Reduced horizontal space between words
                         crossAxisSpacing = 4.dp // Reduced vertical space between words
                     ) {
@@ -129,8 +129,8 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 ) {
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
-                        mainAxisSpacing = 4.dp,  // Reduced space between words horizontally
-                        crossAxisSpacing = 4.dp // Reduced space between words vertically
+                        mainAxisSpacing = 10.dp,  // Reduced space between words horizontally
+                        crossAxisSpacing = 10.dp // Reduced space between words vertically
                     ) {
                         sentenceParts.forEach { word ->
                             DraggableWordOption(word = word, isSelected = false, onClick = {

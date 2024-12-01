@@ -113,7 +113,8 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF5D4037),
-                    fontFamily = Nunito_Bold
+                    fontFamily = Nunito_Bold,
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 )
             }
 
@@ -121,7 +122,7 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
 
             // FlowRow for displaying word options
             FlowRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
                 mainAxisSpacing = 10.dp,  // Horizontal spacing between words
                 crossAxisSpacing = 10.dp, // Vertical spacing between rows
             ) {
