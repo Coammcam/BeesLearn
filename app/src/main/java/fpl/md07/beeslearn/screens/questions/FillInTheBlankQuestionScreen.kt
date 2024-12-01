@@ -21,9 +21,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
+import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import androidx.compose.foundation.lazy.grid.items
+import fpl.md07.beeslearn.models.Word
+import androidx.compose.runtime.getValue
+import fpl.md07.beeslearn.components.ConfirmQuestionNo
+import fpl.md07.beeslearn.components.ConfirmQuestionYes
+import fpl.md07.beeslearn.models.AnswerResult
 
 //class FillInTheBlankQuestionScreen : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,64 +48,98 @@ import androidx.compose.foundation.lazy.grid.items
 //}
 
 @Composable
-fun FillInTheBlankScreen() {
+fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word>, onComplete: () -> Unit) {
     var selectedWord by remember { mutableStateOf("") }
+    val listOfWordInQuestion by remember { mutableStateOf(question.question.split(" ")) }
+    val randomWordFromQuestion by remember { mutableStateOf(listOfWordInQuestion.random()) }
+    val currentQuestion = question.question.replace(randomWordFromQuestion, selectedWord.ifEmpty { "_____" } )
+    var listOfAnswer by remember { mutableStateOf(emptyList<String>().toMutableList()) }
+    var result: AnswerResult? by remember { mutableStateOf(null) }
 
-    // Lấy câu hỏi đầu tiên từ dữ liệu
-    val currentQuestion = fillInTheBlankQuestions[0]
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .graphicsLayer {
-                    shadowElevation = 8.dp.toPx()
-                    shape = RoundedCornerShape(16.dp)
-                    clip = true
-                    translationY = -8.dp.toPx()
-                }
-                .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            // Thay thế "____" bằng từ đã chọn hoặc dấu "______" nếu chưa chọn
-            Text(
-                text = currentQuestion.questionText.replace("____", if (selectedWord.isEmpty()) "______" else selectedWord),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF5D4037),
-                fontFamily = Nunito_Bold
-            )
+    LaunchedEffect(Unit) {
+        for (noise in noiseAnswers) {
+            listOfAnswer.add(noise.englishWord)
         }
+        listOfAnswer.add(randomWordFromQuestion)
+        listOfAnswer = listOfAnswer.shuffled().toMutableList()
+        println(listOfAnswer)
+    }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // LazyVerticalGrid để hiển thị các từ điền trong dạng lưới
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3), // 3 cột trong lưới
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(currentQuestion.wordOptions) { word ->
-                WordOptionButton(
-                    word = word, // Truyền từ vào WordOptionButton
-                    isSelected = selectedWord == word, // Kiểm tra nếu từ đã được chọn
-                    onClick = { toggleWordSelection(word, selectedWord, onSelect = { selectedWord = it }) }
-                )
+    LaunchedEffect(selectedWord) {
+        if(selectedWord.isNotEmpty()){
+            if(currentQuestion == question.question){
+                println("Correct")
+                result = AnswerResult.CORRECT
+            }else{
+                println("Incorrect")
+                result = AnswerResult.INCORRECT
             }
         }
+    }
 
-        Spacer(modifier = Modifier.height(32.dp))
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .graphicsLayer {
+                        shadowElevation = 8.dp.toPx()
+                        shape = RoundedCornerShape(16.dp)
+                        clip = true
+                        translationY = -8.dp.toPx()
+                    }
+                    .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                // Thay thế "____" bằng từ đã chọn hoặc dấu "______" nếu chưa chọn
+                Text(
+//                text = currentQuestion.questionText.replace("____", if (selectedWord.isEmpty()) "______" else selectedWord),
+                    text = currentQuestion,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF5D4037),
+                    fontFamily = Nunito_Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // LazyVerticalGrid để hiển thị các từ điền trong dạng lưới
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3), // 3 cột trong lưới
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(listOfAnswer) { word ->
+                    WordOptionButton(
+                        word = word, // Truyền từ vào WordOptionButton
+                        isSelected = selectedWord == word, // Kiểm tra nếu từ đã được chọn
+                        onClick = { toggleWordSelection(word, selectedWord, onSelect = { selectedWord = it }) }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+        if(result == AnswerResult.CORRECT){
+            ConfirmQuestionYes(){
+                onComplete()
+            }
+        }else if(result == AnswerResult.INCORRECT){
+            ConfirmQuestionNo(){
+                onComplete()
+            }
+        }
     }
 }
 
@@ -137,8 +177,8 @@ fun toggleWordSelection(word: String, selectedWord: String, onSelect: (String) -
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun FillInTheBlankPreview() {
-    FillInTheBlankScreen()
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun FillInTheBlankPreview() {
+//    FillInTheBlankScreen()
+//}
