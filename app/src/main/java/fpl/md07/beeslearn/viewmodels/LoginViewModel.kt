@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,7 +30,19 @@ class LoginViewModel : ViewModel() {
     private val _userData = MutableStateFlow<UserModel?>(null)
     val userData: StateFlow<UserModel?> = _userData
 
-    fun login(email: String, password: String) {
+    var rememberedEmail: String = ""
+        private set
+    var rememberedPassword: String = ""
+        private set
+    var isRemembered: Boolean = false
+        private set
+
+    private val PREF_NAME = "login_preferences"
+    private val PREF_EMAIL = "email"
+    private val PREF_PASSWORD = "password"
+    private val PREF_REMEMBER = "remember_me"
+
+    fun login(context: Context ,email: String, password: String, rememberMe: Boolean) {
         viewModelScope.launch {
             try {
                 _loginResponse.value = null
@@ -45,6 +58,11 @@ class LoginViewModel : ViewModel() {
                     UserSession.currentUser = response.body()
                     Log.d("currentUser", "User data: ${_userData.value}")
 
+                    if (rememberMe) {
+                        saveCredentials(context, email, password)
+                    } else {
+                        clearCredentials(context)
+                    }
                 } else {
                     if (response.code() == 404) {
                         _loginMessage.value = "Tài khoản hoặc mật khẩu không chính xác."
@@ -53,8 +71,7 @@ class LoginViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                _loginMessage.value = "Không thể kết nối đến server!"
-//                ${e.message}
+                _loginMessage.value = "Không thể kết nối đến server: ${e.message}"
             }
         }
     }
@@ -79,5 +96,39 @@ class LoginViewModel : ViewModel() {
                 _registerMessage.value = "Không thể kết nối đến server: ${e.message}"
             }
         }
+    }
+
+    fun loadRememberedCredentials(context: Context) {
+        val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        rememberedEmail = sharedPreferences.getString(PREF_EMAIL, "") ?: ""
+        rememberedPassword = sharedPreferences.getString(PREF_PASSWORD, "") ?: ""
+        isRemembered = sharedPreferences.getBoolean(PREF_REMEMBER, false)
+    }
+
+    private fun saveCredentials(context: Context, email: String, password: String) {
+        val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.edit()
+            .putString(PREF_EMAIL, email)
+            .putString(PREF_PASSWORD, password)
+            .putBoolean(PREF_REMEMBER, true)
+            .apply()
+    }
+
+    private fun clearCredentials(context: Context) {
+        val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.edit()
+            .remove(PREF_EMAIL)
+            .remove(PREF_PASSWORD)
+            .putBoolean(PREF_REMEMBER, false)
+            .apply()
+    }
+
+    fun logout(context: Context) {
+        clearCredentials(context)
+
+        UserSession.currentUser = null
+
+
+        _loginMessage.value = "Đăng xuất thành công!"
     }
 }

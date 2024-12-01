@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.screens.tabs
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,8 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,8 +60,7 @@ fun SettingScreen(
             modifier = Modifier
                 .background(Color(0xffffffff))
                 .verticalScroll(scrollState)
-                .fillMaxSize()
-                .padding(bottom = 20.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
@@ -132,12 +128,7 @@ fun SettingScreen(
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
+                    .padding(horizontal = 20.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
             ) {
@@ -169,12 +160,7 @@ fun SettingScreen(
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
+                    .padding(horizontal = 20.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
             ) {
@@ -206,12 +192,7 @@ fun SettingScreen(
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
+                    .padding(horizontal = 20.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
             ) {
@@ -235,6 +216,46 @@ fun SettingScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Button(
+                onClick = {
+                    loginViewModel.logout(context = navController.context)
+
+                    navController.navigate("welcomeScreen") {
+                        popUpTo(0) // Xóa toàn bộ stack điều hướng để ngăn quay lại màn hình cũ
+                    }
+                },
+                modifier = Modifier
+                    .height(55.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFFD33D5C))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = "Logout",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Logout",
+                        fontFamily = Nunito_Bold,
+                        color = Color(0xFFFFFFFF),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
         }
     }
 }
