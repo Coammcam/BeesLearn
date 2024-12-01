@@ -26,7 +26,7 @@ import com.google.accompanist.flowlayout.FlowRow
 
 
 @Composable
-fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit, goBack: () -> Unit) {
+fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit) {
     var sentenceParts by remember { mutableStateOf(emptyList<String>()) }
     val selectedParts by remember { mutableStateOf(emptyList<String>().toMutableList()) }
     var result: AnswerResult? by remember { mutableStateOf(null) }
@@ -49,40 +49,35 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 result = AnswerResult.INCORRECT
             }
             println("Donezo")
-            delay(1000)
-            onComplete()
-            selectedParts.clear()
-            result = null
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Arrange the words in correct order",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF5D4037),
-            fontFamily = Nunito_Bold,
-            modifier = Modifier.padding(top = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Text(
-            grammarQuestionModel.meaning,
-            fontSize = 18.sp
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // Box to hold the arranged sentence
-        Box(
+    Box {
+        Column(
             modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Arrange the words in correct order",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF5D4037),
+                fontFamily = Nunito_Bold,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            Text(
+                grammarQuestionModel.meaning,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Box to hold the arranged sentence
+            Box(modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .graphicsLayer {
@@ -92,64 +87,78 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                     translationY = -8.dp.toPx()
                 }
                 .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            if (selectedParts.isEmpty()) {
-                Divider(
-                    color = Color(0xFF5D4037),
-                    thickness = 2.dp,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .padding(8.dp)
-                )
-            } else {
-                // Using FlowRow to arrange words with reduced spacing
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
-                    mainAxisSpacing = 4.dp, // Reduced horizontal space between words
-                    crossAxisSpacing = 4.dp // Reduced vertical space between words
-                ) {
-                    selectedParts.forEach { word ->
-                        DraggableWordOption(word = word, isSelected = false, onClick = {
-                            selectedParts.remove(word)
-                            sentenceParts = sentenceParts + word
-                        })
+                contentAlignment = Alignment.Center
+            ) {
+                if (selectedParts.isEmpty()) {
+                    Divider(
+                        color = Color(0xFF5D4037),
+                        thickness = 2.dp,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(8.dp)
+                    )
+                } else {
+                    // Using FlowRow to arrange words with reduced spacing
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        mainAxisSpacing = 4.dp, // Reduced horizontal space between words
+                        crossAxisSpacing = 4.dp // Reduced vertical space between words
+                    ) {
+                        selectedParts.forEach { word ->
+                            DraggableWordOption(word = word, isSelected = false, onClick = {
+                                selectedParts.remove(word)
+                                sentenceParts = sentenceParts + word
+                            })
+                        }
                     }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
-        Box {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),  // Further reduced space between rows
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    mainAxisSpacing = 2.dp,  // Reduced space between words horizontally
-                    crossAxisSpacing = 2.dp // Reduced space between words vertically
+            Box {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),  // Further reduced space between rows
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    sentenceParts.forEach { word ->
-                        DraggableWordOption(word = word, isSelected = false, onClick = {
-                            selectedParts.add(word)
-                            sentenceParts = sentenceParts - word
-                        })
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        mainAxisSpacing = 2.dp,  // Reduced space between words horizontally
+                        crossAxisSpacing = 2.dp // Reduced space between words vertically
+                    ) {
+                        sentenceParts.forEach { word ->
+                            DraggableWordOption(word = word, isSelected = false, onClick = {
+                                selectedParts.add(word)
+                                sentenceParts = sentenceParts - word
+                            })
+                        }
                     }
                 }
             }
             if (result == AnswerResult.CORRECT) {
-                ConfirmQuestionYes()
+                ConfirmQuestionYes(
+                    Continue = {
+                        onComplete()
+                        selectedParts.clear()
+                        result = null
+                    }
+                )
             } else if (result == AnswerResult.INCORRECT) {
-                ConfirmQuestionNo()
+                ConfirmQuestionNo(
+                    Continue = {
+                        onComplete()
+                        selectedParts.clear()
+                        result = null
+                    }
+                )
             }
         }
     }
 }
+
 @Composable
 fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(

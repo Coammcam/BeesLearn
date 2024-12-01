@@ -30,25 +30,20 @@ import kotlinx.coroutines.delay
 @Composable
 fun TrueFalseScreen(
     truefalsequestion: TrueFalseQuestionModel_A,
-    goBack: ()->Unit,
     onComplete: ()->Unit
 ) {
     var result: AnswerResult? by remember { mutableStateOf(null) }
     var textColor by remember { mutableStateOf(Color(0xFF5D4037)) }
 
     LaunchedEffect(result) {
-        if(result != null){
-            println("done with true false")
-            delay(1000)
-            onComplete()
-            textColor = Color(0xFF5D4037)
-        }
+//        if(result != null){
+//
+//        }
     }
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -105,10 +100,10 @@ fun TrueFalseScreen(
                         if(truefalsequestion.answer == "0"){
                             println("${truefalsequestion.answer} is correct")
                             result = AnswerResult.CORRECT
-                            textColor = Color.Green
+//                            textColor = Color.Green
                         }else{
                             result = AnswerResult.INCORRECT
-                            textColor = Color.Red
+//                            textColor = Color.Red
                             println("WRONG")
                         }
 
@@ -122,19 +117,31 @@ fun TrueFalseScreen(
                         if(truefalsequestion.answer == "1"){
                             println("${truefalsequestion.answer} is correct")
                             result = AnswerResult.CORRECT
-                            textColor = Color.Green
+//                            textColor = Color.Green
                         }else{
                             println("WRONG")
                             result = AnswerResult.INCORRECT
-                            textColor = Color.Red
+//                            textColor = Color.Red
                         }
                     }
                 )
             }
             if(result == AnswerResult.CORRECT){
-                ConfirmQuestionYes()
+                ConfirmQuestionYes(
+                    Continue = {
+                        println("done with true false")
+                        onComplete()
+                        textColor = Color(0xFF5D4037)
+                    }
+                )
             }else if(result == AnswerResult.INCORRECT){
-                ConfirmQuestionNo()
+                ConfirmQuestionNo(
+                    Continue = {
+                        println("done with true false")
+                        onComplete()
+                        textColor = Color(0xFF5D4037)
+                    }
+                )
             }
         }
     }
