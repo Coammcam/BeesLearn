@@ -64,7 +64,8 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037),
                 fontFamily = Nunito_Bold,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = 16.dp),
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(48.dp))
