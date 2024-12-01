@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
@@ -23,6 +24,7 @@ import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import kotlinx.coroutines.delay
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
 
 
 @Composable
@@ -105,7 +107,9 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                     FlowRow(
                         modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
                         mainAxisSpacing = 4.dp, // Reduced horizontal space between words
-                        crossAxisSpacing = 4.dp // Reduced vertical space between words
+                        crossAxisSpacing = 4.dp, // Reduced vertical space between words
+                        lastLineMainAxisAlignment = FlowMainAxisAlignment.Center,
+                        mainAxisAlignment = MainAxisAlignment.Center
                     ) {
                         selectedParts.forEach { word ->
                             DraggableWordOption(word = word, isSelected = false, onClick = {
@@ -130,7 +134,9 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
                         mainAxisSpacing = 10.dp,  // Reduced space between words horizontally
-                        crossAxisSpacing = 10.dp // Reduced space between words vertically
+                        crossAxisSpacing = 10.dp, // Reduced space between words vertically
+                        lastLineMainAxisAlignment = FlowMainAxisAlignment.Center,
+                        mainAxisAlignment = MainAxisAlignment.Center
                     ) {
                         sentenceParts.forEach { word ->
                             DraggableWordOption(word = word, isSelected = false, onClick = {

@@ -30,10 +30,12 @@ import androidx.compose.foundation.lazy.grid.items
 import fpl.md07.beeslearn.models.Word
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.style.TextAlign
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
 
 @Composable
 fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word>, onComplete: () -> Unit) {
@@ -114,7 +116,7 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF5D4037),
                     fontFamily = Nunito_Bold,
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -125,6 +127,8 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
                 modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
                 mainAxisSpacing = 10.dp,  // Horizontal spacing between words
                 crossAxisSpacing = 10.dp, // Vertical spacing between rows
+                lastLineMainAxisAlignment = FlowMainAxisAlignment.Center,
+                mainAxisAlignment = MainAxisAlignment.Center
             ) {
                 listOfAnswer.forEach { word ->
                     WordOptionButton(
