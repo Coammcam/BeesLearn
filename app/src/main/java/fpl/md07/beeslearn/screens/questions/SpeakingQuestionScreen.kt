@@ -7,8 +7,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -111,9 +113,11 @@ fun SpeakingQuestionContent() {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "-------------------",
+                                text = "Quê hương em nổi tiếng khắp nơi với khu chợ nổi trên sông. Vốn bởi nơi đây có rất nhiều kênh rạch. Người dân di chuyển chủ yếu bằng thuyền, bằng ghe. Vậy nên, mới thành những buổi họp chợ trên mặt nước. Mới đầu, là để phục vụ người dân, sau nó trở thành một nét văn hóa đặc trưng hấp dẫn bà con tứ xứ đến xem. Trên mặt nước dập dềnh, những chiếc thuyền lớn có bé có tè tựu với đủ thứ mặt hàng thơm ngon, hấp dẫn. Có những chiếc thuyền đơn sơ, mộc mạc như người dân nơi đây.Cũng có những chiếc thuyền được trang trí cầu kì, sặc sỡ để thu hút khách du lịch. Nhưng điểm chung của tất cả những gian hàng di động ấy, chính là tấm lòng đôn hậu, chân chất của người bán hàng. Cả buổi chợ nơi đây lúc nào cũng rộn rã và vui tươi, xáo xào âm thanh người mua kẻ bán. Tất cả cứ lênh đênh, dập dềnh, thật là thú vị.",
                                 fontSize = 14.sp,
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .verticalScroll(rememberScrollState()),
                                 textAlign = TextAlign.Center
                             )
                         }
