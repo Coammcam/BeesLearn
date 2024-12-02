@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import kotlinx.coroutines.delay
@@ -63,47 +65,61 @@ fun SpeakingQuestionContent() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Bee icon and audio message
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(top = 48.dp)
-                    .fillMaxWidth()
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_without_text),
-                    contentDescription = "Bee Icon",
-                    modifier = Modifier.size(90.dp)
-                )
+            Spacer(modifier = Modifier.height(48.dp))
 
-                Spacer(modifier = Modifier.width(16.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.volume),
-                    contentDescription = "Play Audio",
-                    modifier = Modifier.size(30.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Box(
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp) // Adjusted height to make it more compact
+                    .graphicsLayer {
+                        shadowElevation = 8.dp.toPx()
+                        shape = RoundedCornerShape(16.dp)
+                        clip = true
+                        translationY = -8.dp.toPx() // Move the question box up slightly
+                    }
+                    .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(Color(0xFFFFF1B0))
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .padding(10.dp)
+                        .fillMaxWidth()
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    Image(
+                        painter = painterResource(id = R.drawable.logo_without_text),
+                        contentDescription = "Bee Icon",
+                        modifier = Modifier.size(90.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.volume),
+                        contentDescription = "Play Audio",
+                        modifier = Modifier.size(30.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(Color(0xFFE3DFCA))
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.adi),
-                            contentDescription = "Waveform",
-                            modifier = Modifier
-                                .width(120.dp)
-                                .height(40.dp)
-                        )
-                        Text(text = "x1", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "-------------------",
+                                fontSize = 14.sp,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
+
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -137,7 +153,7 @@ fun SpeakingQuestionContent() {
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 160.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
