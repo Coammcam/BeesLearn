@@ -140,6 +140,38 @@ fun SettingScreen(
                         .padding(start = 50.dp)
                 ) {
                     Image(
+                        painter = painterResource(id = R.drawable.wave_icon_dark),
+                        contentDescription = "Languages",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Thống Kê",
+                        fontFamily = Nunito_Bold,
+                        color = colorResource(id = R.color.secondary_color),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Button(
+                onClick = { /* Add your action here */ },
+                modifier = Modifier
+                    .height(55.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primary_color))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 50.dp)
+                ) {
+                    Image(
                         painter = painterResource(id = R.drawable.favorite),
                         contentDescription = "Favorite",
                         modifier = Modifier.size(20.dp)

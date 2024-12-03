@@ -224,22 +224,6 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
                 }
         )
 
-        // Icon 3 (Translate)
-        Image(
-            painter = painterResource(if (isTranslatePressed) R.drawable.translate else R.drawable.translatecnn),
-            contentDescription = "Icon 3",
-            modifier = Modifier
-                .size(30.dp)
-                .clickable {
-                    if (!isTranslatePressed) {
-                        isTranslatePressed = true // Chuyển sang chế độ hiển thị giao diện dịch
-                        isCalendarPressed = false // Đặt lại trạng thái của icon lịch
-                        Toast.makeText(context, "Icon Translate Clicked", Toast.LENGTH_SHORT).show()
-                        onIcon3Click()
-                    }
-                }
-        )
-
         // Icon 4 (User): Khi nhấn vào icon này, calendar và translate trở về trạng thái ban đầu
         Image(
             painter = painterResource(R.drawable.user),
