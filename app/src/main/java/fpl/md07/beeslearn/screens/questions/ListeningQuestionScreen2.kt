@@ -1,34 +1,57 @@
 package fpl.md07.beeslearn.screens.questions
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
+import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.models.GrammarQuestionModel
+import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import kotlinx.coroutines.delay
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
 
 
 @Composable
-fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit) {
+fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit) {
     var sentenceParts by remember { mutableStateOf(emptyList<String>()) }
     val selectedParts by remember { mutableStateOf(emptyList<String>().toMutableList()) }
     var result: AnswerResult? by remember { mutableStateOf(null) }
@@ -61,7 +84,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Arrange the words in correct order",
+                text = "Listen and arrange to get the correct answer",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037),
@@ -72,12 +95,47 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            Text(
-                grammarQuestionModel.meaning,
-                fontSize = 18.sp,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_without_text),
+                    contentDescription = "Bee Icon",
+                    modifier = Modifier.size(90.dp)
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.volume),
+                    contentDescription = "Play Audio",
+                    modifier = Modifier.size(30.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(Color(0xFFE3DFCA))
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.adi),
+                            contentDescription = "Waveform",
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(40.dp)
+                        )
+                        Text(text = "x1", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(48.dp))
 
@@ -112,7 +170,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                         mainAxisAlignment = MainAxisAlignment.Center
                     ) {
                         selectedParts.forEach { word ->
-                            DraggableWordOption(word = word, isSelected = false, onClick = {
+                            DraggableWordOption2(word = word, isSelected = false, onClick = {
                                 selectedParts.remove(word)
                                 sentenceParts = sentenceParts + word
                             })
@@ -139,7 +197,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                         mainAxisAlignment = MainAxisAlignment.Center
                     ) {
                         sentenceParts.forEach { word ->
-                            DraggableWordOption(word = word, isSelected = false, onClick = {
+                            DraggableWordOption2(word = word, isSelected = false, onClick = {
                                 selectedParts.add(word)
                                 sentenceParts = sentenceParts - word
                             })
@@ -169,7 +227,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
 }
 
 @Composable
-fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) {
+fun DraggableWordOption2(word: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -185,7 +243,7 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
             .clickable { onClick() }
             .padding(10.dp),
 
-    ) {
+        ) {
         Text(
             text = word,
             fontSize = 18.sp,
@@ -196,12 +254,18 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
     }
 }
 
-
-
-//
 //@Preview(showBackground = true)
 //@Composable
-//fun ArrangeSentencePreview() {
-//    val navController = rememberNavController()
-//    ArrangeSentenceScreen(){}
+//fun PreviewListeningQuestion2Content() {
+//    val mockGrammarQuestion = GrammarQuestionModel(
+//        question = "This is a sample sentence",
+//        meaning = "Meaning of the sentence",
+//        correct_answer = "This is the correct answer",
+//        topic = "1345",
+//        level = 1
+//    )
+//
+//    // Pass the mock GrammarQuestionModel to the ListeningQuestionScreen2 composable
+//    ListeningQuestionScreen2(grammarQuestionModel = mockGrammarQuestion, onComplete = {})
 //}
+

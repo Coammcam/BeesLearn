@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,63 +54,67 @@ fun ListeningQuestionContent() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Spacer(modifier = Modifier.height(48.dp))
 
-            // Bee icon and audio message
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+
+            Box(
                 modifier = Modifier
-                    .padding(top = 48.dp)
                     .fillMaxWidth()
+                    .height(200.dp) // Adjusted height to make it more compact
+                    .graphicsLayer {
+                        shadowElevation = 8.dp.toPx()
+                        shape = RoundedCornerShape(16.dp)
+                        clip = true
+                        translationY = -8.dp.toPx() // Move the question box up slightly
+                    }
+                    .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_without_text),
-                    contentDescription = "Bee Icon",
-                    modifier = Modifier.size(90.dp)
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.volume),
-                    contentDescription = "Play Audio",
-                    modifier = Modifier.size(30.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Box(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(Color(0xFFFFF1B0))
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .padding(10.dp)
+                        .fillMaxWidth()
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    Image(
+                        painter = painterResource(id = R.drawable.logo_without_text),
+                        contentDescription = "Bee Icon",
+                        modifier = Modifier.size(90.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.volume),
+                        contentDescription = "Play Audio",
+                        modifier = Modifier.size(30.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(Color(0xFFE3DFCA))
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.adi),
-                            contentDescription = "Waveform",
-                            modifier = Modifier
-                                .width(120.dp)
-                                .height(40.dp)
-                        )
-                        Text(text = "x1", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.adi),
+                                contentDescription = "Waveform",
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .height(40.dp)
+                            )
+                            Text(text = "x1", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
+
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Image below audio section
-            Image(
-                painter = painterResource(id = R.drawable.img_listening),
-                contentDescription = "Listening Question Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .padding(vertical = 10.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             // Answer options arranged in a Column with Row for two answers each
             val answers = listOf("A", "B", "C", "D") // Assuming these are your answer labels
