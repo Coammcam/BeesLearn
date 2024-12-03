@@ -85,8 +85,8 @@ val tabItems = listOf(
         screenName = "IPAExercise"
     ),
     TabItem(
-        unselectedIcon = R.drawable.wave_icon,
-        selectedIcon = R.drawable.wave_icon_dark,
+        unselectedIcon = R.drawable.translatecnn,
+        selectedIcon = R.drawable.translate,
         content = { navController -> StatsScreen(navController) },
         screenName = "statsScreen"
     ),
