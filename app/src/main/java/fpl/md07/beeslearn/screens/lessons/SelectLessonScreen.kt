@@ -173,43 +173,49 @@ fun ShowQuestionScreens(
     val multipleChoiceQuestion = questions.words
     var multipleChoiceQuestionIndex by remember { mutableIntStateOf(0) }
 
-    if(questionMode == QuestionMode.TRUEFALSE) {
-        TrueFalseScreen(
-            trueFalseQuestions!![trueFalseQuestionIndex],
-            onComplete = {
-                onCompleteQuestion()
-                if (trueFalseQuestionIndex != trueFalseQuestions.size-1) trueFalseQuestionIndex += 1
-            },
-        )
-    }else if(questionMode == QuestionMode.GRAMMAR){
-        ArrangeSentenceScreen(
-            grammarQuestions!![grammarQuestionIndex],
-            onComplete = {
-                onCompleteQuestion()
-                if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
+    when (questionMode) {
+        QuestionMode.TRUEFALSE -> {
+            TrueFalseScreen(
+                trueFalseQuestions!![trueFalseQuestionIndex],
+                onComplete = {
+                    onCompleteQuestion()
+                    if (trueFalseQuestionIndex != trueFalseQuestions.size-1) trueFalseQuestionIndex += 1
+                },
+            )
+        }
+        QuestionMode.GRAMMAR -> {
+            ArrangeSentenceScreen(
+                grammarQuestions!![grammarQuestionIndex],
+                onComplete = {
+                    onCompleteQuestion()
+                    if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
+                }
+            )
+        }
+        QuestionMode.MULTIPLECHOICE -> {
+            MultipleChoiceScreen(
+                words = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
+                randomNumber = Random.nextInt(4),
+                onComplete = {
+                    onCompleteQuestion()
+                    if (multipleChoiceQuestionIndex != multipleChoiceQuestion.chunked(4).size-1) multipleChoiceQuestionIndex += 1
+                }
+            )
+        }
+        QuestionMode.FILLIN -> {
+            FillInTheBlankScreen(
+                question = grammarQuestions!![grammarQuestionIndex],
+                noiseAnswers = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
+                onComplete = {
+                    onCompleteQuestion()
+                    if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
+                }
+            )
+        }
+        QuestionMode.FINISH -> {
+            CongratulationsScreen(){
+                goBack()
             }
-        )
-    }else if(questionMode == QuestionMode.MULTIPLECHOICE){
-        MultipleChoiceScreen(
-            words = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
-            randomNumber = Random.nextInt(4),
-            onComplete = {
-                onCompleteQuestion()
-                if (multipleChoiceQuestionIndex != multipleChoiceQuestion.chunked(4).size-1) multipleChoiceQuestionIndex += 1
-            }
-        )
-    }else if(questionMode == QuestionMode.FILLIN){
-        FillInTheBlankScreen(
-            question = grammarQuestions!![grammarQuestionIndex],
-            noiseAnswers = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
-            onComplete = {
-                onCompleteQuestion()
-                if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
-            }
-        )
-    }else if(questionMode == QuestionMode.FINISH){
-        CongratulationsScreen(){
-            goBack()
         }
     }
 }
