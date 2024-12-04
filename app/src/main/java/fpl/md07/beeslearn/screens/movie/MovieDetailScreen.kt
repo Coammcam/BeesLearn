@@ -1,5 +1,7 @@
 package fpl.md07.beeslearn.screens.movie
 
+import YoutubeMoviePlayerScreen
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +43,10 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.rememberAsyncImagePainter
+import fpl.md07.beeslearn.models.Movie
 
 @Composable
 fun MovieDetailScreen(
@@ -52,17 +58,36 @@ fun MovieDetailScreen(
     rating: String,
     description: String,
     banner: String,
+    trailer: String
 ) {
     // State to handle loading status
     var isLoading by remember { mutableStateOf(true) }
+    var showYouTubeMoviePlayer by remember { mutableStateOf(false) }
+    var videoMovieId: String? by remember { mutableStateOf(null) }
 
     // Simulate loading data (e.g., from an API)
     LaunchedEffect(true) {
         // Simulate API call delay
-        kotlinx.coroutines.delay(2000) // 2 seconds delay for demo
+        kotlinx.coroutines.delay(1000)
         isLoading = false // Set isLoading to false when data is fetched
     }
 
+    fun extractVideoIdFromUrl(url: String): String {
+        val uri = Uri.parse(url)
+        return uri.getQueryParameter("v") ?: uri.lastPathSegment ?: ""
+    }
+
+    fun startPlaying(movie: Movie) {
+        movie.trailer?.let {
+            videoMovieId = extractVideoIdFromUrl(it)
+            if (videoMovieId != null) {
+                showYouTubeMoviePlayer = true
+            } else {
+                // Xử lý nếu videoId không hợp lệ
+                println("Invalid video ID")
+            }
+        }
+    }
     // Show a loading spinner while data is being loaded
     if (isLoading) {
         Box(
@@ -93,27 +118,42 @@ fun MovieDetailScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             val bannerPainter = rememberImagePainter(
-                data = banner,
+                data =banner,
                 builder = {
                     crossfade(true) // Add transition effect when loading
                 }
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(24.dp)
-            ) {
-                Image(
-                    painter = bannerPainter,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Image(
-                    painter = bannerPainter,
-                    contentDescription = null,
+
+            if (showYouTubeMoviePlayer && videoMovieId != null) {
+                // Hiển thị YouTubePlayerScreen khi nhấn Play
+                YoutubeMoviePlayerScreen(videoMovieId = videoMovieId!!)
+            } else {
+                // Box chứa 2 ảnh
+                Box(
                     modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-                )
+                        .fillMaxWidth()
+                        .shadow(24.dp)
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(banner),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .graphicsLayer(alpha = 0.5f)
+                            .aspectRatio(16 / 9f),
+                        contentScale = ContentScale.Crop
+                    )
+                    Image(
+                        painter = rememberAsyncImagePainter(banner),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+                            .aspectRatio(16 / 9f),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+
             }
             Text(
                 text = title,
@@ -133,7 +173,16 @@ fun MovieDetailScreen(
                     .fillMaxWidth() // Chiếm toàn bộ màn hình
             ) {
                 Button(
-                    onClick = { /* TODO: Xử lý sự kiện khi nhấn nút */ },
+                    onClick = {
+                        trailer?.let {
+                            videoMovieId = extractVideoIdFromUrl(it) // Extract the video ID from the trailer URL
+                            if (videoMovieId != null) {
+                                showYouTubeMoviePlayer = true // Show the YouTube player screen
+                            } else {
+                                println("Invalid video ID")
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .padding(16.dp)
                         .height(56.dp)
@@ -263,20 +312,4 @@ fun MovieDetailScreen(
             }
         }
     }
-}
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewMovieScreen2() {
-    val navController = rememberNavController() // Khởi tạo navController giả
-    MovieDetailScreen(
-        navController = navController,
-        title = "The Dark Knight",
-        duration = "2h 32m",
-        genre = "Action, Drama",
-        year = "2008",
-        rating = "9.0",
-        description = "In Gotham City, the Joker emerges from his mysterious past to wreak havoc and chaos on the people of Gotham.",
-        banner = "jdsdajd"
-    )
-}
