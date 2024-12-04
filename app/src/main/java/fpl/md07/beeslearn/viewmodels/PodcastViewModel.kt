@@ -19,6 +19,9 @@ class PodcastViewModel : ViewModel() {
     private val _error = mutableStateOf<String?>(null)
     val error: State<String?> = _error
 
+    private val _selectedPodcast = mutableStateOf<Podcast?>(null)
+    val selectedPodcast: State<Podcast?> = _selectedPodcast
+
     init {
         loadPodcasts()
     }
@@ -42,5 +45,16 @@ class PodcastViewModel : ViewModel() {
                 _loading.value = false
             }
         }
+    }
+
+    // Xử lý chọn Podcast
+    fun selectPodcast(podcast: Podcast) {
+        _selectedPodcast.value = podcast
+    }
+
+    // Tách videoId từ URL
+    private fun extractYouTubeVideoId(url: String): String? {
+        val regex = "v=([a-zA-Z0-9_-]+)".toRegex()
+        return regex.find(url)?.groupValues?.get(1)
     }
 }

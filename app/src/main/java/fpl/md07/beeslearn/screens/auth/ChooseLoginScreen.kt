@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.auth
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,57 +42,33 @@ fun ChooseLoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally, // Căn giữa theo chiều ngang
             verticalArrangement = Arrangement.Center
         ) {
+            Image(
+                painter = painterResource(R.drawable.beeds),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(bottom = 80.dp)
+            )
             Text(
-                "Bắt đầu học cùng",
+                "Xin Chào! Bee",
                 fontSize = 35.sp,
                 color = Color(0xFF591429),
                 textAlign = TextAlign.Center,
                 fontFamily = NunitoBold
             )
 
-            Text(
-                "Bee !",
-                fontSize = 35.sp,
-                color = Color(0xFF591429),
-                textAlign = TextAlign.Center,
-                fontFamily = NunitoBold
-
-            )
-
+//            Text(
+//                "Bee !",
+//                fontSize = 35.sp,
+//                color = Color(0xFF591429),
+//                textAlign = TextAlign.Center,
+//                fontFamily = NunitoBold
+//            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             CustomButtonLogin(
-                imageResId = R.drawable.email,
-                title = "Tiếp tục với Email",
-                backgroundColor = Color(0xFF591429),
-                textColor = Color.White,
-                onClick = { navController.navigate("loginScreen")}
-            )
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            CustomButtonLogin(
-                imageResId = R.drawable.apple,
-                title = "Tiếp tục với Apple",
-                backgroundColor = Color(0xFF130101),
-                textColor = Color.White,
-                onClick = { navController.navigate("loginScreen")}
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-
-            CustomButtonLogin(
-                imageResId = R.drawable.facebook,
-                title = "Tiếp tục với Facebook",
-                backgroundColor = Color(0xFF475993),
-                textColor = Color.White,
-                onClick = { navController.navigate("loginScreen")}
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-
-            CustomButtonLogin(
-                imageResId = R.drawable.google,
-                title = "Tiếp tục với Google",
+                imageResId = R.drawable.beeds,
+                title = "Bắt Đầu Học",
                 backgroundColor = Color(0xFFFFFFFF),
                 textColor = Color.Black,
                 onClick = { navController.navigate("loginScreen")}

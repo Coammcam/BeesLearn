@@ -11,7 +11,7 @@ val musicItem1 = listOf(
         description = "Today, you'll learn advanced English vocabulary...",
         imageRes = R.drawable.podcast3,
         time = "14:30",
-        youtubeUrl = "https://www.youtube.com/watch?v=NYY5Xz07tno",
+        youtubeUrl = "https://www.youtube.com/watch?v=vwzy8wbqJik",
         author = "Justin"
     ),
     Music(
@@ -21,7 +21,7 @@ val musicItem1 = listOf(
         description = "Today, you'll learn advanced English vocabulary...",
         imageRes = R.drawable.podcast2,
         time = "1:30",
-        youtubeUrl = "https://www.youtube.com/watch?v=NYY5Xz07tno",
+        youtubeUrl = "https://www.youtube.com/watch?v=xFYQQPAOz7Y",
         author = "Eminem"
     ),
     Music(
@@ -31,7 +31,7 @@ val musicItem1 = listOf(
         description = "Today, you'll learn advanced English vocabulary...",
         imageRes = R.drawable.podcast3,
         time = "4:28",
-        youtubeUrl = "https://www.youtube.com/watch?v=NYY5Xz07tno",
+        youtubeUrl = "https://www.youtube.com/watch?v=pbMwTqkKSps",
         author = "Lion King"
     ),
     Music(
@@ -41,7 +41,7 @@ val musicItem1 = listOf(
         description = "Today, you'll learn advanced English vocabulary...",
         imageRes = R.drawable.podcast2,
         time = "3:50",
-        youtubeUrl = "https://www.youtube.com/watch?v=NYY5Xz07tno",
+        youtubeUrl = "https://www.youtube.com/watch?v=qaH7exO9GzQ",
         author = "Justin"
     ),
     Music(
@@ -51,7 +51,7 @@ val musicItem1 = listOf(
         description = "Today, you'll learn advanced English vocabulary...",
         imageRes = R.drawable.podcast3,
         time = "3:34",
-        youtubeUrl = "https://www.youtube.com/watch?v=NYY5Xz07tno",
+        youtubeUrl = "https://www.youtube.com/watch?v=AoAm4om0wTs",
         author = "Lion King"
     ),
 )

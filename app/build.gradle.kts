@@ -80,5 +80,18 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-flowlayout:0.36.0")
 
+    dependencies {
+        implementation ("com.google.android.exoplayer:exoplayer:2.19.1")  // Thêm ExoPlayer
+        implementation ("androidx.media3:media3-exoplayer:1.0.0")         // Thêm Media3
+    }
+
+    implementation ("androidx.media3:media3-exoplayer:1.0.0")
+    implementation ("androidx.media3:media3-ui:1.0.0")
+
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
+
+
+
+
 
 }
