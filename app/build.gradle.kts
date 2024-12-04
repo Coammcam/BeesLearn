@@ -69,6 +69,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
 
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
@@ -79,11 +80,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:0.36.0")
 
     implementation("com.google.accompanist:accompanist-flowlayout:0.36.0")
-
-    dependencies {
-        implementation ("com.google.android.exoplayer:exoplayer:2.19.1")  // Thêm ExoPlayer
-        implementation ("androidx.media3:media3-exoplayer:1.0.0")         // Thêm Media3
-    }
+    implementation ("com.google.android.exoplayer:exoplayer:2.19.1")  // Thêm ExoPlayer
+    implementation ("androidx.media3:media3-exoplayer:1.0.0")         // Thêm Media3
 
     implementation ("androidx.media3:media3-exoplayer:1.0.0")
     implementation ("androidx.media3:media3-ui:1.0.0")
