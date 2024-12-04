@@ -56,7 +56,7 @@ import fpl.md07.beeslearn.screens.auth.ForgotPasswordScreen
 import fpl.md07.beeslearn.screens.lessons.SelectLessonScreen
 import fpl.md07.beeslearn.screens.tabs.SettingScreen
 import fpl.md07.beeslearn.screens.auth.SignUpScreen
-import fpl.md07.beeslearn.screens.tabs.StatsScreen
+import fpl.md07.beeslearn.screens.tabs.TranslateScreen
 import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
@@ -87,7 +87,7 @@ val tabItems = listOf(
     TabItem(
         unselectedIcon = R.drawable.translatecnn,
         selectedIcon = R.drawable.translate,
-        content = { navController -> StatsScreen(navController) },
+        content = { navController -> TranslateScreen(navController) },
         screenName = "statsScreen"
     ),
     TabItem(
@@ -132,7 +132,7 @@ fun NestedBottomTab(
             IPAExercise(navController)
         }
         composable("statsScreen") {
-            StatsScreen(navController)
+            TranslateScreen(navController)
         }
         composable("settingScreen") {
             SettingScreen(navController)
