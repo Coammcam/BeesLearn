@@ -47,9 +47,7 @@ import fpl.md07.beeslearn.screens.tabs.IPAExercise
 import fpl.md07.beeslearn.screens.auth.LoginScreen
 import fpl.md07.beeslearn.screens.movie.MovieListScreen
 import fpl.md07.beeslearn.screens.movie.MovieDetailScreen
-import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.music.MusicDetailScreen
-import fpl.md07.beeslearn.screens.music.MusicPlayerScreen
 import fpl.md07.beeslearn.screens.podcast.PodcastListScreen
 import fpl.md07.beeslearn.screens.podcast.PodcastDetailScreen
 import fpl.md07.beeslearn.screens.lessons.LessonScreen
@@ -61,9 +59,9 @@ import fpl.md07.beeslearn.screens.tabs.TranslateScreen
 import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
+import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
-import fpl.md07.beeslearn.viewmodels.MusicViewModel
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -179,22 +177,16 @@ fun NestedBottomTab(
                 banner = backStackEntry.arguments?.getString("banner") ?: ""
             )
         }
-
         composable("musicScreen") {
             MusicListScreen(navController)
         }
-        composable(
-            "musicScreen2"
-        ) {
-            MusicDetailScreen(navController)
-        }
 
         composable(
-            "musicScreen3/{musicId}",
+            "musicDetail/{musicId}",
             arguments = listOf(navArgument("musicId") { type = NavType.IntType })
         ) { backStackEntry ->
             val musicId = backStackEntry.arguments?.getInt("musicId")
-            MusicPlayerScreen(navController, musicId)
+            MusicDetailScreen(navController, musicId)
         }
         composable("practiceOneScreen") {
             LessonScreen(navController)

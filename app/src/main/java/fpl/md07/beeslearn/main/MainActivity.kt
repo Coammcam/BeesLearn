@@ -21,9 +21,9 @@ import fpl.md07.beeslearn.navigation.BottomNavBar
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
 import fpl.md07.beeslearn.screens.movie.MovieListScreen
-import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.podcast.PodcastListScreen
 import fpl.md07.beeslearn.screens.lessons.SelectLessonScreen
+import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
 
