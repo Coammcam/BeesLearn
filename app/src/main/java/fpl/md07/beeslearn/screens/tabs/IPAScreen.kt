@@ -1,5 +1,8 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.content.Context
+import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,11 +18,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,52 +37,53 @@ import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.models.IPAModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
+
 private val vowels = listOf(
-    IPAModel("ɑ", "hot", null, null),
-    IPAModel("æ", "cat", null, null),
-    IPAModel("ʌ", "but", null, null),
-    IPAModel("ɛ", "bed", null, null),
-    IPAModel("eɪ", "say", null, null),
-    IPAModel("ɪ", "sit", null, null),
-    IPAModel("i", "see", null, null),
-    IPAModel("ə", "about", null, null),
-    IPAModel("oʊ", "go", null, null),
-    IPAModel("ʊ", "book", null, null),
-    IPAModel("u", "you", null, null),
-    IPAModel("aʊ", "now", null, null),
-    IPAModel("aɪ", "my", null, null),
-    IPAModel("ɔɪ", "boy", null, null),
-    IPAModel("ɔ", "thought", null, null),
-    IPAModel("ɒ", "lot", null, null),
-    IPAModel("e", "met", null, null),
-    IPAModel("ø", "bird", null, null),
-    IPAModel("œ", "girl", null, null)
+    IPAModel("ɑ", "hot", R.raw.hot, R.raw.hot),
+    IPAModel("æ", "cat", R.raw.cat, R.raw.cat),
+    IPAModel("ʌ", "but", R.raw.but, R.raw.but),
+    IPAModel("ɛ", "bed", R.raw.bed, R.raw.bed),
+    IPAModel("eɪ", "say", R.raw.but, R.raw.say),
+    IPAModel("ɪ", "sit", R.raw.but, R.raw.sit),
+    IPAModel("i", "see", R.raw.but, R.raw.see),
+    IPAModel("ə", "about", R.raw.but, R.raw.about),
+    IPAModel("oʊ", "go", R.raw.but, R.raw.go),
+    IPAModel("ʊ", "book", R.raw.but, R.raw.book),
+    IPAModel("u", "you", R.raw.but, R.raw.you),
+    IPAModel("aʊ", "now", R.raw.but, R.raw.now),
+    IPAModel("aɪ", "my", R.raw.but, R.raw.my),
+    IPAModel("ɔɪ", "boy", R.raw.but, R.raw.boy),
+    IPAModel("ɔ", "thought", R.raw.but, R.raw.thought),
+    IPAModel("ɒ", "lot", R.raw.but, R.raw.lot),
+    IPAModel("e", "met", R.raw.but, R.raw.met),
+    IPAModel("ø", "bird", R.raw.but, R.raw.bird),
+    IPAModel("œ", "girl", R.raw.but, R.raw.girl)
 )
 private val consonants = listOf(
-    IPAModel("b", "bat", null, null),
-    IPAModel("d", "dog", null, null),
-    IPAModel("f", "fish", null, null),
-    IPAModel("g", "goat", null, null),
-    IPAModel("h", "hat", null, null),
-    IPAModel("j", "yes", null, null),
-    IPAModel("k", "kite", null, null),
-    IPAModel("l", "lip", null, null),
-    IPAModel("m", "man", null, null),
-    IPAModel("n", "nose", null, null),
-    IPAModel("p", "pig", null, null),
-    IPAModel("r", "red", null, null),
-    IPAModel("s", "sun", null, null),
-    IPAModel("t", "top", null, null),
-    IPAModel("v", "van", null, null),
-    IPAModel("w", "water", null, null),
-    IPAModel("z", "zebra", null, null),
-    IPAModel("ʃ", "ship", null, null),
-    IPAModel("ʒ", "measure", null, null),
-    IPAModel("θ", "think", null, null),
-    IPAModel("ð", "this", null, null),
-    IPAModel("ŋ", "sing", null, null),
-    IPAModel("tʃ", "cheese", null, null),
-    IPAModel("dʒ", "judge", null, null)
+    IPAModel("b", "bat", R.raw.but, R.raw.bat),
+    IPAModel("d", "dog", R.raw.but, R.raw.dog),
+    IPAModel("f", "fish", R.raw.but, R.raw.fish),
+    IPAModel("g", "goat", R.raw.but, R.raw.goat),
+    IPAModel("h", "hat", R.raw.but, R.raw.hat),
+    IPAModel("j", "yes", R.raw.but, R.raw.yes),
+    IPAModel("k", "kite", R.raw.but, R.raw.kite),
+    IPAModel("l", "lip", R.raw.but, R.raw.lip),
+    IPAModel("m", "man", R.raw.but, R.raw.man),
+    IPAModel("n", "nose", R.raw.but, R.raw.nose),
+    IPAModel("p", "pig", R.raw.but, R.raw.pig),
+    IPAModel("r", "red", R.raw.but, R.raw.red),
+    IPAModel("s", "sun", R.raw.but, R.raw.sun),
+    IPAModel("t", "top", R.raw.but, R.raw.top),
+    IPAModel("v", "van", R.raw.but, R.raw.van),
+    IPAModel("w", "water", R.raw.but, R.raw.water),
+    IPAModel("z", "zebra", R.raw.but, R.raw.zebra),
+    IPAModel("ʃ", "ship", R.raw.but, R.raw.ship),
+    IPAModel("ʒ", "measure", R.raw.but, R.raw.measure),
+    IPAModel("θ", "think", R.raw.but, R.raw.think),
+    IPAModel("ð", "this", R.raw.but, R.raw.thisword),
+    IPAModel("ŋ", "sing", R.raw.but, R.raw.sing),
+    IPAModel("tʃ", "cheese", R.raw.but, R.raw.cheese),
+    IPAModel("dʒ", "judge", R.raw.but, R.raw.judge)
 )
 
 @Composable
@@ -120,7 +126,7 @@ fun SectionTitle(title: String) {
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.secondary_color),
             modifier = Modifier
-                .weight(1.3f)
+                .weight(1.4f)
                 .padding(horizontal = 8.dp),
             textAlign = TextAlign.Center,
             fontFamily = Nunito_Bold
@@ -139,6 +145,7 @@ fun SectionTitle(title: String) {
 fun IPAGrid(symbols: List<IPAModel>) {
 
     val clickedIndex = remember { mutableStateOf<Int?>(null) }
+    val isPlayingSound = remember { mutableStateOf<Boolean>(false) }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -149,44 +156,92 @@ fun IPAGrid(symbols: List<IPAModel>) {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(symbols.size) { index ->
-            val (symbol, example) = symbols[index]
-            IPACard(
-                symbol = symbol,
-                example = example,
-                isClicked = clickedIndex.value == index,
-                onClick = {
-                    clickedIndex.value = index
+            val (symbol, example, soundSymbol, soundExample) = symbols[index]
+            if (soundSymbol != null) {
+                if (soundExample != null) {
+                    IPACard(
+                        symbol = symbol,
+                        example = example,
+                        soundSymbol = soundSymbol,
+                        soundExample = soundExample,
+                        isClicked = clickedIndex.value == index,
+                        isPlayingSound = isPlayingSound.value,
+                        onClick = {
+                            clickedIndex.value = index
+                            isPlayingSound.value = true
+                        }
+                    )
                 }
-            )
+            }
         }
     }
     // Tự động reset sau 1 giây nếu một mục được click
     clickedIndex.value?.let {
         LaunchedEffect(it) {
-            kotlinx.coroutines.delay(1000)
+            kotlinx.coroutines.delay(1100)
             clickedIndex.value = null
+            isPlayingSound.value = false
         }
     }
 
+}
+
+fun playSound(
+    fileName: String,
+    mediaPlayer: MutableState<MediaPlayer?>,
+    context: Context,
+    onCompletion: (() -> Unit)? = null
+) {
+    val resId =
+        context.resources.getIdentifier(fileName.removeSuffix(".mp3"), "raw", context.packageName)
+    if (resId != 0) {
+        mediaPlayer.value?.release()
+        mediaPlayer.value = MediaPlayer.create(context, resId)
+        mediaPlayer.value?.setOnCompletionListener {
+
+            onCompletion?.invoke()
+        }
+        mediaPlayer.value?.start()
+    } else {
+        Log.e("IPAGrid", "Sound file $fileName not found in the raw resource directory.")
+    }
 }
 
 @Composable
 fun IPACard(
     symbol: String,
     example: String,
+    soundSymbol: Int,
+    soundExample: Int,
     isClicked: Boolean,
-    onClick: () -> Unit
-    ) {
+    isPlayingSound: Boolean,
+    onClick: () -> Unit,
+
+) {
     val borderColor = if (isClicked) {
         colorResource(id = R.color.secondary_color)
     } else {
         Color.Transparent
     }
+    val context = LocalContext.current
+    val mediaPlayer = remember { mutableStateOf<MediaPlayer?>(null) }
+    //val isPlayingSound = remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier
             .size(80.dp)
-            .clickable(enabled = !isClicked) { onClick() },
+            .clickable(
+                enabled = !isClicked && !isPlayingSound,
+                onClick = {
+                    onClick()
+                    playSound("$soundSymbol.mp3", mediaPlayer, context) {
+                        playSound("$soundExample.mp3", mediaPlayer, context) {
+                            // Khi âm thanh thứ 2 hoàn tất, reset trạng thái clicked và playing sound
+
+                        }
+                    }
+                }
+            ),
         color = colorResource(id = R.color.fourth_color),
         shape = RoundedCornerShape(11.dp),
         tonalElevation = 2.dp,
@@ -215,6 +270,7 @@ fun IPACard(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
