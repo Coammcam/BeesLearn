@@ -302,22 +302,3 @@ private fun EditProfilePre() {
 }
 
 
-//Row(
-//modifier = Modifier.fillMaxWidth(),
-//verticalAlignment = Alignment.CenterVertically,
-//horizontalArrangement = Arrangement.SpaceBetween
-//) {
-//    BackComponent(navController)
-//    Text(
-//        "Edit Profile",
-//        fontSize = 18.sp,
-//        fontFamily = NunitoBold,
-//        color = colorResource(id = R.color.secondary_color),
-//        modifier = Modifier.padding(end = 30.dp)
-//
-//    )
-//    Text("")
-//}
-
-
-
