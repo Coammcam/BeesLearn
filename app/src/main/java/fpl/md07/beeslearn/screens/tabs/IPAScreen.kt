@@ -1,6 +1,8 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.*
@@ -12,8 +14,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -101,10 +107,11 @@ fun SectionTitle(title: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(modifier = Modifier
-            .height(1.dp)
-            .weight(1f)
-            .background(colorResource(id = R.color.secondary_color))
+        Box(
+            modifier = Modifier
+                .height(1.dp)
+                .weight(1f)
+                .background(colorResource(id = R.color.secondary_color))
         )
 
         Text(
@@ -131,6 +138,8 @@ fun SectionTitle(title: String) {
 @Composable
 fun IPAGrid(symbols: List<IPAModel>) {
 
+    val clickedIndex = remember { mutableStateOf<Int?>(null) }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier
@@ -141,18 +150,47 @@ fun IPAGrid(symbols: List<IPAModel>) {
     ) {
         items(symbols.size) { index ->
             val (symbol, example) = symbols[index]
-            IPACard(symbol, example)
+            IPACard(
+                symbol = symbol,
+                example = example,
+                isClicked = clickedIndex.value == index,
+                onClick = {
+                    clickedIndex.value = index
+                }
+            )
         }
     }
+    // Tự động reset sau 1 giây nếu một mục được click
+    clickedIndex.value?.let {
+        LaunchedEffect(it) {
+            kotlinx.coroutines.delay(1000)
+            clickedIndex.value = null
+        }
+    }
+
 }
 
 @Composable
-fun IPACard(symbol: String, example: String) {
+fun IPACard(
+    symbol: String,
+    example: String,
+    isClicked: Boolean,
+    onClick: () -> Unit
+    ) {
+    val borderColor = if (isClicked) {
+        colorResource(id = R.color.secondary_color)
+    } else {
+        Color.Transparent
+    }
+
     Surface(
-        modifier = Modifier.size(80.dp),
+        modifier = Modifier
+            .size(80.dp)
+            .clickable(enabled = !isClicked) { onClick() },
         color = colorResource(id = R.color.fourth_color),
         shape = RoundedCornerShape(11.dp),
-        tonalElevation = 2.dp
+        tonalElevation = 2.dp,
+        border = BorderStroke(2.dp, borderColor)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -173,6 +211,7 @@ fun IPACard(symbol: String, example: String) {
                 color = colorResource(id = R.color.third_color),
                 textAlign = TextAlign.Center
             )
+
         }
     }
 }
