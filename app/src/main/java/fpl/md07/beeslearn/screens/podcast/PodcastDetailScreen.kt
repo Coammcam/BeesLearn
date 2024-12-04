@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.podcast
 
+import YouTubePlayerScreen
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -66,6 +67,9 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
     var isShared by remember { mutableStateOf(false) }
     var isDownloaded by remember { mutableStateOf(false) }
 
+    var showYouTubePlayer by remember { mutableStateOf(false) }
+    var videoId: String? by remember { mutableStateOf(null) }
+
     fun handleLike() {
         isLiked = !isLiked
     }
@@ -89,26 +93,16 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
         Toast.makeText(context, "Downloading...", Toast.LENGTH_SHORT).show()
     }
 
-    fun openYouTube(podcast: Podcast) {
+    fun extractVideoIdFromUrl(url: String): String {
+        val uri = Uri.parse(url)
+        return uri.getQueryParameter("v") ?: uri.lastPathSegment ?: ""
+    }
 
-        try {
-            val youtubeUrl = podcast.link_on_youtube
-            Log.d("YouTube", "Opening URL: $youtubeUrl")
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(youtubeUrl)
-                setPackage("com.google.android.youtube")  //app
-            }
 
-            try {
-                context.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                // trinh duyet
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl))
-                context.startActivity(browserIntent)
-            }
-        } catch (e: Exception) {
-            Toast.makeText(context, "Không thể mở YouTube", Toast.LENGTH_SHORT).show()
-        }
+    fun startPlaying(podcast: Podcast) {
+        // Khi nhấn Play, lấy videoId từ URL và hiển thị YouTubePlayer
+        videoId = extractVideoIdFromUrl(podcast.link_on_youtube)
+        showYouTubePlayer = true
     }
 
     if (loading) {
@@ -116,8 +110,6 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
     } else if (error != null) {
         Text("Error: $error")
     } else {
-
-        // Display podcast details based on ID
         val podcast = podcasts.firstOrNull { it.title.hashCode() == podcastId }
         if (podcast != null) {
 
@@ -139,29 +131,36 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(24.dp)
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = podcast.image_url),
-                        contentDescription = null,
+                if (showYouTubePlayer && videoId != null) {
+                    // Hiển thị YouTubePlayerScreen khi nhấn Play
+                    YouTubePlayerScreen(videoId = videoId!!)
+                } else {
+                    // Box chứa 2 ảnh
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .graphicsLayer(alpha = 0.5f)
-                            .aspectRatio(16 / 9f),
-                        contentScale = ContentScale.Crop
-                    )
-                    Image(
-                        painter = rememberAsyncImagePainter(model = podcast.image_url),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-                            .aspectRatio(16 / 9f),
-                        contentScale = ContentScale.Crop
-                    )
+                            .shadow(24.dp)
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = podcast.image_url),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .graphicsLayer(alpha = 0.5f)
+                                .aspectRatio(16 / 9f),
+                            contentScale = ContentScale.Crop
+                        )
+                        Image(
+                            painter = rememberAsyncImagePainter(model = podcast.image_url),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+                                .aspectRatio(16 / 9f),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
+
                 Text(
                     text = podcast.title,
                     fontSize = 20.sp,
@@ -178,23 +177,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         .height(1.dp)    // Chiều cao của đường line
                         .background(Color.Gray)  // Màu của đường line
                 )
-                Row(
-                    modifier = Modifier
-                        .padding(start = 25.dp, end = 25.dp, top = 15.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = podcast.duration,
-                        fontFamily = Nunito_Bold,
-                        fontSize = 16.sp,
-                    )
-                    Text(
-                        text = podcast.duration,
-                        fontFamily = Nunito_Bold,
-                        fontSize = 16.sp,
-                    )
-                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -218,7 +201,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         modifier = Modifier
                             .size(40.dp)
                             .clickable {
-                                podcast?.let { openYouTube(it) }
+                                podcast?.let { startPlaying(it) }
                             }
                     )
                     Image(
@@ -229,6 +212,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
 
                     )
                 }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -294,6 +278,7 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         )
                     }
                 }
+
                 Text(
                     text = podcast.description,
                     fontSize = 18.sp,
@@ -304,11 +289,10 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                     color = Color(0xff591429)
                 )
             }
-
         }
     }
-
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
