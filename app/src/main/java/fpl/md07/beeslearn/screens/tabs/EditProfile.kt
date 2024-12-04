@@ -1,7 +1,16 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,22 +67,44 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.requests.UpdateUserRequest
 import fpl.md07.beeslearn.viewmodels.EditProfileViewModel
+import coil.compose.rememberImagePainter
 
 
 @Composable
-fun EditProfile(
-    navController: NavController,
-    editProfileViewModel: EditProfileViewModel = viewModel()
-) {
+fun EditProfile(navController: NavController,editProfileViewModel: EditProfileViewModel = viewModel()) {
+
     var userr = UserSession.currentUser
     Log.d("cde", userr.toString())
+
     var name by remember { mutableStateOf(userr?.username ?: "") }
     var email by remember { mutableStateOf(userr?.email ?: "") }
     var dateOfBirth by remember { mutableStateOf(userr?.dateOfBirth ?: "") }
     var phoneNumber by remember { mutableStateOf(userr?.phoneNumber ?: "") }
 
+    var avatarUri by remember { mutableStateOf<Uri?>(null) } // Avatar Uri
+
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    // Sử dụng ActivityResultContracts.GetContent() để chọn ảnh hoặc chụp ảnh
+    val getImageLauncher: ActivityResultLauncher<String> =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            avatarUri = uri // Cập nhật URI của ảnh đã chọn
+        }
+
+
+
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { isSuccess ->
+            if (isSuccess) {
+                avatarUri?.let {
+                    // Chụp ảnh thành công, sử dụng URI của ảnh
+                    avatarUri = it
+                }
+            }
+        }
+    )
 
     Box(
         modifier = Modifier
@@ -108,7 +139,9 @@ fun EditProfile(
             Spacer(modifier = Modifier.height(50.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.avatarsetting),
+                painter = rememberImagePainter(
+                    avatarUri ?: R.drawable.avatarsetting // Nếu avatarUri rỗng, hiển thị ảnh mặc định
+                ),
                 contentDescription = "Avatar",
                 modifier = Modifier
                     .size(140.dp)
@@ -122,7 +155,30 @@ fun EditProfile(
                 fontSize = 10.sp,
                 fontFamily = NunitoBold,
                 color = Color(0xFF777777),
-                style = TextStyle(textDecoration = TextDecoration.Underline)
+                style = TextStyle(textDecoration = TextDecoration.Underline),
+                modifier = Modifier.clickable {
+                    val options = arrayOf("Chọn ảnh", "Chụp ảnh")
+                    val builder = android.app.AlertDialog.Builder(context)
+                    builder.setTitle("Choose an option")
+                        .setItems(options) { _, which ->
+                            when (which) {
+                                0 -> {
+                                    // Chọn ảnh từ bộ sưu tập
+                                    getImageLauncher.launch("image/*") // This launches the image picker
+                                }
+                                1 -> {
+                                    // Mở camera để chụp ảnh
+                                    val photoUri = createImageUri(context) // Create URI for the photo
+                                    photoUri?.let { uri ->
+                                        avatarUri = uri // Set the avatarUri to the new photo URI
+                                        takePictureLauncher.launch(uri) // Launch the camera with the URI
+                                    }
+                                }
+                            }
+                        }
+                        .create()
+                        .show()
+                }
             )
 
             CustomTextField(
@@ -193,7 +249,7 @@ fun EditProfile(
                     username = name,
                     phoneNumber = if (phoneNumber.isBlank()) null else phoneNumber,
                     dateOfBirth = if (dateOfBirth.isBlank()) null else dateOfBirth,
-                    profileImageUrl = "" // không call
+                    profileImageUrl = avatarUri?.toString() ?: "" // Cập nhật URL của avatar
                 )
 
                 editProfileViewModel.updateProfile(
@@ -224,6 +280,19 @@ fun EditProfile(
         }
     }
 }
+fun createImageUri(context: Context): Uri? {
+    val contentValues = ContentValues().apply {
+        put(MediaStore.Images.Media.TITLE, "avatar_${System.currentTimeMillis()}")
+        put(MediaStore.Images.Media.DESCRIPTION, "Avatar image")
+        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+    }
+
+    // Insert the image in the media store
+    val imageUri: Uri? = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+    return imageUri
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -231,24 +300,5 @@ private fun EditProfilePre() {
     val navController = rememberNavController()
     EditProfile(navController)
 }
-
-
-//Row(
-//modifier = Modifier.fillMaxWidth(),
-//verticalAlignment = Alignment.CenterVertically,
-//horizontalArrangement = Arrangement.SpaceBetween
-//) {
-//    BackComponent(navController)
-//    Text(
-//        "Edit Profile",
-//        fontSize = 18.sp,
-//        fontFamily = NunitoBold,
-//        color = colorResource(id = R.color.secondary_color),
-//        modifier = Modifier.padding(end = 30.dp)
-//
-//    )
-//    Text("")
-//}
-
 
 
