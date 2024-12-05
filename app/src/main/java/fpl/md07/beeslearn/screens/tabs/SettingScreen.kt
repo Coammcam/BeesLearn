@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
@@ -66,12 +68,18 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.avatarsetting),
+                painter = rememberAsyncImagePainter(
+                    model = user?.profileImageUrl ?: R.drawable.avatarsetting,
+                    contentScale = ContentScale.Fit,
+                    placeholder = painterResource(id = R.drawable.avatarsetting),
+                    error = painterResource(id = R.drawable.avatarsetting)
+                ),
                 contentDescription = "Avatar",
                 modifier = Modifier
                     .size(170.dp)
                     .clip(CircleShape)
             )
+
 
             Spacer(modifier = Modifier.height(10.dp))
 

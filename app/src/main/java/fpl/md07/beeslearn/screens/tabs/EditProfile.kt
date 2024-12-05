@@ -63,25 +63,27 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.viewModelFactory
+import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.requests.UpdateUserRequest
 import fpl.md07.beeslearn.viewmodels.EditProfileViewModel
 import coil.compose.rememberImagePainter
-
+import fpl.md07.beeslearn.createMultipartBody
 
 @Composable
 fun EditProfile(navController: NavController,editProfileViewModel: EditProfileViewModel = viewModel()) {
 
     var userr = UserSession.currentUser
-    Log.d("cde", userr.toString())
+    Log.d("user information: ", userr.toString())
 
     var name by remember { mutableStateOf(userr?.username ?: "") }
     var email by remember { mutableStateOf(userr?.email ?: "") }
     var dateOfBirth by remember { mutableStateOf(userr?.dateOfBirth ?: "") }
     var phoneNumber by remember { mutableStateOf(userr?.phoneNumber ?: "") }
 
-    var avatarUri by remember { mutableStateOf<Uri?>(null) } // Avatar Uri
+    var avatarUri by remember { mutableStateOf<Uri?>(Uri.parse(userr?.profileImageUrl)) }
 
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -91,8 +93,6 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             avatarUri = uri // Cập nhật URI của ảnh đã chọn
         }
-
-
 
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
@@ -105,6 +105,12 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             }
         }
     )
+
+    val avatarModel = if (avatarUri.toString().isNullOrEmpty()) {
+        R.drawable.avatarsetting
+    } else {
+        avatarUri
+    }
 
     Box(
         modifier = Modifier
@@ -139,8 +145,11 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             Spacer(modifier = Modifier.height(50.dp))
 
             Image(
-                painter = rememberImagePainter(
-                    avatarUri ?: R.drawable.avatarsetting // Nếu avatarUri rỗng, hiển thị ảnh mặc định
+                painter = rememberAsyncImagePainter(
+                    model = avatarModel,
+                    contentScale = ContentScale.Fit,
+                    placeholder = painterResource(id = R.drawable.avatarsetting),
+                    error = painterResource(id = R.drawable.avatarsetting)
                 ),
                 contentDescription = "Avatar",
                 modifier = Modifier
@@ -249,7 +258,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
                     username = name,
                     phoneNumber = if (phoneNumber.isBlank()) null else phoneNumber,
                     dateOfBirth = if (dateOfBirth.isBlank()) null else dateOfBirth,
-                    profileImageUrl = avatarUri?.toString() ?: "" // Cập nhật URL của avatar
+                    file = avatarUri?.let { createMultipartBody(it, context) }
                 )
 
                 editProfileViewModel.updateProfile(

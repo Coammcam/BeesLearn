@@ -86,6 +86,7 @@ dependencies {
     implementation ("androidx.media3:media3-exoplayer:1.0.0")
     implementation ("androidx.media3:media3-ui:1.0.0")
 
+    implementation ("com.google.code.gson:gson:2.8.8")
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
 
 }

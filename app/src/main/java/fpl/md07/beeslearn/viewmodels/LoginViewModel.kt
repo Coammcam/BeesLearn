@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.api.HttpRequest
 import fpl.md07.beeslearn.models.UserModel
@@ -27,9 +28,6 @@ class LoginViewModel : ViewModel() {
     private val _registerResponse = MutableStateFlow<Response<UserModel>?>(null)
     val registerResponse: StateFlow<Response<UserModel>?> = _registerResponse
 
-    private val _userData = MutableStateFlow<UserModel?>(null)
-    val userData: StateFlow<UserModel?> = _userData
-
     var rememberedEmail: String = ""
         private set
     var rememberedPassword: String = ""
@@ -42,7 +40,7 @@ class LoginViewModel : ViewModel() {
     private val PREF_PASSWORD = "password"
     private val PREF_REMEMBER = "remember_me"
 
-    fun login(context: Context ,email: String, password: String, rememberMe: Boolean) {
+    fun login(context: Context, email: String, password: String, rememberMe: Boolean) {
         viewModelScope.launch {
             try {
                 _loginResponse.value = null
@@ -52,14 +50,12 @@ class LoginViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _loginResponse.value = response
                     _loginMessage.value = "Đăng nhập thành công!"
-                    _userData.value = response.body()
-                    Log.d("LoginViewModel", "User data: ${_userData.value}")
-
                     UserSession.currentUser = response.body()
-                    Log.d("currentUser", "User data: ${_userData.value}")
 
                     if (rememberMe) {
-                        saveCredentials(context, email, password)
+                        saveCredentials(
+                            context, email, password, userModel = UserSession.currentUser!!
+                        )
                     } else {
                         clearCredentials(context)
                     }
@@ -85,6 +81,13 @@ class LoginViewModel : ViewModel() {
                     HttpRequest.getInstance().Register(RegisterRequest(username, email, password))
                 if (response.isSuccessful) {
                     _registerMessage.value = "Đăng ký thành công!"
+                    UserSession.currentUser = UserModel(
+                        email = email,
+                        username = username,
+                        phoneNumber = null,
+                        dateOfBirth = null,
+                        profileImageUrl = ""
+                    )
                 } else {
                     if (response.code() == 409) {
                         _registerMessage.value = "Email này đã tồn tại!"
@@ -100,34 +103,52 @@ class LoginViewModel : ViewModel() {
 
     fun loadRememberedCredentials(context: Context) {
         val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        rememberedEmail = sharedPreferences.getString(PREF_EMAIL, "") ?: ""
-        rememberedPassword = sharedPreferences.getString(PREF_PASSWORD, "") ?: ""
-        isRemembered = sharedPreferences.getBoolean(PREF_REMEMBER, false)
+
+        val userJson = sharedPreferences.getString("user", null)
+        if (userJson != null) {
+            val gson = Gson()
+            val userModel = gson.fromJson(userJson, UserModel::class.java)
+            UserSession.currentUser = userModel
+
+            rememberedEmail = sharedPreferences.getString(PREF_EMAIL, "") ?: ""
+            rememberedPassword = sharedPreferences.getString(PREF_PASSWORD, "") ?: ""
+            isRemembered = sharedPreferences.getBoolean(PREF_REMEMBER, false)
+        } else {
+            rememberedPassword = ""
+            isRemembered = false
+        }
+
+
     }
 
-    private fun saveCredentials(context: Context, email: String, password: String) {
+    private fun saveCredentials(
+        context: Context, email: String, password: String, userModel: UserModel
+    ) {
         val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit()
-            .putString(PREF_EMAIL, email)
-            .putString(PREF_PASSWORD, password)
-            .putBoolean(PREF_REMEMBER, true)
-            .apply()
+
+        val editor = sharedPreferences.edit()
+
+        val gson = Gson()
+        val userJson = gson.toJson(userModel)
+
+        editor.putString("user", userJson)
+        editor.putString(PREF_EMAIL, email)
+        editor.putString(PREF_PASSWORD, password)
+        editor.putBoolean(PREF_REMEMBER, true)
+        editor.apply()
+
     }
 
     private fun clearCredentials(context: Context) {
         val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit()
-            .remove(PREF_EMAIL)
-            .remove(PREF_PASSWORD)
-            .putBoolean(PREF_REMEMBER, false)
-            .apply()
+        sharedPreferences.edit().remove("user").remove(PREF_EMAIL).remove(PREF_PASSWORD)
+            .putBoolean(PREF_REMEMBER, false).apply()
     }
 
     fun logout(context: Context) {
         clearCredentials(context)
 
         UserSession.currentUser = null
-
 
         _loginMessage.value = "Đăng xuất thành công!"
     }
