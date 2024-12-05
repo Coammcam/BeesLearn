@@ -88,8 +88,4 @@ dependencies {
 
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
 
-
-
-
-
 }

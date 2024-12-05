@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.movie
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,14 +48,17 @@ import fpl.md07.beeslearn.viewmodels.MovieViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+
 //import fpl.md07.beeslearn.viewmodels.data.movieList
 @Composable
 fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel) {
+
 
     // Directly access the properties from ViewModel
     val movieList = movieViewModel.movieList.value
     val isLoading = movieViewModel.isLoading.value
     val errorMessage = movieViewModel.errorMessage.value
+
 
     Column(
         modifier = Modifier
@@ -66,6 +70,7 @@ fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel
     ) {
         BackComponent(navController)
     }
+
 
     Column(
         modifier = Modifier
@@ -113,6 +118,7 @@ fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel
                     )
                 }
 
+
                 Image(
                     painter = painterResource(R.drawable.beetv),
                     contentDescription = "Bee with headphones",
@@ -155,6 +161,7 @@ fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel
     }
 }
 
+
 @Composable
 fun MovieItem(movie: Movie, navController: NavController) {
     val encodedBanner = URLEncoder.encode(movie.banner, StandardCharsets.UTF_8.toString())
@@ -166,12 +173,14 @@ fun MovieItem(movie: Movie, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+
         val posterPainter = rememberImagePainter(
             data = movie.poster,
             builder = {
                 crossfade(true) // Add transition effect when loading
             }
         )
+
 
         Image(
             modifier = Modifier
@@ -199,10 +208,14 @@ fun PreViewMovieScreen() {
     // Tạo một navController giả cho preview
     val navController = rememberNavController()
 
+
     // Tạo một MovieViewModel giả (mock) cho preview
     val movieViewModel = MovieViewModel()
+
 
     // Gọi MovieListScreen với cả navController và movieViewModel
     MovieListScreen(navController = navController, movieViewModel = movieViewModel)
 }
+
+
 
