@@ -47,8 +47,6 @@ fun MovieDetailScreen(
     var videoMovieId: String? by remember { mutableStateOf(null) }
 
 
-
-
     fun extractVideoIdFromUrl(url: String): String {
         val uri = Uri.parse(url)
         return uri.getQueryParameter("v") ?: uri.lastPathSegment ?: ""
@@ -76,201 +74,202 @@ fun MovieDetailScreen(
             CircularProgressIndicator()
         }
     } else {
-    // Show a loading spinner while data is being loaded
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
-    ) {
-        BackComponent(navController)
-    }
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 60.dp),
-        verticalArrangement = Arrangement.Top,
-    ) {
-        val bannerPainter = rememberImagePainter(data = banner)
-
-
-        if (showYouTubeMoviePlayer && videoMovieId != null) {
-            // Display the YouTube player screen when play is clicked
-            YoutubeMoviePlayerScreen(videoMovieId = videoMovieId!!)
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(24.dp)
-            ) {
-                Image(
-                    painter = bannerPainter,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Image(
-                    painter = bannerPainter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, top = 10.dp),
-                )
-            }
-        }
-
-
-        Text(
-            text = title,
-            fontSize = 35.sp,
-            color = colorResource(id = R.color.secondary_color),
+        // Show a loading spinner while data is being loaded
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp),
-            fontWeight = FontWeight.Bold,
-            fontFamily = Nunito_Bold,
-            textAlign = TextAlign.Center,
-            lineHeight = 40.sp
-        )
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
         ) {
-            Button(
-                onClick = { startPlaying() },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .height(56.dp)
-                    .width(179.dp)
-                    .clip(RoundedCornerShape(28.dp))
-                    .align(Alignment.TopCenter), // Center the button
-                colors = ButtonDefaults.buttonColors(Color(0xFF591429))
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.play2), // Replace with your play icon
-                    contentDescription = "Play",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-
-
-                Spacer(modifier = Modifier.width(14.dp))
-
-
-                Text(
-                    text = "Play",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontFamily = Nunito_Bold,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            BackComponent(navController)
         }
 
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp, start = 15.dp, end = 15.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+                .padding(top = 60.dp),
+            verticalArrangement = Arrangement.Top,
         ) {
-            // Year
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Năm phát hành: ",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary2_color),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = Nunito_Bold,
-                )
-                Text(
-                    text = year,
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary_color),
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Nunito_Bold,
-                )
+            val bannerPainter = rememberImagePainter(data = banner)
+
+
+            if (showYouTubeMoviePlayer && videoMovieId != null) {
+                // Display the YouTube player screen when play is clicked
+                YoutubeMoviePlayerScreen(videoMovieId = videoMovieId!!)
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(24.dp)
+                ) {
+                    Image(
+                        painter = bannerPainter,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Image(
+                        painter = bannerPainter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+                    )
+                }
             }
 
 
-            // Genre
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Thể loại: ",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary2_color),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = Nunito_Bold,
-                )
-                Text(
-                    text = genre,
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary_color),
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Nunito_Bold,
-                )
+            Text(
+                text = title,
+                fontSize = 35.sp,
+                color = colorResource(id = R.color.secondary_color),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
+                fontWeight = FontWeight.Bold,
+                fontFamily = Nunito_Bold,
+                textAlign = TextAlign.Center,
+                lineHeight = 40.sp
+            )
+
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Button(
+                    onClick = { startPlaying() },
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .height(56.dp)
+                        .width(179.dp)
+                        .clip(RoundedCornerShape(28.dp))
+                        .align(Alignment.TopCenter), // Center the button
+                    colors = ButtonDefaults.buttonColors(Color(0xFF591429))
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.play2), // Replace with your play icon
+                        contentDescription = "Play",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+
+                    Text(
+                        text = "Play",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontFamily = Nunito_Bold,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
 
-            // Duration
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Thời gian: ",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary2_color),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = Nunito_Bold,
-                )
-                Text(
-                    text = duration,
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary_color),
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Nunito_Bold,
-                )
-            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, start = 15.dp, end = 15.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                // Year
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Năm phát hành: ",
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary2_color),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = Nunito_Bold,
+                    )
+                    Text(
+                        text = year,
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary_color),
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = Nunito_Bold,
+                    )
+                }
 
 
-            // Rating
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Đánh giá: ",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary2_color),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = Nunito_Bold,
-                )
-                Text(
-                    text = rating,
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary_color),
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Nunito_Bold,
-                )
-            }
+                // Genre
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Thể loại: ",
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary2_color),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = Nunito_Bold,
+                    )
+                    Text(
+                        text = genre,
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary_color),
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = Nunito_Bold,
+                    )
+                }
 
 
-            // Description
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Mô tả: ",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary2_color),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = Nunito_Bold,
-                )
-                Text(
-                    text = description,
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.secondary_color),
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Nunito_Bold,
-                )
+                // Duration
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Thời gian: ",
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary2_color),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = Nunito_Bold,
+                    )
+                    Text(
+                        text = duration,
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary_color),
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = Nunito_Bold,
+                    )
+                }
+
+
+                // Rating
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Đánh giá: ",
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary2_color),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = Nunito_Bold,
+                    )
+                    Text(
+                        text = rating,
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary_color),
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = Nunito_Bold,
+                    )
+                }
+
+
+                // Description
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Mô tả: ",
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary2_color),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = Nunito_Bold,
+                    )
+                    Text(
+                        text = description,
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.secondary_color),
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = Nunito_Bold,
+                    )
+                }
             }
         }
     }
