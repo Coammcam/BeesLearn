@@ -18,11 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.MovieViewModel
 
 @Composable
 fun MovieDetailScreen(
@@ -34,7 +36,8 @@ fun MovieDetailScreen(
     rating: String,
     description: String,
     banner: String,
-    trailer: String?
+    trailer: String?,
+    movieViewModel: MovieViewModel = viewModel ()
 ) {
 
     var showYouTubeMoviePlayer by remember { mutableStateOf(false) }
@@ -57,8 +60,18 @@ fun MovieDetailScreen(
             }
         }
     }
+    if (movieViewModel.isLoading.value) {
+        // Display the loading spinner
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center)
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
 
-    // Show a loading spinner while data is being loaded
+        // Show a loading spinner while data is being loaded
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -246,4 +259,5 @@ fun MovieDetailScreen(
             }
         }
     }
+}
 
