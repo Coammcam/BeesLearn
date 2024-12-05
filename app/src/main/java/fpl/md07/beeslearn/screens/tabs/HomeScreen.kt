@@ -21,12 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
@@ -185,6 +189,8 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
     var isCalendarPressed by remember { mutableStateOf(false) }
     var isTranslatePressed by remember { mutableStateOf(false) }
 
+    var user = UserSession.currentUser
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,15 +232,19 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
 
         // Icon 4 (User): Khi nhấn vào icon này, calendar và translate trở về trạng thái ban đầu
         Image(
-            painter = painterResource(R.drawable.user),
-            contentDescription = "Icon 4",
+            painter = rememberAsyncImagePainter(
+                model = user?.profileImageUrl ?: R.drawable.avatarsetting,
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.avatarsetting),
+                error = painterResource(id = R.drawable.avatarsetting)
+            ),
+            contentDescription = "Avatar",
             modifier = Modifier
                 .size(40.dp)
+                .clip(CircleShape)
                 .clickable {
-                    isCalendarPressed = false // Đặt lại trạng thái của icon lịch
-                    isTranslatePressed = false // Đặt lại trạng thái của icon dịch
-                    Toast.makeText(context, "Icon 4 Clicked", Toast.LENGTH_SHORT).show()
-
+                    isCalendarPressed = false
+                    isTranslatePressed = false
                 }
         )
     }
