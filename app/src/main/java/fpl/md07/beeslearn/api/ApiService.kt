@@ -13,11 +13,15 @@ import fpl.md07.beeslearn.models.Word
 import fpl.md07.beeslearn.models.responseModel.QuestionResponseModel
 import fpl.md07.beeslearn.requests.ChangePasswordRequest
 import fpl.md07.beeslearn.requests.UpdateUserRequest
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -58,6 +62,17 @@ interface ApiService {
 
     @GET("/music")
     suspend fun getMusicList(): Response<List<Music>>
+
+    @Multipart
+    @PUT("/user")
+    suspend fun EditProfile(
+        @Part("email") email: RequestBody,
+        @Part("username") username: RequestBody,
+        @Part("phone_number") phoneNumber: RequestBody?,
+        @Part("date_of_birth") dateOfBirth: RequestBody?,
+        @Part file: MultipartBody.Part?
+    ): Response<UserModel>
+
 }
 
 

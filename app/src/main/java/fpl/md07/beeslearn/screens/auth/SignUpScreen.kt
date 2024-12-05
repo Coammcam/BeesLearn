@@ -63,7 +63,6 @@ fun SignUpScreen(
     // Lấy trạng thái thông báo từ ViewModel
     val registerMessage by viewModel.registerMessage.collectAsState()
 
-
     Column(
         modifier = Modifier
             .background(Color(0xffffffff))
@@ -129,6 +128,7 @@ fun SignUpScreen(
                         Toast.makeText(context, "Mật khẩu không khớp!", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
+
                         viewModel.register(email, password, name)
                     }
                 }
