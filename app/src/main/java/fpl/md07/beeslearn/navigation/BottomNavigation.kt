@@ -155,7 +155,7 @@ fun NestedBottomTab(
 
 
         composable(
-            "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}/{banner}",
+            "movieScreen2/{title}/{duration}/{genre}/{year}/{rating}/{description}/{banner}/{trailer}",
             arguments = listOf(
                 navArgument("title") { type = NavType.StringType },
                 navArgument("duration") { type = NavType.StringType },
@@ -163,7 +163,8 @@ fun NestedBottomTab(
                 navArgument("year") { type = NavType.StringType },
                 navArgument("rating") { type = NavType.StringType },
                 navArgument("description") { type = NavType.StringType },
-                navArgument("banner") { type = NavType.StringType }
+                navArgument("banner") { type = NavType.StringType },
+                navArgument("trailer") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             MovieDetailScreen(
@@ -174,9 +175,11 @@ fun NestedBottomTab(
                 year = backStackEntry.arguments?.getString("year") ?: "",
                 rating = backStackEntry.arguments?.getString("rating") ?: "",
                 description = backStackEntry.arguments?.getString("description") ?: "",
-                banner = backStackEntry.arguments?.getString("banner") ?: ""
+                banner = backStackEntry.arguments?.getString("banner") ?: "",
+                trailer = backStackEntry.arguments?.getString("trailer") ?: ""
             )
         }
+        
         composable("musicScreen") {
             MusicListScreen(navController)
         }

@@ -158,6 +158,7 @@ fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel
 @Composable
 fun MovieItem(movie: Movie, navController: NavController) {
     val encodedBanner = URLEncoder.encode(movie.banner, StandardCharsets.UTF_8.toString())
+    val encodedTrailer = URLEncoder.encode(movie.trailer, StandardCharsets.UTF_8.toString())
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,7 +179,7 @@ fun MovieItem(movie: Movie, navController: NavController) {
                 .height(250.dp)
                 .clip(shape = RoundedCornerShape(8.dp))
                 .clickable {
-                    navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}/$encodedBanner") },
+                    navController.navigate("movieScreen2/${movie.title}/${movie.duration}/${movie.genre}/${movie.year}/${movie.rating}/${movie.description}/$encodedBanner/$encodedTrailer") },
             painter = posterPainter,
             contentDescription = null,
             contentScale = ContentScale.Crop
