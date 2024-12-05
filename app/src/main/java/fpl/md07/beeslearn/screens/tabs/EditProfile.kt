@@ -1,9 +1,12 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
@@ -64,6 +67,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.layout.ContentScale
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
@@ -88,23 +92,20 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
-    // Sử dụng ActivityResultContracts.GetContent() để chọn ảnh hoặc chụp ảnh
+    // Sử dụng ActivityResultContracts.GetContent() để chọn ảnh
     val getImageLauncher: ActivityResultLauncher<String> =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             avatarUri = uri // Cập nhật URI của ảnh đã chọn
         }
 
-    val takePictureLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { isSuccess ->
-            if (isSuccess) {
-                avatarUri?.let {
-                    // Chụp ảnh thành công, sử dụng URI của ảnh
-                    avatarUri = it
-                }
-            }
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            // Permission granted, proceed to pick an image
+            getImageLauncher.launch("image/*")
+        } else {
+            Toast.makeText(context, "Permission denied to access images", Toast.LENGTH_SHORT).show()
         }
-    )
+    }
 
     val avatarModel = if (avatarUri.toString().isNullOrEmpty()) {
         R.drawable.avatarsetting
@@ -155,6 +156,23 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
                 modifier = Modifier
                     .size(140.dp)
                     .clip(CircleShape)
+                    .clickable {
+                        // Check for permission before picking an image
+                        when {
+                            // If permission is already granted, open the image picker
+                            ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED -> {
+                                getImageLauncher.launch("image/*")
+                            }
+                            // If the app is running on Android 13+, request permission
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                            }
+                            // If running on Android 12 or lower, request the old permission
+                            else -> {
+                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            }
+                        }
+                    }
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -165,29 +183,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
                 fontFamily = NunitoBold,
                 color = Color(0xFF777777),
                 style = TextStyle(textDecoration = TextDecoration.Underline),
-                modifier = Modifier.clickable {
-                    val options = arrayOf("Chọn ảnh", "Chụp ảnh")
-                    val builder = android.app.AlertDialog.Builder(context)
-                    builder.setTitle("Choose an option")
-                        .setItems(options) { _, which ->
-                            when (which) {
-                                0 -> {
-                                    // Chọn ảnh từ bộ sưu tập
-                                    getImageLauncher.launch("image/*") // This launches the image picker
-                                }
-                                1 -> {
-                                    // Mở camera để chụp ảnh
-                                    val photoUri = createImageUri(context) // Create URI for the photo
-                                    photoUri?.let { uri ->
-                                        avatarUri = uri // Set the avatarUri to the new photo URI
-                                        takePictureLauncher.launch(uri) // Launch the camera with the URI
-                                    }
-                                }
-                            }
-                        }
-                        .create()
-                        .show()
-                }
+
             )
 
             CustomTextField(
