@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.music
 
+import YouTubePlayerScreen
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -48,6 +49,7 @@ import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.models.Music
+import fpl.md07.beeslearn.models.Podcast
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.MusicViewModel
 
@@ -59,6 +61,22 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
     val musics = viewModel.musics.value
     val loading = viewModel.loading.value
     val error = viewModel.error.value
+
+    var showYouTubePlayer by remember { mutableStateOf(false) }
+    var videoId: String? by remember { mutableStateOf(null) }
+
+    fun extractVideoIdFromUrl(url: String): String {
+        val uri = Uri.parse(url)
+        return uri.getQueryParameter("v") ?: uri.lastPathSegment ?: ""
+    }
+
+
+    fun startPlaying(music: Music) {
+        // Khi nhấn Play, lấy videoId từ URL và hiển thị YouTubePlayer
+        videoId = extractVideoIdFromUrl(music.link_on_youtube)
+        showYouTubePlayer = true
+    }
+
 
 
     if (loading) {
@@ -73,7 +91,7 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 30.dp),
+                    .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -83,32 +101,38 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(start = 20.dp, end = 20.dp, top = 70.dp, bottom = 20.dp),
+                    .padding(top = 70.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(24.dp)
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = music.image_url),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth()
-                            .graphicsLayer(alpha = 0.5f)
-                            .aspectRatio(16 / 9f),
-                        contentScale = ContentScale.Crop
-                    )
-                    Image(
-                        painter = rememberAsyncImagePainter(model = music.image_url),
-                        contentDescription = null,
+                if (showYouTubePlayer && videoId != null) {
+                    // Hiển thị YouTubePlayerScreen khi nhấn Play
+                    YouTubePlayerComposable(videoId = videoId!!)
+                } else {
+                    // Box chứa 2 ảnh
+                    Box(
                         modifier = Modifier
-                            .padding(start = 20.dp, end = 20.dp, top = 15.dp)
-                            .aspectRatio(16 / 9f),
-                        contentScale = ContentScale.Crop
-                    )
+                            .fillMaxWidth()
+                            .shadow(24.dp)
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = music.image_url),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .graphicsLayer(alpha = 0.5f)
+                                .aspectRatio(16 / 9f),
+                            contentScale = ContentScale.Crop
+                        )
+                        Image(
+                            painter = rememberAsyncImagePainter(model = music.image_url),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+                                .aspectRatio(16 / 9f),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
                 Text(
                     text = music.title,
@@ -140,19 +164,6 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
                 )
                 Row(
                     modifier = Modifier
-                        .padding(start = 25.dp, end = 25.dp, top = 10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = music.duration,
-                        fontSize = 16.sp,
-                        fontFamily = Nunito_Bold,
-                        color = colorResource(id = R.color.secondary_color)
-                    )
-                }
-                Row(
-                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 40.dp, end = 40.dp, top = 30.dp)
                         .align(Alignment.CenterHorizontally),
@@ -170,9 +181,10 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
                     Image(
                         painter = painterResource(R.drawable.play),
                         contentDescription = null,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier
+                            .size(40.dp)
                             .clickable {
-
+                                music?.let { startPlaying(it) }
                             }
                     )
                     Image(
@@ -208,7 +220,7 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
 fun Music3Item(music: Music) {
     Column(
         modifier = Modifier
-            .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+            .padding(top = 10.dp, start = 25.dp, end = 5.dp)
     ) {
         Text(
             text = music.description,
