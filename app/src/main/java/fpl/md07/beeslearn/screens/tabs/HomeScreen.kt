@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
@@ -231,14 +232,17 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
         )
 
         // Icon 4 (User): Khi nhấn vào icon này, calendar và translate trở về trạng thái ban đầu
-        Image(
-            painter = rememberAsyncImagePainter(
-                model = user?.profileImageUrl ?: R.drawable.avatarsetting,
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(id = R.drawable.avatarsetting),
-                error = painterResource(id = R.drawable.avatarsetting)
-            ),
+        AsyncImage(
+//            painter = rememberAsyncImagePainter(
+//                model = user?.profileImageUrl ?: R.drawable.avatarsetting,
+//                contentScale = ContentScale.Crop,
+//                placeholder = painterResource(id = R.drawable.avatarsetting),
+//                error = painterResource(id = R.drawable.avatarsetting)
+//            ),
+            model = user?.profileImageUrl,
+            fallback = painterResource(id = R.drawable.avatarsetting),
             contentDescription = "Avatar",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)

@@ -3,7 +3,6 @@ package fpl.md07.beeslearn.screens.tabs
 import android.Manifest
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -12,7 +11,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,7 +20,6 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,8 +33,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -60,34 +54,31 @@ import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.BackComponent
 import fpl.md07.beeslearn.components.CustomTextField
-import fpl.md07.beeslearn.models.UserModel
 import fpl.md07.beeslearn.screens.NunitoBold
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.layout.ContentScale
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.viewModelFactory
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.requests.UpdateUserRequest
 import fpl.md07.beeslearn.viewmodels.EditProfileViewModel
-import coil.compose.rememberImagePainter
 import fpl.md07.beeslearn.createMultipartBody
 
 @Composable
 fun EditProfile(navController: NavController,editProfileViewModel: EditProfileViewModel = viewModel()) {
 
-    var userr = UserSession.currentUser
-    Log.d("user information: ", userr.toString())
+    val user = UserSession.currentUser
+    Log.d("user information: ", user.toString())
 
-    var name by remember { mutableStateOf(userr?.username ?: "") }
-    var email by remember { mutableStateOf(userr?.email ?: "") }
-    var dateOfBirth by remember { mutableStateOf(userr?.dateOfBirth ?: "") }
-    var phoneNumber by remember { mutableStateOf(userr?.phoneNumber ?: "") }
+    var name by remember { mutableStateOf(user?.username ?: "") }
+    var email by remember { mutableStateOf(user?.email ?: "") }
+    var dateOfBirth by remember { mutableStateOf(user?.dateOfBirth ?: "") }
+    var phoneNumber by remember { mutableStateOf(user?.phoneNumber ?: "") }
 
-    var avatarUri by remember { mutableStateOf<Uri?>(Uri.parse(userr?.profileImageUrl)) }
+    var avatarUri by remember { mutableStateOf<Uri?>(Uri.parse(user?.profileImageUrl)) }
 
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -145,14 +136,11 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = avatarModel,
-                    contentScale = ContentScale.Fit,
-                    placeholder = painterResource(id = R.drawable.avatarsetting),
-                    error = painterResource(id = R.drawable.avatarsetting)
-                ),
+            AsyncImage(
+                model = avatarModel,
+                fallback = painterResource(id = R.drawable.avatarsetting),
                 contentDescription = "Avatar",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(140.dp)
                     .clip(CircleShape)
@@ -208,7 +196,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
                 labelText = "Date of birth",
                 value = dateOfBirth,
                 onValueChange = { dateOfBirth = it },
-                placeholder = dateOfBirth
+                placeholder = "dd/MM/yyyy"
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -217,7 +205,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
                 labelText = "Phone number",
                 value = phoneNumber,
                 onValueChange = { phoneNumber = it },
-                placeholder = phoneNumber
+                placeholder = "09xxxxxxxx"
             )
 
             Spacer(modifier = Modifier.height(10.dp))

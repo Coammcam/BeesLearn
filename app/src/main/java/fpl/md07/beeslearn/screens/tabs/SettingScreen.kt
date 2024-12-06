@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
@@ -55,7 +56,7 @@ fun SettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(alignment = Alignment.Start)
-                .padding(20.dp)
+                .padding(10.dp)
         )
 
         Column(
@@ -67,19 +68,16 @@ fun SettingScreen(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = user?.profileImageUrl ?: R.drawable.avatarsetting,
-                    contentScale = ContentScale.Fit,
-                    placeholder = painterResource(id = R.drawable.avatarsetting),
-                    error = painterResource(id = R.drawable.avatarsetting)
-                ),
+            AsyncImage(
+                model = user?.profileImageUrl,
                 contentDescription = "Avatar",
+                placeholder = painterResource(id = R.drawable.avatarsetting),
+                fallback = painterResource(id = R.drawable.avatarsetting),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(170.dp)
                     .clip(CircleShape)
             )
-
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -298,6 +296,11 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(15.dp))
         }
     }
+}
+
+@Composable
+fun SettingButton(){
+
 }
 
 @Preview(showSystemUi = true, showBackground = true)
