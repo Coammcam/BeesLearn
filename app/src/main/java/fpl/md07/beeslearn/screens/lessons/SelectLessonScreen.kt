@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import fpl.md07.beeslearn.components.BeeAnimaComponent
 import fpl.md07.beeslearn.components.TextBoxComponent
 import androidx.navigation.compose.rememberNavController
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.TopBarComponent
 import fpl.md07.beeslearn.components.TopBarComponent_A
@@ -37,19 +38,25 @@ import fpl.md07.beeslearn.screens.CongratulationsScreen
 import fpl.md07.beeslearn.screens.questions.ArrangeSentenceScreen
 import fpl.md07.beeslearn.screens.questions.FillInTheBlankScreen
 import fpl.md07.beeslearn.screens.questions.MultipleChoiceScreen
+import fpl.md07.beeslearn.screens.questions.SpeakingQuestionScreen
 import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
 import fpl.md07.beeslearn.viewmodels.QuestionViewModel
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
 enum class QuestionMode{
-    TRUEFALSE, GRAMMAR, MULTIPLECHOICE, FILLIN, FINISH
+    TRUEFALSE, GRAMMAR, MULTIPLECHOICE, FILLIN, FINISH, SPEAKBITCH
 }
 
 @Composable
 fun SelectLessonScreen(navController: NavController) {
+
+    val userDataViewModel: UserDataViewModel = viewModel()
+    userDataViewModel.getCurrencyData()
+
     var isQuestionLoaded by remember { mutableStateOf(false) }
     var isLessonSelected by remember { mutableStateOf(false) }
 
@@ -74,6 +81,7 @@ fun SelectLessonScreen(navController: NavController) {
             )
             questionIndex = 1
             questionMode = QuestionMode.GRAMMAR
+            UserSession.bonusHoneyJar = 0
         }
     }
 
@@ -179,8 +187,9 @@ fun ShowQuestionScreens(
                 trueFalseQuestions!![trueFalseQuestionIndex],
                 onComplete = {
                     onCompleteQuestion()
-                    if (trueFalseQuestionIndex != trueFalseQuestions.size-1) trueFalseQuestionIndex += 1
+                    if (trueFalseQuestionIndex != trueFalseQuestions.size - 1) trueFalseQuestionIndex += 1
                 },
+                goBack = {goBack()},
             )
         }
         QuestionMode.GRAMMAR -> {
@@ -188,29 +197,37 @@ fun ShowQuestionScreens(
                 grammarQuestions!![grammarQuestionIndex],
                 onComplete = {
                     onCompleteQuestion()
-                    if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
-                }
+                    if (grammarQuestionIndex != grammarQuestions.size - 1) grammarQuestionIndex += 1
+                },
+                goBack = {goBack()}
             )
         }
         QuestionMode.MULTIPLECHOICE -> {
             MultipleChoiceScreen(
-                words = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
+                words = multipleChoiceQuestion!!.shuffled().chunked(4)
+                    .shuffled()[multipleChoiceQuestionIndex],
                 randomNumber = Random.nextInt(4),
                 onComplete = {
                     onCompleteQuestion()
-                    if (multipleChoiceQuestionIndex != multipleChoiceQuestion.chunked(4).size-1) multipleChoiceQuestionIndex += 1
-                }
+                    if (multipleChoiceQuestionIndex != multipleChoiceQuestion.chunked(4).size - 1) multipleChoiceQuestionIndex += 1
+                },
+                goBack = {goBack()}
             )
         }
         QuestionMode.FILLIN -> {
             FillInTheBlankScreen(
                 question = grammarQuestions!![grammarQuestionIndex],
-                noiseAnswers = multipleChoiceQuestion!!.shuffled().chunked(4).shuffled()[multipleChoiceQuestionIndex],
+                noiseAnswers = multipleChoiceQuestion!!.shuffled().chunked(4)
+                    .shuffled()[multipleChoiceQuestionIndex],
                 onComplete = {
                     onCompleteQuestion()
-                    if (grammarQuestionIndex != grammarQuestions.size-1) grammarQuestionIndex += 1
-                }
+                    if (grammarQuestionIndex != grammarQuestions.size - 1) grammarQuestionIndex += 1
+                },
+                goBack = {goBack()}
             )
+        }
+        QuestionMode.SPEAKBITCH ->{
+            SpeakingQuestionScreen()
         }
         QuestionMode.FINISH -> {
             CongratulationsScreen(){

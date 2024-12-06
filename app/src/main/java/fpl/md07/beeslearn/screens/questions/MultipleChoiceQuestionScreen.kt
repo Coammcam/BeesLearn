@@ -3,37 +3,25 @@ package fpl.md07.beeslearn.screens.questions
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
-import fpl.md07.beeslearn.data.multipleChoiceQuestions // Import the fake data
 import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.models.Word
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import kotlinx.coroutines.delay
-import java.security.SecureRandom
-import kotlin.random.Random
 
 @Composable
-fun MultipleChoiceScreen(words: List<Word>, randomNumber: Int, onComplete: () -> Unit) {
+fun MultipleChoiceScreen(words: List<Word>, randomNumber: Int, onComplete: () -> Unit, goBack: () -> Unit) {
     var selectedAnswer by remember { mutableStateOf("") }
     val questionWord = words[randomNumber]
     var result: AnswerResult? by remember { mutableStateOf(null) }
@@ -108,12 +96,13 @@ fun MultipleChoiceScreen(words: List<Word>, randomNumber: Int, onComplete: () ->
                         )
                     }else if(result == AnswerResult.INCORRECT){
                         ConfirmQuestionNo(
-                            Continue = {
+                            `continue` = {
                                 onComplete()
                                 result = null
                                 showResult = false
                                 selectedAnswer = ""
-                            }
+                            },
+                            exitWhenNotEnoughHive = {goBack()}
                         )
                     }
                 }

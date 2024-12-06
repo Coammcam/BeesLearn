@@ -25,12 +25,12 @@ import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import kotlinx.coroutines.delay
 
 @Composable
 fun TrueFalseScreen(
     truefalsequestion: TrueFalseQuestionModel_A,
-    onComplete: ()->Unit
+    onComplete: ()->Unit,
+    goBack: () -> Unit
 ) {
     var result: AnswerResult? by remember { mutableStateOf(null) }
     var textColor by remember { mutableStateOf(Color(0xFF5D4037)) }
@@ -136,11 +136,12 @@ fun TrueFalseScreen(
                 )
             }else if(result == AnswerResult.INCORRECT){
                 ConfirmQuestionNo(
-                    Continue = {
+                    `continue` = {
                         println("done with true false")
                         onComplete()
                         textColor = Color(0xFF5D4037)
-                    }
+                    },
+                    exitWhenNotEnoughHive = {goBack()}
                 )
             }
         }

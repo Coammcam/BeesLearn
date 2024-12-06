@@ -38,7 +38,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 
 @Composable
-fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word>, onComplete: () -> Unit) {
+fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word>, onComplete: () -> Unit, goBack: () -> Unit) {
     var selectedWord by remember { mutableStateOf("") }
     val listOfWordInQuestion by remember { mutableStateOf(question.question.split(" ")) }
     val randomWordFromQuestion by remember { mutableStateOf(listOfWordInQuestion.random()) }
@@ -148,9 +148,10 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
                 onComplete()
             }
         }else if(result == AnswerResult.INCORRECT){
-            ConfirmQuestionNo(){
-                onComplete()
-            }
+            ConfirmQuestionNo(
+                `continue` = {onComplete()},
+                exitWhenNotEnoughHive = {goBack()}
+            )
         }
     }
 }

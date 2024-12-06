@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.screens.questions
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +32,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
@@ -46,12 +42,11 @@ import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.models.GrammarQuestionModel
-import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 
 @Composable
-fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit) {
+fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit, goBack: () -> Unit) {
     var sentenceParts by remember { mutableStateOf(emptyList<String>()) }
     val selectedParts by remember { mutableStateOf(emptyList<String>().toMutableList()) }
     var result: AnswerResult? by remember { mutableStateOf(null) }
@@ -215,11 +210,12 @@ fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onCompl
                 )
             } else if (result == AnswerResult.INCORRECT) {
                 ConfirmQuestionNo(
-                    Continue = {
+                    `continue` = {
                         onComplete()
                         selectedParts.clear()
                         result = null
-                    }
+                    },
+                    exitWhenNotEnoughHive = {goBack()}
                 )
             }
         }

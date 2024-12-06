@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,13 +21,12 @@ import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import kotlinx.coroutines.delay
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 
 
 @Composable
-fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit) {
+fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete: () -> Unit, goBack: () -> Unit) {
     var sentenceParts by remember { mutableStateOf(emptyList<String>()) }
     val selectedParts by remember { mutableStateOf(emptyList<String>().toMutableList()) }
     var result: AnswerResult? by remember { mutableStateOf(null) }
@@ -54,7 +52,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
         }
     }
 
-    Box {
+    Box{
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -157,10 +155,13 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
                 )
             } else if (result == AnswerResult.INCORRECT) {
                 ConfirmQuestionNo(
-                    Continue = {
+                    `continue` = {
                         onComplete()
                         selectedParts.clear()
                         result = null
+                    },
+                    exitWhenNotEnoughHive = {
+                        goBack()
                     }
                 )
             }
