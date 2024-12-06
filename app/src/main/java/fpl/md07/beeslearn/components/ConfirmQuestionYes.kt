@@ -20,6 +20,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -30,10 +31,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
 fun ConfirmQuestionYes (Continue: ()->Unit) {
+//    val userDataViewModel: UserDataViewModel = viewModel()
+//    val currencyData = userDataViewModel.currencyData.value
+
+    LaunchedEffect(Unit) {
+        UserSession.bonusHoneyJar += 10
+//        userDataViewModel.updateCurrencyData(currencyData!!)
+    }
+
     Box(
         modifier = Modifier
             .padding(top = 15.dp)
