@@ -15,6 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -22,9 +28,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
 fun TopBarComponent_A(goBack: () -> Unit) {
@@ -55,6 +66,9 @@ fun BackComponent_A(goBack: ()->Unit) {
 @Composable
 fun IconTopComponent_A() {
 
+    val userDataViewModel: UserDataViewModel = viewModel()
+    val currencyData by userDataViewModel.currencyData.observeAsState()
+
     // Heart and coins row
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -74,7 +88,7 @@ fun IconTopComponent_A() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "5",
+                    text = "${currencyData?.honeyComb ?: "0"}",
                     fontSize = 16.sp,
                     fontFamily = customFont,
                     color = colorResource(id = R.color.secondary_color)
@@ -96,7 +110,7 @@ fun IconTopComponent_A() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "100",
+                    text = "${currencyData?.honeyJar ?: "0"}",
                     fontFamily = customFont,
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.secondary_color)

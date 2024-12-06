@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.api
 
 import com.google.gson.JsonObject
+import fpl.md07.beeslearn.models.CurrencyModel
 import fpl.md07.beeslearn.models.GrammarQuestionModel
 import fpl.md07.beeslearn.models.Movie
 import fpl.md07.beeslearn.models.Music
@@ -57,11 +58,18 @@ interface ApiService {
 
     @GET("/podcast")
     suspend fun getPodcasts(): Response<List<Podcast>>
+
     @PUT("user")
     suspend fun EditProfile(@Body request: UpdateUserRequest): Response<UserModel>
 
     @GET("/music")
     suspend fun getMusicList(): Response<List<Music>>
+
+    @GET("/user/currency/{email}")
+    suspend fun getCurrency(@Path("email") email: String): Response<CurrencyModel>
+
+    @PUT("/user/currency/{email}")
+    suspend fun updateCurrency(@Path("email") email: String, @Body currencyData: CurrencyModel): Response<CurrencyModel>
 
     @Multipart
     @PUT("/user")
