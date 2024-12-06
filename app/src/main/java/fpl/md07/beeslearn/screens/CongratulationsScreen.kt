@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,7 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 // Tạo FontFamily cho Nunito Bold
 val NunitoBold = FontFamily(
@@ -25,6 +29,14 @@ val NunitoBold = FontFamily(
 
 @Composable
 fun CongratulationsScreen( goBack: () -> Unit ) {
+    val userDataViewModel: UserDataViewModel = viewModel()
+    val currencyData = userDataViewModel.currencyData.value
+
+    LaunchedEffect(Unit) {
+        currencyData!!.honeyJar += UserSession.bonusHoneyJar
+        userDataViewModel.updateCurrencyData(currencyData!!)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +95,7 @@ fun InfoBoxes() {
 //        InfoBox(title = "Total XP", value = "+30", icon = null)
 
         // Box thứ hai cho "Reward" với biểu tượng
-        InfoBox(title = "Reward", value = "+5", icon = R.drawable.honey_picture) // Thay "honey_picture" bằng ID của biểu tượng của bạn
+        InfoBox(title = "Reward", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey_picture) // Thay "honey_picture" bằng ID của biểu tượng của bạn
     }
 }
 
