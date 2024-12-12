@@ -48,7 +48,7 @@ fun MultipleChoiceScreen(words: List<Word>, randomNumber: Int, onComplete: () ->
     ) {
 //        Spacer(Modifier.height(50.dp))
         Text(
-            text = "Choose the right option",
+            text = "Chọn tùy chọn đúng",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),

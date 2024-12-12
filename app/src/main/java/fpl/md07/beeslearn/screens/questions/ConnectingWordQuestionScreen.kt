@@ -64,7 +64,7 @@ fun ConnectingWordScreen() {
 
 
         Text(
-            text = "Match column A with column B",
+            text = "Nối cột A với cột B sao cho đúng",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),

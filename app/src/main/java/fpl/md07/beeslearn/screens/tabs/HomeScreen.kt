@@ -463,7 +463,7 @@ fun BeeImage() {
 
             // Văn bản nằm dưới logo
             Text(
-                text = "Start to learning with Bee", // Nội dung văn bản
+                text = "Bắt đầu học với Bee", // Nội dung văn bản
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -507,16 +507,16 @@ data class ListItem(
 
 val listItems = listOf(
     ListItem(
-        title = "Pratice", iconResIdgs = R.drawable.icpractice, funtion = "selectExercise"
+        title = "Luyện tập", iconResIdgs = R.drawable.icpractice, funtion = "selectExercise"
     ),
     ListItem(
-        title = "Podcast", iconResIdgs = R.drawable.icpodcast, funtion = "podcastScreen"
+        title = "Bản tin", iconResIdgs = R.drawable.icpodcast, funtion = "podcastScreen"
     ),
     ListItem(
-        title = "Movie", iconResIdgs = R.drawable.icmovie, funtion = "movieScreen"
+        title = "Bộ phim", iconResIdgs = R.drawable.icmovie, funtion = "movieScreen"
     ),
     ListItem(
-        title = "Music", iconResIdgs = R.drawable.icmusic, funtion = "musicScreen"
+        title = "Âm nhạc", iconResIdgs = R.drawable.icmusic, funtion = "musicScreen"
     )
 )
 

@@ -240,7 +240,7 @@ fun SpeakingQuestionContent() {
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Listen again",
+                            text = "Nghe lại lần nữa",
                             fontSize = 12.sp,
                             color = Color.Black
                         )
@@ -271,7 +271,7 @@ fun SpeakingQuestionContent() {
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Delete",
+                            text = "Xóa",
                             fontSize = 12.sp,
                             color = Color.Black
                         )
@@ -298,7 +298,7 @@ fun SpeakingQuestionContent() {
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Send",
+                            text = "Gửi",
                             fontSize = 12.sp,
                             color = Color.Black
                         )

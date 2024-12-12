@@ -61,14 +61,14 @@ fun CongratulationsScreen( goBack: () -> Unit ) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Congratulations!",
+                    text = "Chúc mừng!",
                     fontSize = 33.sp,
                     fontFamily = NunitoBold,
                     color = Color(0xFFFFA000)
                 )
                 Spacer(modifier = Modifier.height(4.dp)) // Khoảng cách nhỏ giữa hai dòng text
                 Text(
-                    text = "You have done your test very well",
+                    text = "Bạn đã làm bài kiểm tra rất tốt",
                     fontSize = 14.sp,
                     color = Color.Gray
                 )

@@ -59,7 +59,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Arrange the words in correct order",
+                text = "Sắp xếp các từ theo đúng thứ tự",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037),
@@ -196,13 +196,3 @@ fun DraggableWordOption(word: String, isSelected: Boolean, onClick: () -> Unit) 
         )
     }
 }
-
-
-
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun ArrangeSentencePreview() {
-//    val navController = rememberNavController()
-//    ArrangeSentenceScreen(){}
-//}

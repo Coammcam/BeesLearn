@@ -153,21 +153,6 @@ fun SignUpScreen(
             }
         }
 
-//        LaunchedEffect(registerResponse) {
-//            if (registerResponse == null) {
-//                Toast.makeText(context, "Không thể kết nối tới máy chủ. Vui lòng thử lại sau.", Toast.LENGTH_LONG).show()
-//            } else {
-//                if (registerResponse!!.isSuccessful) {
-//                    Toast.makeText(context, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
-//                    navController.navigate("chaoHoiScreen")
-//                } else {
-//                    val errorMessage =
-//                        registerResponse!!.errorBody()?.string() ?: "Đăng ký thất bại."
-//                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-
         Row(modifier = Modifier.padding(top = 50.dp)) {
             Text(
                 "Bạn đã có tài khoản?",

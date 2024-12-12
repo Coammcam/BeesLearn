@@ -56,14 +56,6 @@ fun ChooseLoginScreen(navController: NavController) {
                 fontFamily = NunitoBold
             )
 
-//            Text(
-//                "Bee !",
-//                fontSize = 35.sp,
-//                color = Color(0xFF591429),
-//                textAlign = TextAlign.Center,
-//                fontFamily = NunitoBold
-//            )
-
             Spacer(modifier = Modifier.height(30.dp))
 
             CustomButtonLogin(

@@ -47,16 +47,12 @@ fun ChooseLanguagesScreen(navController: NavController) {
                     modifier = Modifier
                         .width(170.dp)
                         .height(210.dp)
-//                        .align(Alignment.TopStart)
-//                        .padding(top = 10.dp)
                 )
 
                 Box(
                     modifier = Modifier
                         .width(230.dp)
                         .height(130.dp)
-//                        .align(Alignment.TopEnd)
-//                        .padding(start = (-20).dp)
                 ) {
                     Image(
                         painterResource(id = R.drawable.cloudshape),
