@@ -196,7 +196,7 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
                     )
                 }
                 Text(
-                    "Lyrics",
+                    "Lời bài hát",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = Nunito_Bold,

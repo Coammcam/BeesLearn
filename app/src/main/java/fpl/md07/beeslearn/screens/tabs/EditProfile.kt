@@ -94,7 +94,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             // Permission granted, proceed to pick an image
             getImageLauncher.launch("image/*")
         } else {
-            Toast.makeText(context, "Permission denied to access images", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Quyền truy cập hình ảnh bị từ chối", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -124,7 +124,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             ) {
                 BackComponent(navController)
                 Text(
-                    "Edit Profile",
+                    "Chỉnh sửa hồ sơ",
                     fontSize = 18.sp,
                     fontFamily = NunitoBold,
                     color = colorResource(id = R.color.secondary_color),
@@ -166,7 +166,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             Spacer(modifier = Modifier.height(15.dp))
 
             Text(
-                "Change the profile image",
+                "Thay đổi hình ảnh hồ sơ",
                 fontSize = 10.sp,
                 fontFamily = NunitoBold,
                 color = Color(0xFF777777),
@@ -175,7 +175,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             )
 
             CustomTextField(
-                labelText = "Name",
+                labelText = "Tên",
                 value = name,
                 onValueChange = { name = it },
                 placeholder = "Beeslearn"
@@ -193,7 +193,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             Spacer(modifier = Modifier.height(20.dp))
 
             CustomTextField(
-                labelText = "Date of birth",
+                labelText = "Ngày sinh",
                 value = dateOfBirth,
                 onValueChange = { dateOfBirth = it },
                 placeholder = "dd/MM/yyyy"
@@ -202,7 +202,7 @@ fun EditProfile(navController: NavController,editProfileViewModel: EditProfileVi
             Spacer(modifier = Modifier.height(20.dp))
 
             CustomTextField(
-                labelText = "Phone number",
+                labelText = "Số điện thoại",
                 value = phoneNumber,
                 onValueChange = { phoneNumber = it },
                 placeholder = "09xxxxxxxx"

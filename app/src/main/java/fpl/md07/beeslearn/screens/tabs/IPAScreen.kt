@@ -94,12 +94,12 @@ fun IPAExercise(navController: NavController) {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        SectionTitle(title = "Vowels")
+        SectionTitle(title = "Nguyên âm")
         Spacer(modifier = Modifier.height(16.dp))
         IPAGrid(symbols = vowels)
         Spacer(modifier = Modifier.height(50.dp))
 
-        SectionTitle(title = "Consonants")
+        SectionTitle(title = "Phụ âm")
         Spacer(modifier = Modifier.height(16.dp))
         IPAGrid(symbols = consonants)
 

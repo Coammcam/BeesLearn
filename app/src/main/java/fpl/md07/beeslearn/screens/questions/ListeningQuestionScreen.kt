@@ -22,23 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
-
-//class ListeningQuestionScreen : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            BeesLearnTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    ListeningQuestionContent()
-//                }
-//            }
-//        }
-//    }
-//}
-
 @Composable
 fun ListeningQuestionContent() {
     var selectedAnswer by remember { mutableStateOf<String?>(null) }

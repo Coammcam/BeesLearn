@@ -49,7 +49,7 @@ fun TrueFalseScreen(
     ) {
 
         Text(
-            text = "Choose the right option",
+            text = "Chọn tùy chọn đúng",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF5D4037),

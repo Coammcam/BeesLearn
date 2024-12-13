@@ -56,13 +56,6 @@ fun ForgotPasswordScreen(navController: NavController) {
                 .padding(bottom = 80.dp)
         )
 
-
-//        Image(
-//            painterResource(id = R.drawable.logo),
-//            contentDescription = null,
-//            modifier = Modifier.width(267.dp)
-//        )
-
         Spacer(modifier = Modifier.height(25.dp))
 
         Text(

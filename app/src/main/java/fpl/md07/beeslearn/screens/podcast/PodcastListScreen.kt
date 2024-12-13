@@ -100,7 +100,7 @@ fun PodcastListScreen(
                         )
                     )
                     Text(
-                        text = "excellent way for\nstudents to practice\nself-study",
+                        text = "Cách tuyệt vời để\nthực hành tự học\n",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color(0xFF591429),
                             fontFamily = Nunito_Bold,

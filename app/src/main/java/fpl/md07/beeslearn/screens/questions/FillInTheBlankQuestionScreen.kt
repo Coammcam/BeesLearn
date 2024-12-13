@@ -75,7 +75,7 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
         ) {
             // Instruction Text
             Text(
-                text = "Choose the word to complete the sentence",
+                text = "Chọn từ để hoàn thành câu",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037),

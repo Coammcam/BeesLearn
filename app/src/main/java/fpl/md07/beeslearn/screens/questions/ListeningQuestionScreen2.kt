@@ -79,7 +79,7 @@ fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onCompl
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Listen and arrange to get the correct answer",
+                text = "Hãy lắng nghe và sắp xếp để có được câu trả lời đúng",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF5D4037),

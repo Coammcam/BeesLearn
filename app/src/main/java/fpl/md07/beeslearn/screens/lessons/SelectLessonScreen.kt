@@ -87,8 +87,6 @@ fun SelectLessonScreen(navController: NavController) {
 
     LaunchedEffect(questionIndex) {
         if(questionIndex == totalAmountOfQuestion + 1){
-//            questionIndex = 0
-//            isLessonSelected = false
             questionMode = QuestionMode.FINISH
         }else{
             if(questionIndex == 5 || questionIndex == 7){
@@ -130,10 +128,6 @@ fun SelectLessonScreen(navController: NavController) {
                         .fillMaxWidth()
                         .padding(top = 50.dp)
                 )
-//            BeeAnimaComponent(
-//                modifier = Modifier
-//                    .align(Alignment.TopEnd)
-//            )
             }
             Spacer(modifier = Modifier.height(200.dp))
 
@@ -244,7 +238,6 @@ fun HexGridd(onPress: () -> Unit) {
     // Tạo danh sách trạng thái cho các hexagon
     val hexagonStates = remember { mutableStateListOf(*Array(hexagonCount) { true }) } // Sử dụng mutableStateListOf
 
-    // Scrollable row to hold hexagons
     Row(
         modifier = Modifier
             .fillMaxWidth()

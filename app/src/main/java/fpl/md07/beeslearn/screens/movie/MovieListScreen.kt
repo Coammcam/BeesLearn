@@ -109,7 +109,7 @@ fun MovieListScreen(navController: NavController, movieViewModel: MovieViewModel
                         )
                     )
                     Text(
-                        text = "Learning English\nby watching moview",
+                        text = "Học tiếng anh\nvới các bộ phim",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color(0xFF591429),
                             fontSize = 14.sp,

@@ -110,7 +110,7 @@ fun LoginScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Remember Me",
+                text = "Nhớ Mật Khẩu",
                 color = if (isRememberMeChecked) Color(0xFFFFD528) else Color(0xFF777777), // Vàng hoặc xám
                 fontFamily = Nunito_Bold,
                 fontSize = 13.sp,

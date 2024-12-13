@@ -49,7 +49,7 @@ fun SettingScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Setting",
+            text = "Cài đặt",
             fontFamily = Nunito_Bold,
             fontSize = 35.sp,
             color = colorResource(id = R.color.secondary_color),
@@ -96,7 +96,7 @@ fun SettingScreen(
                     color = colorResource(id = R.color.secondary_color)
                 )
             } ?: Text(
-                text = "No user logged in",
+                text = "Không có người dùng nào đăng nhập",
                 fontFamily = Nunito_Bold,
                 fontSize = 20.sp,
                 color = Color.Red
@@ -120,7 +120,7 @@ fun SettingScreen(
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.secondary_color))
             ) {
                 Text(
-                    text = "Edit Profile",
+                    text = "Chỉnh sửa hồ sơ",
                     fontFamily = Nunito_Bold,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterVertically)
@@ -183,7 +183,7 @@ fun SettingScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Favorites",
+                        text = "Yêu thích",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -215,7 +215,7 @@ fun SettingScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Downloads",
+                            text = "Tải xuống",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -247,7 +247,7 @@ fun SettingScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Languages",
+                        text = "Ngôn ngữ",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -285,7 +285,7 @@ fun SettingScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Logout",
+                        text = "Đăng xuất",
                         fontFamily = Nunito_Bold,
                         color = Color(0xFFFFFFFF),
                         modifier = Modifier.padding(start = 8.dp)
