@@ -56,7 +56,7 @@ fun HomePageComponent() {
     }
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(Color(0xFFF6F6F6)),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -133,7 +133,7 @@ fun HomePageComponent() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun PreviewHomePageComponent() {
     HomePageComponent()

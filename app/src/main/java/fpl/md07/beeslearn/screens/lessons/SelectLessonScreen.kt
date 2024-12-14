@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,8 @@ import fpl.md07.beeslearn.components.TextBoxComponent
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.HomeComponent
+import fpl.md07.beeslearn.components.HomePageComponent
 import fpl.md07.beeslearn.components.TopBarComponent
 import fpl.md07.beeslearn.components.TopBarComponent_A
 import fpl.md07.beeslearn.components.customFont
@@ -55,10 +58,13 @@ enum class QuestionMode{
 fun SelectLessonScreen(navController: NavController) {
 
     val userDataViewModel: UserDataViewModel = viewModel()
+    val currencyData by userDataViewModel.currencyData.observeAsState()
     userDataViewModel.getCurrencyData()
 
     var isQuestionLoaded by remember { mutableStateOf(false) }
     var isLessonSelected by remember { mutableStateOf(false) }
+    var showHoneyCombSellComponent by remember { mutableStateOf(false) }
+    var showHoneyStatusComponent by remember { mutableStateOf(false) }
 
     val questionViewModel: QuestionViewModel = viewModel()
     var questions by remember { mutableStateOf(QuestionResponseModel(
@@ -105,55 +111,81 @@ fun SelectLessonScreen(navController: NavController) {
         isLessonSelected = false
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        TopBarComponent_A {
-            if(isLessonSelected){
-                isLessonSelected = false
-            }else{
-                navController.popBackStack()
-            }
-        }
-        if(!isLessonSelected){
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(
-            ) {
-                TextBoxComponent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 50.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(200.dp))
+    BackHandler (enabled = showHoneyCombSellComponent) {
+        showHoneyCombSellComponent = false
+    }
 
-            HexGridd(){
-                isLessonSelected = true
-            }
-        }else{
-            if(isQuestionLoaded){
-                ShowQuestionScreens(
-                    questionMode = questionMode,
-                    questions = questions,
-                    goBack = { isLessonSelected = false },
-                    onCompleteQuestion = { questionIndex += 1 }
-                )
-            }else{
+    BackHandler (enabled = showHoneyStatusComponent) {
+        showHoneyStatusComponent = false
+    }
+
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            TopBarComponent_A(
+                goBack = {
+                    if(isLessonSelected){
+                        isLessonSelected = false
+                    }else{
+                        navController.popBackStack()
+                    }
+                         },
+                showHoneyCombStatus = {
+                    if (!isLessonSelected){
+                        showHoneyCombSellComponent = true
+                    }
+                }
+            )
+            if(!isLessonSelected){
+                Spacer(modifier = Modifier.height(16.dp))
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
-                    CircularProgressIndicator(
-                        modifier = Modifier.width(64.dp).height(64.dp),
-                        color = colorResource(R.color.primary_color),
-                        trackColor = colorResource(R.color.secondary_color)
+                ) {
+                    TextBoxComponent(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 50.dp)
                     )
                 }
+                Spacer(modifier = Modifier.height(200.dp))
+
+                HexGridd(){
+                    isLessonSelected = true
+                }
+            }else{
+                if(isQuestionLoaded){
+                    ShowQuestionScreens(
+                        questionMode = questionMode,
+                        questions = questions,
+                        goBack = { isLessonSelected = false },
+                        onCompleteQuestion = { questionIndex += 1 }
+                    )
+                }else{
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ){
+                        CircularProgressIndicator(
+                            modifier = Modifier.width(64.dp).height(64.dp),
+                            color = colorResource(R.color.primary_color),
+                            trackColor = colorResource(R.color.secondary_color)
+                        )
+                    }
+                }
             }
+        }
+        if (showHoneyStatusComponent){
+            HomePageComponent()
+        }
+        if (showHoneyCombSellComponent){
+            HomeComponent(
+                honeyCombCount = currencyData?.honeyComb,
+                honeyJarCount = currencyData?.honeyJar
+            )
         }
     }
 }

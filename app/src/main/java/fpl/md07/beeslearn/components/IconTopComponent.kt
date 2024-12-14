@@ -2,6 +2,7 @@ package fpl.md07.beeslearn.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -16,7 +17,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun IconTopComponent() {
+fun IconTopComponent(honeyCombCount: Int?, honeyJarCount: Int?, showHoneyCombStatus: ()->Unit) {
 
     // Heart and coins row
     Row(
@@ -28,6 +29,7 @@ fun IconTopComponent() {
             modifier = Modifier
                 .background(color = colorResource(id = R.color.primary_color), shape = RoundedCornerShape(50))
                 .padding(horizontal = 12.dp, vertical = 4.dp)
+                .clickable { showHoneyCombStatus() }
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
@@ -37,7 +39,7 @@ fun IconTopComponent() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "5",
+                    text = "$honeyCombCount",
                     fontSize = 16.sp,
                     fontFamily = customFont,
                     color = colorResource(id = R.color.secondary_color)
@@ -59,7 +61,7 @@ fun IconTopComponent() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "100",
+                    text = "$honeyJarCount",
                     fontFamily = customFont,
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.secondary_color)
@@ -68,8 +70,8 @@ fun IconTopComponent() {
         }
     }
 }
-@Preview
-@Composable
-fun PreviewSelectExercise() {
-    IconTopComponent()
-}
+//@Preview
+//@Composable
+//fun PreviewSelectExercise() {
+//    IconTopComponent()
+//}

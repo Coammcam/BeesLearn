@@ -19,7 +19,11 @@ fun TopBarComponent(navController: NavController) {
     ) {
 
         BackComponent(navController)
-        IconTopComponent()
+        IconTopComponent(
+            honeyCombCount = TODO(),
+            honeyJarCount = TODO(),
+            showHoneyCombStatus = TODO()
+        )
     }
 }
 @Preview

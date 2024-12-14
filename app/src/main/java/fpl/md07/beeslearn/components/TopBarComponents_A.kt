@@ -38,7 +38,11 @@ import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
-fun TopBarComponent_A(goBack: () -> Unit) {
+fun TopBarComponent_A(goBack: () -> Unit, showHoneyCombStatus: ()->Unit) {
+
+    val userDataViewModel: UserDataViewModel = viewModel()
+    val currencyData by userDataViewModel.currencyData.observeAsState()
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -48,7 +52,12 @@ fun TopBarComponent_A(goBack: () -> Unit) {
         BackComponent_A(){
             goBack()
         }
-        IconTopComponent_A()
+        IconTopComponent(
+            honeyCombCount = currencyData?.honeyComb,
+            honeyJarCount = currencyData?.honeyJar
+        ){
+            showHoneyCombStatus()
+        }
     }
 }
 
@@ -63,59 +72,60 @@ fun BackComponent_A(goBack: ()->Unit) {
     )
 }
 
-@Composable
-fun IconTopComponent_A() {
-
-    val userDataViewModel: UserDataViewModel = viewModel()
-    val currencyData by userDataViewModel.currencyData.observeAsState()
-
-    // Heart and coins row
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Heart with background
-        Box(
-            modifier = Modifier
-                .background(color = colorResource(id = R.color.primary_color), shape = RoundedCornerShape(50))
-                .padding(horizontal = 12.dp, vertical = 4.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.heart),
-                    contentDescription = "Heart",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "${currencyData?.honeyComb ?: "0"}",
-                    fontSize = 16.sp,
-                    fontFamily = customFont,
-                    color = colorResource(id = R.color.secondary_color)
-                )
-            }
-        }
-
-        // Coins with background
-        Box(
-            modifier = Modifier
-                .background(color = colorResource(id = R.color.primary_color), shape = RoundedCornerShape(50))
-                .padding(horizontal = 12.dp, vertical = 4.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.honey),
-                    contentDescription = "Coins",
-                    modifier = Modifier.size(22.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "${currencyData?.honeyJar ?: "0"}",
-                    fontFamily = customFont,
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.secondary_color)
-                )
-            }
-        }
-    }
-}
+//@Composable
+//fun IconTopComponent_A(showHoneyCombStatus: () -> Unit) {
+//
+//    val userDataViewModel: UserDataViewModel = viewModel()
+//    val currencyData by userDataViewModel.currencyData.observeAsState()
+//
+//    // Heart and coins row
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        horizontalArrangement = Arrangement.spacedBy(16.dp)
+//    ) {
+//        // Heart with background
+//        Box(
+//            modifier = Modifier
+//                .background(color = colorResource(id = R.color.primary_color), shape = RoundedCornerShape(50))
+//                .padding(horizontal = 12.dp, vertical = 4.dp)
+//                .clickable { showHoneyCombStatus() }
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.heart),
+//                    contentDescription = "Heart",
+//                    modifier = Modifier.size(16.dp)
+//                )
+//                Spacer(modifier = Modifier.width(4.dp))
+//                Text(
+//                    text = "${currencyData?.honeyComb ?: "0"}",
+//                    fontSize = 16.sp,
+//                    fontFamily = customFont,
+//                    color = colorResource(id = R.color.secondary_color)
+//                )
+//            }
+//        }
+//
+//        // Coins with background
+//        Box(
+//            modifier = Modifier
+//                .background(color = colorResource(id = R.color.primary_color), shape = RoundedCornerShape(50))
+//                .padding(horizontal = 12.dp, vertical = 4.dp)
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.honey),
+//                    contentDescription = "Coins",
+//                    modifier = Modifier.size(22.dp)
+//                )
+//                Spacer(modifier = Modifier.width(4.dp))
+//                Text(
+//                    text = "${currencyData?.honeyJar ?: "0"}",
+//                    fontFamily = customFont,
+//                    fontSize = 16.sp,
+//                    color = colorResource(id = R.color.secondary_color)
+//                )
+//            }
+//        }
+//    }
+//}

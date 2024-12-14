@@ -18,6 +18,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,13 +30,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
-fun HomeComponent() {
+fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?) {
 
     val context = LocalContext.current
+    val userDataViewModel: UserDataViewModel = viewModel()
+    val currencyData by userDataViewModel.currencyData.observeAsState()
 
     Column(
         modifier = Modifier
@@ -51,32 +58,11 @@ fun HomeComponent() {
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(50),
-                        clip = false
-                    )
-                    .clip(RoundedCornerShape(50))
-                    .background(Color(0xFFFFFACD))
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.honey),
-                    contentDescription = null,
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "100",
-                    fontFamily = Nunito_Bold,
-                    fontSize = 18.sp,
-                    color = Color(0xFF591429)
-                )
-            }
+            IconTopComponent(
+                honeyCombCount = honeyCombCount,
+                honeyJarCount = honeyJarCount,
+                showHoneyCombStatus = {}
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -146,7 +132,16 @@ fun HomeComponent() {
                 .background(Color(0xFFFFF192))
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .clickable {
-                    Toast.makeText(context, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show()
+                    val newData = currencyData
+                    if (newData != null) {
+                        if(newData.honeyJar > 50){
+                            newData.honeyJar -= 50
+                            newData.honeyComb += 1
+                            userDataViewModel.updateCurrencyData(newData)
+                        }else{
+                            Toast.makeText(context, "Hết tiền", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
         ) {
             Row(
@@ -169,7 +164,7 @@ fun HomeComponent() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Refill 5/5",
+                        text = "Refill 1",
                         fontFamily = Nunito_Bold,
                         fontSize = 22.sp,
                         color = Color(0xFF000000)
@@ -181,7 +176,7 @@ fun HomeComponent() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "500",
+                            text = "50",
                             fontFamily = Nunito_Bold,
                             fontSize = 22.sp,
                             color = Color(0xFFFFA500)
@@ -255,8 +250,8 @@ fun HomeComponent() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewHomeComponent() {
-    HomeComponent()
-}
+//@Preview(showBackground = true, showSystemUi = false)
+//@Composable
+//fun PreviewHomeComponent() {
+//    HomeComponent()
+//}
