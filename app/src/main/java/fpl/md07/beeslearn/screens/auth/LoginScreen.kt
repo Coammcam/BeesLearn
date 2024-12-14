@@ -63,11 +63,11 @@ fun LoginScreen(
         password = viewModel.rememberedPassword
         isRememberMeChecked = viewModel.isRemembered
 
-        if (isRememberMeChecked && email.isNotBlank() && password.isNotBlank()) {
-            navController.navigate("HomeScreen") {
-                popUpTo("LoginScreen") { inclusive = true }
-            }
-        }
+//        if (isRememberMeChecked && email.isNotBlank() && password.isNotBlank()) {
+//            navController.navigate("HomeScreen") {
+//                popUpTo("LoginScreen") { inclusive = true }
+//            }
+//        }
     }
 
     Column(
