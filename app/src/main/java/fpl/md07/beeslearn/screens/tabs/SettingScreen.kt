@@ -69,7 +69,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             AsyncImage(
-                model = user?.profileImageUrl,
+                model = if(user?.profileImageUrl?.isEmpty() == true || user?.profileImageUrl == null) null else user.profileImageUrl,
                 contentDescription = "Avatar",
                 placeholder = painterResource(id = R.drawable.avatarsetting),
                 fallback = painterResource(id = R.drawable.avatarsetting),

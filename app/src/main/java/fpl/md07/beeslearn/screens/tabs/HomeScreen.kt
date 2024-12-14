@@ -239,7 +239,7 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
 //                placeholder = painterResource(id = R.drawable.avatarsetting),
 //                error = painterResource(id = R.drawable.avatarsetting)
 //            ),
-            model = user?.profileImageUrl,
+            model = if(user?.profileImageUrl?.isEmpty() == true || user?.profileImageUrl == null) null else user.profileImageUrl,
             fallback = painterResource(id = R.drawable.avatarsetting),
             contentDescription = "Avatar",
             contentScale = ContentScale.Crop,
