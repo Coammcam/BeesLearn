@@ -1,5 +1,7 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -34,6 +37,7 @@ import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 import java.util.*
 
@@ -71,7 +75,7 @@ fun HomeScreen(navController: NavController) {
 
         // Điều kiện để hiển thị hình ảnh, lịch hoặc giao diện dịch
         when {
-            showCalendar -> RealCalendarView()
+            showCalendar -> RealCalendarView(context = LocalContext.current)
             showTranslationBox -> TranslationBox()
             showImage -> BeeImage()
         }
@@ -256,22 +260,38 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
 
 
 @Composable
-fun RealCalendarView() {
+fun RealCalendarView(context: Context, userDataViewModel: UserDataViewModel = viewModel()) {
     var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
     var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
-    val calendar = Calendar.getInstance()
-    calendar.set(Calendar.MONTH, currentMonth)
-    calendar.set(Calendar.YEAR, currentYear)
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.MONTH, currentMonth)
+        set(Calendar.YEAR, currentYear)
+    }
 
-    // Lấy số ngày trong tháng
+    // Lấy số ngày trong tháng và ngày đầu tiên của tháng
     val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-    // Lấy ngày đầu tiên của tháng để biết nó bắt đầu vào thứ mấy
     calendar.set(Calendar.DAY_OF_MONTH, 1)
     val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-    // Tạo danh sách các ngày trong tháng
+    // Lấy ngày hôm nay
+    val today = Calendar.getInstance()
+    val todayDay = today.get(Calendar.DAY_OF_MONTH)
+    val todayMonth = today.get(Calendar.MONTH)
+    val todayYear = today.get(Calendar.YEAR)
+
+    // Lấy các ngày đã đăng nhập từ SharedPreferences
+    val sharedPreferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+
+    // Lấy email của người dùng từ ViewModel
+    val userEmail = UserSession.currentUser?.email ?: ""
+
+    // Use 'remember' to store logged-in dates, passing email as a key
+    val loggedInDates = remember(userEmail) {
+        mutableStateOf(getLoggedInDatesFromPrefs(sharedPreferences, userEmail))
+    }
+
+    // Tạo danh sách tất cả các ngày trong tháng
     val daysList = mutableListOf<String>()
     for (i in 2 until firstDayOfWeek) {
         daysList.add("") // Thêm các ô trống trước khi tháng bắt đầu
@@ -280,22 +300,15 @@ fun RealCalendarView() {
         daysList.add(day.toString())
     }
 
-    // Giao diện lịch với kích thước nhỏ gọn hơn
+    // Giao diện lịch với thiết kế nhỏ gọn
     Column(
         modifier = Modifier
-            .width(250.dp) // Giảm chiều rộng của lịch
-            .background(
-                Color(0xFFFFF59D),
-                shape = RoundedCornerShape(16.dp)
-            ) // Nền màu vàng và bo tròn góc toàn bộ
-            .border(
-                2.dp,
-                Color(0xFF800000),
-                shape = RoundedCornerShape(16.dp)
-            ) // Viền ngoài màu nâu
-            .padding(8.dp) // Giảm padding của lịch
+            .width(250.dp)
+            .background(Color(0xFFFFF59D), shape = RoundedCornerShape(16.dp))
+            .border(2.dp, Color(0xFF800000), shape = RoundedCornerShape(16.dp))
+            .padding(8.dp)
     ) {
-        // Phần tiêu đề và nút điều hướng
+        // Phần tiêu đề với các nút điều hướng
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -355,7 +368,7 @@ fun RealCalendarView() {
         )
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Hàng tiêu đề các thứ trong tuần
+        // Hàng tiêu đề các ngày trong tuần
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -373,7 +386,7 @@ fun RealCalendarView() {
             }
         }
 
-        // Thanh ngang thứ hai dưới các thứ trong tuần
+        // Thanh ngang thứ hai dưới các tiêu đề tuần
         Spacer(modifier = Modifier.height(4.dp))
         Divider(
             color = Color(0xFF800000),
@@ -391,21 +404,68 @@ fun RealCalendarView() {
                 for (col in 0..6) {
                     val index = row * 7 + col
                     val dayText = if (index < daysList.size) daysList[index] else ""
-                    Text(
-                        text = dayText,
-                        modifier = Modifier
-                            .padding(4.dp) // Giảm padding của các ngày
-                            .weight(1f),
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            color = Color(0xFF800000)
-                        ) // Giảm kích thước chữ ngày
-                    )
+                    val isToday = dayText == todayDay.toString() && currentMonth == todayMonth && currentYear == todayYear
+                    val isLoggedInDay = loggedInDates.value.contains("$currentYear-${currentMonth + 1}-$dayText")  // Kiểm tra ngày đã đăng nhập
+
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (dayText.isNotEmpty()) {
+                            Text(
+                                text = dayText,
+                                modifier = Modifier
+                                    .padding(4.dp) // Giảm padding của các ngày
+                                    .background(
+                                        Color.Transparent,
+                                    )
+                                    .padding(4.dp),
+                                style = TextStyle(
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF800000)
+                                ) // Giảm kích thước chữ ngày
+                            )
+
+                            // Hiển thị chấm đỏ nếu ngày đã đăng nhập
+                            if (isLoggedInDay) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .size(6.dp)
+                                        .background(Color.Red, shape = CircleShape)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
+    // Đăng nhập vào ngày hôm nay và lưu lại
+    val currentDateString = "$todayYear-${todayMonth + 1}-$todayDay"
+    if (userEmail.isNotEmpty() && !loggedInDates.value.contains(currentDateString)) {
+        // Cập nhật ngày đã đăng nhập và lưu theo email người dùng
+        loggedInDates.value = loggedInDates.value + currentDateString
+        saveLoggedInDatesToPrefs(sharedPreferences, loggedInDates.value, userEmail)
+    }
 }
+
+// Phương thức để lưu các ngày đã đăng nhập vào SharedPreferences theo email người dùng
+fun saveLoggedInDatesToPrefs(sharedPreferences: SharedPreferences, dates: List<String>, email: String) {
+    val editor = sharedPreferences.edit()
+    // Lưu các ngày đăng nhập dưới key là email người dùng
+    editor.putStringSet("logged_in_dates_$email", dates.toSet())
+    editor.apply()
+}
+
+// Phương thức để lấy các ngày đã đăng nhập từ SharedPreferences theo email người dùng
+fun getLoggedInDatesFromPrefs(sharedPreferences: SharedPreferences, email: String): List<String> {
+    val loggedInDatesSet = sharedPreferences.getStringSet("logged_in_dates_$email", emptySet())
+    return loggedInDatesSet?.toList() ?: emptyList()
+}
+
+
 
 
 fun getMonthName(month: Int): String {
