@@ -61,7 +61,9 @@ import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
+import fpl.md07.beeslearn.screens.tabs.VideoScreen
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
+import fpl.md07.beeslearn.viewmodels.TranslateViewModel
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -179,7 +181,7 @@ fun NestedBottomTab(
                 trailer = backStackEntry.arguments?.getString("trailer") ?: ""
             )
         }
-        
+
         composable("musicScreen") {
             MusicListScreen(navController)
         }
@@ -234,6 +236,11 @@ fun NestedBottomTab(
             ) {
 //                addQuestionNavGraph(navController)
             }
+        }
+
+        composable("videoScreen/{videoResId}") { backStackEntry ->
+            val videoResId = backStackEntry.arguments?.getString("videoResId")?.toIntOrNull() ?: 0
+            VideoScreen(navController = navController, videoResId = videoResId)
         }
     }
 }

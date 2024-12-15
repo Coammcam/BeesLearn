@@ -202,7 +202,7 @@ fun TranslateScreen(navController: NavController) {
                     isClicked = true
                 },
 
-            ) {
+                ) {
                 Text(
                     text = "Xóa lịch sử",
                     style = MaterialTheme.typography.titleMedium.copy(color = textColor),
