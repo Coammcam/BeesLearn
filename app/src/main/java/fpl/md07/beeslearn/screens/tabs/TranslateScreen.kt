@@ -32,6 +32,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslateScreen(navController: NavController) {
+
     val sourceText = remember { mutableStateOf("") }
     val translatedText = remember { mutableStateOf("Kết quả sẽ hiển thị ở đây") }
     val sourceLanguage = remember { mutableStateOf(Language.ENGLISH) }
@@ -132,6 +133,7 @@ fun TranslateScreen(navController: NavController) {
                             translatedText.value = translation.translatedText
                             // Cập nhật lịch sử
                             translationHistory.add(
+                                0, // Chỉ định vị trí đầu tiên
                                 sourceText.value to translation.translatedText
                             )
                         }
@@ -175,7 +177,7 @@ fun TranslateScreen(navController: NavController) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             // Màu "Lịch sử dịch"
             val historyTextColor = colorResource(id = R.color.secondary2_color)
             Text(
@@ -184,16 +186,22 @@ fun TranslateScreen(navController: NavController) {
             )
             // Nút xóa lịch sử
             var isClicked by remember { mutableStateOf(false) }
-            val textColor = if (isClicked) {
-                colorResource(id = R.color.third_color) // Màu khi đã click
+
+            val textColor = if (translationHistory.isEmpty()) {
+                colorResource(id = R.color.third_color) //Disabled state when no history
+            } else if (translationHistory.isNotEmpty()) {
+                colorResource(id = R.color.secondary2_color) // Always show this color when history exists
+            } else if (isClicked) {
+                colorResource(id = R.color.third_color)
             } else {
-                colorResource(id = R.color.secondary2_color) // Màu mặc định
+                colorResource(id = R.color.secondary2_color) // Default color when history exists
             }
             TextButton(
                 onClick = {
                     translationHistory.clear()
                     isClicked = true
                 },
+
             ) {
                 Text(
                     text = "Xóa lịch sử",
