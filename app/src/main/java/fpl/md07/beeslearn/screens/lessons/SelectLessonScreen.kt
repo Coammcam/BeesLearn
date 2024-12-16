@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.screens.lessons
 
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -153,9 +155,12 @@ fun SelectLessonScreen(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(200.dp))
 
-                HexGridd(){
-                    isLessonSelected = true
-                }
+                HexGridd(
+                    onPress = {
+                        isLessonSelected = true
+                    },
+                    userLevel = currencyData?.level ?: 0
+                )
             }else{
                 if(isQuestionLoaded){
                     ShowQuestionScreens(
@@ -264,11 +269,11 @@ fun ShowQuestionScreens(
 }
 
 @Composable
-fun HexGridd(onPress: () -> Unit) {
+fun HexGridd(onPress: () -> Unit, userLevel: Int) {
     val hexagonRadius = 40.dp
     val hexagonCount = 10
-    // Tạo danh sách trạng thái cho các hexagon
-    val hexagonStates = remember { mutableStateListOf(*Array(hexagonCount) { true }) } // Sử dụng mutableStateListOf
+
+    val context = LocalContext.current
 
     Row(
         modifier = Modifier
@@ -280,11 +285,13 @@ fun HexGridd(onPress: () -> Unit) {
             HexagonWithNumber(
                 radius = hexagonRadius,
                 number = i + 1,
-                isClicked = hexagonStates[i],
+                isClicked = i + 1 < userLevel,
                 onClick = {
-                    // Cập nhật trạng thái
-                    hexagonStates[i] = !hexagonStates[i]
-                    onPress()
+                    if (i + 1 < userLevel + 1){
+                        onPress()
+                    }else{
+                        Toast.makeText(context, "Bạn cần hoàn thành level phía trước", Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
 
@@ -294,9 +301,9 @@ fun HexGridd(onPress: () -> Unit) {
                 HorizontalDivider(
                     modifier = Modifier
                         .width(100.dp)
-                        .height(2.dp)
+                        .height(4.dp)
                         .align(Alignment.CenterVertically),
-                    color = Color.Gray
+                    color = if(i + 1 < userLevel) colorResource(R.color.newInnerColor) else Color.Gray
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Adjust space after line
             }

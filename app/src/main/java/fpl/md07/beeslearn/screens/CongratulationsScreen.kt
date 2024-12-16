@@ -36,6 +36,8 @@ fun CongratulationsScreen(goBack: () -> Unit) {
 
     LaunchedEffect(Unit) {
         currencyData!!.honeyJar += UserSession.bonusHoneyJar
+        currencyData!!.level += 1
+        println(currencyData!!.level)
         userDataViewModel.updateCurrencyData(currencyData!!)
     }
 
