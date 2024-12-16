@@ -46,6 +46,13 @@ import android.net.Uri
 import android.widget.Toast
 import android.content.ActivityNotFoundException
 import android.util.Log
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
@@ -188,29 +195,34 @@ fun PodcastDetailScreen(navController: NavController, podcastId: Int?) {
                         Alignment.CenterHorizontally
                     )
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.next_left_music),
-                        contentDescription = null,
+                    Button(
+                        onClick = {
+                            podcast?.let { startPlaying(it) }
+                        },
                         modifier = Modifier
-                            .size(40.dp)
+                            .padding(16.dp)
+                            .height(56.dp)
+                            .width(179.dp)
+                            .clip(RoundedCornerShape(28.dp)),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF591429))
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.play2), // Replace with your play icon
+                            contentDescription = "Play",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
 
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.play),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                podcast?.let { startPlaying(it) }
-                            }
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.next_right_music),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp)
+                        Spacer(modifier = Modifier.width(14.dp))
 
-                    )
+                        Text(
+                            text = "Play",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontFamily = Nunito_Bold,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
 
                 Row(
