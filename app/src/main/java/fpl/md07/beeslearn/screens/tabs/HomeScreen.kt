@@ -431,7 +431,7 @@ fun RealCalendarView(context: Context, userDataViewModel: UserDataViewModel = vi
                                 Box(
                                     modifier = Modifier
                                         .align(Alignment.BottomCenter)
-                                        .size(6.dp)
+                                        .size(4.dp)
                                         .background(Color.Red, shape = CircleShape)
                                 )
                             }
