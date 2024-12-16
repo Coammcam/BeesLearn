@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,35 +119,6 @@ fun PodcastListScreen(
                 )
             }
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp, start = 15.dp, top = 20.dp),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.play),
-                contentDescription = "Play",
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .size(28.dp)
-            )
-            Icon(
-                painter = painterResource(R.drawable.heart1),
-                contentDescription = "Play",
-                modifier = Modifier
-                    .padding(end = 10.dp, start = 10.dp)
-                    .size(28.dp)
-            )
-            Icon(
-                painter = painterResource(R.drawable.threedots),
-                contentDescription = "Play",
-                modifier = Modifier
-                    .padding(end = 10.dp, start = 10.dp)
-                    .size(28.dp)
-            )
-        }
         // Podcast List
         when {
             loading -> {
@@ -206,6 +178,7 @@ fun PodcastItem(podcast: Podcast, navController: NavController) {
         ) {
             Text(
                 text = podcast.title,
+                color = colorResource(id = R.color.secondary_color),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 fontFamily = Nunito_Bold,
@@ -213,27 +186,27 @@ fun PodcastItem(podcast: Podcast, navController: NavController) {
             )
             Text(
                 text = podcast.description,
+                color = colorResource(id = R.color.secondary2_color),
                 fontSize = 14.sp,
                 fontFamily = Nunito_Bold,
-                color = Color.Gray,
                 maxLines = 2
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp),
+                    .padding(top = 0.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = podcast.duration,
                     fontWeight = FontWeight.W300,
                     fontFamily = Nunito_Bold,
-                    fontSize = 10.sp
+                    fontSize = 12.sp
                 )
                 Text(
-                    text = podcast.duration,
+                    text = "${podcast.views} views",
                     fontWeight = FontWeight.W300,
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
                     fontFamily = Nunito_Bold,
                     modifier = Modifier
                         .padding(end = 50.dp)

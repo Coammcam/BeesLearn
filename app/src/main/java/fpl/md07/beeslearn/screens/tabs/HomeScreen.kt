@@ -229,7 +229,9 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
                     if (!isCalendarPressed) {
                         isCalendarPressed = true // Chuyển sang chế độ hiển thị lịch
                         isTranslatePressed = false // Đặt lại trạng thái của icon dịch
-                        Toast.makeText(context, "Icon Calendar Clicked", Toast.LENGTH_SHORT).show()
+                        Toast
+                            .makeText(context, "Icon Calendar Clicked", Toast.LENGTH_SHORT)
+                            .show()
                         onIcon2Click()
                     }
                 }
@@ -243,7 +245,7 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
 //                placeholder = painterResource(id = R.drawable.avatarsetting),
 //                error = painterResource(id = R.drawable.avatarsetting)
 //            ),
-            model = if(user?.profileImageUrl?.isEmpty() == true || user?.profileImageUrl == null) null else user.profileImageUrl,
+            model = if (user?.profileImageUrl?.isEmpty() == true || user?.profileImageUrl == null) null else user.profileImageUrl,
             fallback = painterResource(id = R.drawable.avatarsetting),
             contentDescription = "Avatar",
             contentScale = ContentScale.Crop,
@@ -404,8 +406,10 @@ fun RealCalendarView(context: Context, userDataViewModel: UserDataViewModel = vi
                 for (col in 0..6) {
                     val index = row * 7 + col
                     val dayText = if (index < daysList.size) daysList[index] else ""
-                    val isToday = dayText == todayDay.toString() && currentMonth == todayMonth && currentYear == todayYear
-                    val isLoggedInDay = loggedInDates.value.contains("$currentYear-${currentMonth + 1}-$dayText")  // Kiểm tra ngày đã đăng nhập
+                    val isToday =
+                        dayText == todayDay.toString() && currentMonth == todayMonth && currentYear == todayYear
+                    val isLoggedInDay =
+                        loggedInDates.value.contains("$currentYear-${currentMonth + 1}-$dayText")  // Kiểm tra ngày đã đăng nhập
 
                     Box(
                         modifier = Modifier.weight(1f),
@@ -452,7 +456,11 @@ fun RealCalendarView(context: Context, userDataViewModel: UserDataViewModel = vi
 }
 
 // Phương thức để lưu các ngày đã đăng nhập vào SharedPreferences theo email người dùng
-fun saveLoggedInDatesToPrefs(sharedPreferences: SharedPreferences, dates: List<String>, email: String) {
+fun saveLoggedInDatesToPrefs(
+    sharedPreferences: SharedPreferences,
+    dates: List<String>,
+    email: String
+) {
     val editor = sharedPreferences.edit()
     // Lưu các ngày đăng nhập dưới key là email người dùng
     editor.putStringSet("logged_in_dates_$email", dates.toSet())
@@ -464,8 +472,6 @@ fun getLoggedInDatesFromPrefs(sharedPreferences: SharedPreferences, email: Strin
     val loggedInDatesSet = sharedPreferences.getStringSet("logged_in_dates_$email", emptySet())
     return loggedInDatesSet?.toList() ?: emptyList()
 }
-
-
 
 
 fun getMonthName(month: Int): String {
@@ -570,7 +576,7 @@ val listItems = listOf(
         title = "Luyện tập", iconResIdgs = R.drawable.icpractice, funtion = "selectExercise"
     ),
     ListItem(
-        title = "Bản tin", iconResIdgs = R.drawable.icpodcast, funtion = "podcastScreen"
+        title = "Podcast", iconResIdgs = R.drawable.icpodcast, funtion = "podcastScreen"
     ),
     ListItem(
         title = "Bộ phim", iconResIdgs = R.drawable.icmovie, funtion = "movieScreen"
@@ -612,7 +618,8 @@ fun ActionButton(navController: NavController, item: ListItem) {
                         fontFamily = Nunito_Bold,
                         color = Color(0xFF000000)
                     ),
-                    modifier = Modifier.align(Alignment.Start)
+                    modifier = Modifier
+                        .align(Alignment.Start)
                         .padding(top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -625,15 +632,13 @@ fun ActionButton(navController: NavController, item: ListItem) {
                     contentDescription = null,
                     modifier = Modifier
                         .size(100.dp)
-                        .align(Alignment.End)
-                    , // Đặt icon căn từ bên phải và dịch sang trái
+                        .align(Alignment.End), // Đặt icon căn từ bên phải và dịch sang trái
                     contentScale = ContentScale.Fit
                 )
             }
         }
     }
 }
-
 
 
 @Preview(showBackground = true, showSystemUi = true)

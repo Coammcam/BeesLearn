@@ -16,5 +16,6 @@ data class Podcast(
     val image_url: String,
     val link_on_youtube: String,
     val description: String,
-    val title: String
+    val title: String,
+    val views : String
 )

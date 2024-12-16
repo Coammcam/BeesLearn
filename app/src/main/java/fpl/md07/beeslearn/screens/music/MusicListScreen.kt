@@ -1,6 +1,7 @@
 package fpl.md07.beeslearn.screens.music
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -74,39 +77,53 @@ fun MusicListScreen(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp)
-                .size(width = 320.dp, height = 190.dp)
+                .padding(16.dp, bottom = 10.dp, end = 16.dp)
+                .size(width = 276.dp, height = 151.dp)
+                .shadow(18.dp, RoundedCornerShape(6.dp))
+                .background(Color(0xFFFFF176))
                 .align(Alignment.CenterHorizontally)
         ) {
-            Image(
-                painter = painterResource(R.drawable.music1),
-                contentDescription = null,
+            Row(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(24.dp))
                     .fillMaxSize()
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp, start = 15.dp, top = 18.dp),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.play),
-                contentDescription = "Play",
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .size(35.dp),
-            )
-            Icon(
-                painter = painterResource(R.drawable.heart1),
-                contentDescription = "Play",
-                modifier = Modifier
-                    .padding(end = 10.dp, start = 10.dp)
-                    .size(35.dp)
-            )
+                    .padding(bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .weight(1f)
+                ) {
+                    Text(
+                        text = "Âm nhạc",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF591429), // Màu nâu chữ
+                            fontSize = 20.sp,
+                            fontFamily = Nunito_Bold,
+                        )
+                    )
+                    Text(
+                        text = "Học tiếng anh\nvới các bài hát",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color(0xFF591429),
+                            fontSize = 14.sp,
+                            fontFamily = Nunito_Bold,
+                        )
+                    )
+                }
+
+
+                Image(
+                    painter = painterResource(R.drawable.bee_wink),
+                    contentDescription = "Bee with headphones",
+                    modifier = Modifier
+                        .width(117.dp)
+                        .height(72.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
         when {
             loading -> {
@@ -125,7 +142,7 @@ fun MusicListScreen(
 
             else -> {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(musics) { music ->
                         MusicItem(music, navController)
@@ -143,8 +160,8 @@ fun MusicItem (music: Music, navController: NavController) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 30.dp, top = 10.dp)
-            .clickable {navController.navigate("musicDetail/${music.title.hashCode()}")},
+            .padding(start = 20.dp, top = 10.dp)
+            .clickable { navController.navigate("musicDetail/${music.title.hashCode()}") },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -163,22 +180,27 @@ fun MusicItem (music: Music, navController: NavController) {
         ) {
             Text(
                 text = music.title,
+                color = colorResource(id = R.color.secondary_color),
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontFamily = Nunito_Bold,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(top = 10.dp)
             )
             Text(
                 text = music.description,
                 fontSize = 14.sp,
                 fontFamily = Nunito_Bold,
-                color = Color.Gray,
-                maxLines = 2
+                color = colorResource(id = R.color.secondary2_color),
+                maxLines = 2,
+                fontWeight = FontWeight.Bold
             )
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp),
+                    .padding(end = 18.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -187,7 +209,6 @@ fun MusicItem (music: Music, navController: NavController) {
                     fontFamily = Nunito_Bold,
                     fontSize = 10.sp
                 )
-
             }
         }
     }
