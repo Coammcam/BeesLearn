@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.GlideImage
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 // Tạo FontFamily cho Nunito Bold
@@ -28,7 +30,7 @@ val NunitoBold = FontFamily(
 )
 
 @Composable
-fun CongratulationsScreen( goBack: () -> Unit ) {
+fun CongratulationsScreen(goBack: () -> Unit) {
     val userDataViewModel: UserDataViewModel = viewModel()
     val currencyData = userDataViewModel.currencyData.value
 
@@ -41,22 +43,55 @@ fun CongratulationsScreen( goBack: () -> Unit ) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // Nội dung chính ở giữa màn hình
+        // Main content box for overlapping images
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center) // Center the main content
+        ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.beeds),
+                contentDescription = "Main Image",
+                modifier = Modifier
+                    .size(200.dp)
+                    .offset(y = (-80).dp)
+            )
+
+
+            GlideImage(
+                imageUrl = R.drawable.firework,
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(Alignment.CenterStart)
+                    .offset(x = (-80).dp)
+                    .offset(y = (-50).dp)
+            )
+
+
+            GlideImage(
+                imageUrl = R.drawable.firework,
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 80.dp)
+                    .offset(y = (-50).dp)
+                    .graphicsLayer(scaleX = -1f)
+            )
+        }
+
+
         Column(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier
+                .align(Alignment.Center) // Center the text below the images
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Hình ảnh ở giữa màn hình
-            Image(
-                painter = painterResource(id = R.drawable.beeds), // Sử dụng hình ảnh bạn muốn
-                contentDescription = "Main Image",
-                modifier = Modifier.size(200.dp)
-            )
 
-            Spacer(modifier = Modifier.height(16.dp)) // Khoảng cách giữa hình ảnh và text
+            Spacer(modifier = Modifier.height(160.dp))
 
-            // Text "Congratulations" và "You have done your test very well"
+            // Text Section
+            Spacer(modifier = Modifier.height(100.dp))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -66,7 +101,7 @@ fun CongratulationsScreen( goBack: () -> Unit ) {
                     fontFamily = NunitoBold,
                     color = Color(0xFFFFA000)
                 )
-                Spacer(modifier = Modifier.height(4.dp)) // Khoảng cách nhỏ giữa hai dòng text
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Bạn đã làm bài kiểm tra rất tốt",
                     fontSize = 14.sp,
@@ -74,28 +109,31 @@ fun CongratulationsScreen( goBack: () -> Unit ) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(60.dp)) // Khoảng cách giữa text và các box
+            Spacer(modifier = Modifier.height(60.dp))
 
-            // Hai box bên dưới cho Total XP và Reward
+            // Info Boxes for "Reward"
             InfoBoxes()
         }
     }
 }
 
+
+
+
 @Composable
 fun InfoBoxes() {
     Row(
-        horizontalArrangement = Arrangement.SpaceEvenly, // Căn đều khoảng cách giữa hai Box
+        horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp), // Khoảng cách từ rìa ngoài vào trong một chút
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Box đầu tiên cho "Total XP"
 //        InfoBox(title = "Total XP", value = "+30", icon = null)
 
         // Box thứ hai cho "Reward" với biểu tượng
-        InfoBox(title = "Reward", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey_picture) // Thay "honey_picture" bằng ID của biểu tượng của bạn
+        InfoBox(title = "Reward", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey_picture)
     }
 }
 
@@ -104,10 +142,10 @@ fun InfoBoxes() {
 fun InfoBox(title: String, value: String, icon: Int?) {
     Box(
         modifier = Modifier
-            .width(130.dp) // Chiều rộng của Box vàng
-            .height(100.dp) // Chiều cao tổng thể của Box vàng
+            .width(130.dp)
+            .height(100.dp)
             .background(Color(0xFFFFF176), shape = RoundedCornerShape(12.dp)) // Nền màu vàng và bo góc
-            .padding(8.dp), // Khoảng cách bên trong Box vàng
+            .padding(8.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
@@ -125,7 +163,7 @@ fun InfoBox(title: String, value: String, icon: Int?) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Box màu trắng bên dưới
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -147,12 +185,12 @@ fun InfoBox(title: String, value: String, icon: Int?) {
 
                     // Nếu có biểu tượng, hiển thị biểu tượng bên cạnh giá trị
                     icon?.let {
-                        Spacer(modifier = Modifier.width(4.dp)) // Khoảng cách giữa giá trị và biểu tượng
+                        Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             painter = painterResource(id = it),
                             contentDescription = null,
                             tint = Color(0xFF6A1B9A),
-                            modifier = Modifier.size(18.dp) // Kích thước biểu tượng
+                            modifier = Modifier.size(18.dp)
                         )
                     }
                 }
