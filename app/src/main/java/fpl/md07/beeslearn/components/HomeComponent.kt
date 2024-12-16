@@ -67,59 +67,59 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Card(
-            modifier = Modifier
-                .width(275.dp)
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFFFF192))
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .clickable {
-                    Toast.makeText(context, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show()
-                }
-        ) {
-            Row(
-                modifier = Modifier
-                    .background(Color(0xFFFFF192)),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.heart),
-                    contentDescription = null,
-                    tint = Color.Red,
-                    modifier = Modifier.size(32.dp)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Unlimited",
-                        fontFamily = Nunito_Bold,
-                        fontSize = 22.sp,
-                        color = Color(0xFF000000)
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "20$ / Month",
-                        fontFamily = Nunito_Bold,
-                        fontSize = 22.sp,
-                        color = Color(0xFFFFA500)
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
+//        Card(
+//            modifier = Modifier
+//                .width(275.dp)
+//                .shadow(
+//                    elevation = 8.dp,
+//                    shape = RoundedCornerShape(16.dp)
+//                )
+//                .clip(RoundedCornerShape(16.dp))
+//                .background(Color(0xFFFFF192))
+//                .padding(horizontal = 16.dp, vertical = 12.dp)
+//                .clickable {
+//                    Toast.makeText(context, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show()
+//                }
+//        ) {
+//            Row(
+//                modifier = Modifier
+//                    .background(Color(0xFFFFF192)),
+//                verticalAlignment = Alignment.Top,
+//                horizontalArrangement = Arrangement.Center,
+//            ) {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.heart),
+//                    contentDescription = null,
+//                    tint = Color.Red,
+//                    modifier = Modifier.size(32.dp)
+//                )
+//
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth(),
+//                    verticalArrangement = Arrangement.Center,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(
+//                        text = "Unlimited",
+//                        fontFamily = Nunito_Bold,
+//                        fontSize = 22.sp,
+//                        color = Color(0xFF000000)
+//                    )
+//
+//                    Spacer(modifier = Modifier.height(4.dp))
+//
+//                    Text(
+//                        text = "20$ / Month",
+//                        fontFamily = Nunito_Bold,
+//                        fontSize = 22.sp,
+//                        color = Color(0xFFFFA500)
+//                    )
+//                }
+//            }
+//        }
+//
+//        Spacer(modifier = Modifier.height(16.dp))
 
         Card(
             modifier = Modifier
@@ -194,59 +194,59 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?) {
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Card(
-            modifier = Modifier
-                .width(275.dp)
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFFFF192))
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .clickable {
-                    Toast.makeText(context, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show()
-                }
-        ) {
-            Row(
-                modifier = Modifier
-                    .background(Color(0xFFFFF192)),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.heart),
-                    contentDescription = null,
-                    tint = Color.Red,
-                    modifier = Modifier.size(32.dp)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Refill 2/3",
-                        fontFamily = Nunito_Bold,
-                        fontSize = 22.sp,
-                        color = Color(0xFF000000)
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "Watching ads",
-                        fontFamily = Nunito_Bold,
-                        fontSize = 22.sp,
-                        color = Color(0xFFFFA500)
-                    )
-                }
-            }
-        }
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        Card(
+//            modifier = Modifier
+//                .width(275.dp)
+//                .shadow(
+//                    elevation = 8.dp,
+//                    shape = RoundedCornerShape(16.dp)
+//                )
+//                .clip(RoundedCornerShape(16.dp))
+//                .background(Color(0xFFFFF192))
+//                .padding(horizontal = 16.dp, vertical = 12.dp)
+//                .clickable {
+//                    Toast.makeText(context, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show()
+//                }
+//        ) {
+//            Row(
+//                modifier = Modifier
+//                    .background(Color(0xFFFFF192)),
+//                verticalAlignment = Alignment.Top,
+//                horizontalArrangement = Arrangement.Center,
+//            ) {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.heart),
+//                    contentDescription = null,
+//                    tint = Color.Red,
+//                    modifier = Modifier.size(32.dp)
+//                )
+//
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth(),
+//                    verticalArrangement = Arrangement.Center,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(
+//                        text = "Refill 2/3",
+//                        fontFamily = Nunito_Bold,
+//                        fontSize = 22.sp,
+//                        color = Color(0xFF000000)
+//                    )
+//
+//                    Spacer(modifier = Modifier.height(4.dp))
+//
+//                    Text(
+//                        text = "Watching ads",
+//                        fontFamily = Nunito_Bold,
+//                        fontSize = 22.sp,
+//                        color = Color(0xFFFFA500)
+//                    )
+//                }
+//            }
+//        }
     }
 }
 
