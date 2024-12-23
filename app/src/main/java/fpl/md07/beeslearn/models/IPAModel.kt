@@ -5,5 +5,5 @@ data class IPAModel(
     val example: String,
     val soundSymbol: Int? = null, // Tùy chọn âm thanh
     val soundExample: Int? = null, // Tùy chọn âm thanh
-    val videoResId: Int? = null // Tùy chọn video
+//    val videoResId: Int? = null // Tùy chọn video
 )
