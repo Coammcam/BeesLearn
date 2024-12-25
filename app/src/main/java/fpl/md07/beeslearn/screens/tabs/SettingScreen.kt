@@ -1,16 +1,22 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.OptIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,11 +28,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.util.NotificationUtil.createNotificationChannel
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
@@ -37,14 +47,58 @@ fun SettingScreen(
     navController: NavController,
     loginViewModel: LoginViewModel = viewModel()
 ) {
-//    val userData by loginViewModel.userData.collectAsState()
-
     val user = UserSession.currentUser
     val scrollState = rememberScrollState()
+    var showAlert by remember { mutableStateOf(false) }
+    var showLogoutAlert by remember { mutableStateOf(false) }
+    val context = navController.context
+
+    // Tạo kênh thông báo
+    fun createNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "beeslearn_notifications",
+                "BeesLearn Notifications",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Thông báo từ ứng dụng BeesLearn"
+            }
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    // Gửi thông báo
+    fun sendNotification(context: Context, title: String, message: String) {
+        val channelId = "beeslearn_notifications"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = android.Manifest.permission.POST_NOTIFICATIONS
+            if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    (context as Activity),
+                    arrayOf(permission),
+                    1
+                )
+                return
+            }
+        }
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.beeds)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+        NotificationManagerCompat.from(context).notify(0, notification)
+    }
+
+    // Khởi tạo kênh thông báo khi màn hình được tạo
+    LaunchedEffect(Unit) {
+        createNotificationChannel(context)
+    }
 
     Column(
         modifier = Modifier
-            .background(Color(0xffffffff))
+            .background(Color.White)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -61,7 +115,6 @@ fun SettingScreen(
 
         Column(
             modifier = Modifier
-                .background(Color(0xffffffff))
                 .verticalScroll(scrollState)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -69,7 +122,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             AsyncImage(
-                model = if(user?.profileImageUrl?.isEmpty() == true || user?.profileImageUrl == null) null else user.profileImageUrl,
+                model = user?.profileImageUrl.takeIf { !it.isNullOrEmpty() },
                 contentDescription = "Avatar",
                 placeholder = painterResource(id = R.drawable.avatarsetting),
                 fallback = painterResource(id = R.drawable.avatarsetting),
@@ -77,18 +130,43 @@ fun SettingScreen(
                 modifier = Modifier
                     .size(170.dp)
                     .clip(CircleShape)
+                    .clickable {
+                        sendNotification(
+                            context,
+                            "BeesLearn",
+                            "Gói Premium của bạn sẽ hết hạn vào ngày: 31/12/2024."
+                        )
+                    }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             user?.let { userInfo ->
-                Text(
-                    text = userInfo.username,
-                    fontFamily = Nunito_Bold,
-                    fontSize = 38.sp,
-                    color = colorResource(id = R.color.secondary_color)
-                )
-
+                Row (
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = userInfo.username,
+                        fontFamily = Nunito_Bold,
+                        fontSize = 38.sp,
+                        color = colorResource(id = R.color.secondary_color)
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.blue_tick),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(25.dp)
+                            .clickable {
+                                sendNotification(
+                                    context,
+                                    "BeesLearn",
+                                    "Tài khoản của bạn đang sử dụng gói Premium."
+                                )
+                            showAlert = true
+                            }
+                    )
+                }
                 Text(
                     text = userInfo.email,
                     fontFamily = Nunito_Bold,
@@ -101,7 +179,6 @@ fun SettingScreen(
                 fontSize = 20.sp,
                 color = Color.Red
             )
-
 
             Spacer(modifier = Modifier.height(25.dp))
 
@@ -130,7 +207,9 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(25.dp))
 
             Button(
-                onClick = { /* Add your action here */ },
+                onClick = {
+                    navController.navigate("homeComponents")
+                },
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
@@ -146,12 +225,12 @@ fun SettingScreen(
                         .padding(start = 50.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.wave_icon_dark),
+                        painter = painterResource(id = R.drawable.heart8),
                         contentDescription = "Languages",
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Thống Kê",
+                        text = "Mua Premium",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -215,7 +294,7 @@ fun SettingScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                            text = "Tải xuống",
+                        text = "Tải xuống",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -259,11 +338,7 @@ fun SettingScreen(
 
             Button(
                 onClick = {
-                    loginViewModel.logout(context = navController.context)
-
-                    navController.navigate("welcomeScreen") {
-                        popUpTo(0) // Xóa toàn bộ stack điều hướng để ngăn quay lại màn hình cũ
-                    }
+                    showLogoutAlert = true
                 },
                 modifier = Modifier
                     .height(55.dp)
@@ -280,6 +355,7 @@ fun SettingScreen(
                         .padding(start = 50.dp)
                 ) {
                     Image(
+
                         painter = painterResource(id = R.drawable.logout),
                         contentDescription = "Logout",
                         modifier = Modifier.size(20.dp)
@@ -292,14 +368,60 @@ fun SettingScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(15.dp))
         }
+    }
+    // Hiển thị AlertDialog xác nhận đăng xuất
+    if (showLogoutAlert) {
+        AlertDialog(
+            onDismissRequest = { showLogoutAlert = false }, // Đóng hộp thoại khi nhấn ra ngoài
+            title = { Text("Xác nhận đăng xuất", fontSize = 20.sp) },
+            text = { Text("Bạn có chắc chắn muốn đăng xuất không?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutAlert = false // Đóng hộp thoại
+                        sendNotification(context, "Bạn đã đăng xuất", "Thời gian học tập của bạn chưa đủ")
+                        loginViewModel.logout(context = navController.context)
+                        navController.navigate("welcomeScreen") {
+                            popUpTo(0) // Xóa toàn bộ stack điều hướng để ngăn quay lại màn hình cũ
+                        }
+                    }
+                ) {
+                    Text("OK", color = colorResource(id = R.color.secondary_color))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutAlert = false }) {
+                    Text("Hủy", color = Color.Gray)
+                }
+            }
+        )
+    }
+    if (showAlert) {
+        AlertDialog(
+            onDismissRequest = { showAlert = false },
+            confirmButton = {
+                TextButton(onClick = { showAlert = false }) {
+                    Text("OK")
+                }
+            },
+            title = {
+                Text(
+                    "Thông báo",
+                    fontSize = 30.sp
+                )
+            },
+            text = {
+                Text(
+                    "Gói Premium của bạn sẽ hết hạn vào ngày: 31/12/2024.",
+                )
+            }
+        )
     }
 }
 
 @Composable
-fun SettingButton(){
+fun SettingButton() {
 
 }
 

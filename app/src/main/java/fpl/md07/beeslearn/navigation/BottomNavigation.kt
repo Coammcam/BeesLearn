@@ -39,6 +39,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.components.HomePageComponent
+import fpl.md07.beeslearn.components.PaymentComponent
 import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
 import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
@@ -61,6 +63,7 @@ import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
+import fpl.md07.beeslearn.screens.tabs.HomeLeversScreen
 import fpl.md07.beeslearn.screens.tabs.VideoScreen
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
 import fpl.md07.beeslearn.viewmodels.TranslateViewModel
@@ -242,6 +245,15 @@ fun NestedBottomTab(
             val videoResId = backStackEntry.arguments?.getString("videoResId")?.toIntOrNull() ?: 0
             VideoScreen(navController = navController, videoResId = videoResId)
         }
+        composable("homeComponents") {
+            HomePageComponent (navController)
+        }
+        composable("paymentComponent") {
+            PaymentComponent(navController)
+        }
+        composable("homeLeversScreen") {
+            HomeLeversScreen(navController)
+        }
     }
 }
 
@@ -277,11 +289,9 @@ fun TabView(tabBarItems: List<TabItem>, navController: NavController) {
                         indicatorColor = Color.White
                     )
                 )
-
             }
         }
     }
-
 }
 
 // This component helps to clean up the API call from our TabView above,

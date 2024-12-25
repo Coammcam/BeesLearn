@@ -39,16 +39,15 @@ class MainActivity : ComponentActivity() {
                     MainScreen(navController = navController, movieViewModel = movieViewModel) // Truyền movieViewModel vào MainScreen
                 }
 //                    WelcomeScreen(navController)
-                }
             }
         }
     }
+}
 
 
 @Composable
 fun MainScreen(navController : NavHostController, movieViewModel: MovieViewModel) {
     val navController = rememberNavController()
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
