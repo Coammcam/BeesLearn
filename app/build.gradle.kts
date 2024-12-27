@@ -98,6 +98,6 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.0.0")
     implementation("io.ktor:ktor-client-serialization:2.0.0")
 
-
+    implementation ("androidx.work:work-runtime-ktx:2.8.1")
 
 }

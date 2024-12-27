@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.main
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,6 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.navigation.BottomNavBar
+import fpl.md07.beeslearn.notifications.LessonViewModels
+import fpl.md07.beeslearn.notifications.ReminderService
+import fpl.md07.beeslearn.notifications.TimePreferences
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
 import fpl.md07.beeslearn.screens.movie.MovieListScreen
@@ -28,12 +32,20 @@ import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
 
 class MainActivity : ComponentActivity() {
+    lateinit var timePreferences: TimePreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             BeesLearnTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    val intent = Intent(this, ReminderService::class.java)
+                    startService(intent)
+                    timePreferences = TimePreferences(this)
+                    timePreferences.resetDailyStatus()
+                    timePreferences.checkAndResetDaily()
+
                     val navController = rememberNavController()
                     val movieViewModel: MovieViewModel = viewModel()
                     MainScreen(navController = navController, movieViewModel = movieViewModel) // Truyền movieViewModel vào MainScreen
@@ -72,7 +84,7 @@ fun SetupNavGraph(navController: NavHostController, movieViewModel: MovieViewMod
         composable("podcastScreen") { PodcastListScreen( navController = navController) }
         composable("movieScreen") {  MovieListScreen(navController = navController, movieViewModel = movieViewModel)}
         composable("musicScreen") { MusicListScreen (navController = navController) }
-        composable("selectExercise") { SelectLessonScreen (navController = navController) }
+        composable("selectExercise") { SelectLessonScreen (navController = navController, lessonViewModel = LessonViewModels()) }
 
         composable("bottomNavBar") {  BottomNavBar(navController = navController, movieViewModel = movieViewModel)}
     }
