@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "fpl.md07.beeslearn"
-    compileSdk = 34
+    compileSdk = 35 // Hạ xuống nếu môi trường chưa hỗ trợ SDK 35
 
     defaultConfig {
         applicationId = "fpl.md07.beeslearn"
@@ -41,52 +41,79 @@ android {
 }
 
 dependencies {
-
+    // AndroidX & Jetpack Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
+    implementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation(fileTree(mapOf(
+        "dir" to "D:\\DuAnToiNghiep\\ZaloPay",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Material Design
+    implementation("com.google.android.material:material:1.9.0")
+
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+
+    // Image loading
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("io.coil-kt:coil-gif:2.7.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Retrofit for API calls
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Hilt for Dependency Injection
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    // LiveData and Coroutines
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+
+    // Media playback (Media3)
+    implementation("androidx.media3:media3-exoplayer:1.5.1")
+    implementation("androidx.media3:media3-ui:1.5.1")
+
+    // YouTube Player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
+
+    // Translator (third-party)
+    implementation("com.github.therealbush:translator:1.1.1")
+
+    // Ktor for Networking
+    implementation("io.ktor:ktor-client-core:3.0.3")
+    implementation("io.ktor:ktor-client-cio:3.0.3")
+    implementation("io.ktor:ktor-client-serialization:3.0.3")
+
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.30.1")
 
-    implementation("androidx.navigation:navigation-compose:2.8.3")
+    //ZaloPay
+    implementation ("org.json:json:20210307")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
-    implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation("io.coil-kt:coil-gif:2.5.0")
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    kapt("com.github.bumptech.glide:compiler:4.12.0")
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
-
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.5.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("com.google.accompanist:accompanist-flowlayout:0.36.0")
-
-    implementation("com.google.accompanist:accompanist-flowlayout:0.36.0")
-
-    dependencies {
-        implementation ("com.google.android.exoplayer:exoplayer:2.19.1")  // Thêm ExoPlayer
-        implementation ("androidx.media3:media3-exoplayer:1.0.0")         // Thêm Media3
-    }
-
-    implementation ("androidx.media3:media3-exoplayer:1.0.0")
-    implementation ("androidx.media3:media3-ui:1.0.0")
 
     implementation ("com.google.code.gson:gson:2.8.8")
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")

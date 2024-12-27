@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.navigation
 
-import YouTubePlayerScreen
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -28,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -39,6 +37,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.api.AppInfo.APP_ID
+import fpl.md07.beeslearn.components.HomePageComponent
+import fpl.md07.beeslearn.components.PaymentComponent
 import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
 import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.notifications.LessonViewModels
@@ -62,9 +63,11 @@ import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
+import fpl.md07.beeslearn.screens.tabs.HomeLeversScreen
 import fpl.md07.beeslearn.screens.tabs.VideoScreen
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
-import fpl.md07.beeslearn.viewmodels.TranslateViewModel
+import vn.zalopay.sdk.Environment
+import vn.zalopay.sdk.ZaloPaySDK
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -243,6 +246,15 @@ fun NestedBottomTab(
             val videoResId = backStackEntry.arguments?.getString("videoResId")?.toIntOrNull() ?: 0
             VideoScreen(navController = navController, videoResId = videoResId)
         }
+        composable("homeComponents") {
+            HomePageComponent (navController)
+        }
+        composable("paymentComponent") {
+            PaymentComponent(navController)
+        }
+        composable("homeLeversScreen") {
+            HomeLeversScreen(navController)
+        }
     }
 }
 
@@ -278,11 +290,9 @@ fun TabView(tabBarItems: List<TabItem>, navController: NavController) {
                         indicatorColor = Color.White
                     )
                 )
-
             }
         }
     }
-
 }
 
 // This component helps to clean up the API call from our TabView above,
