@@ -1,6 +1,9 @@
 package fpl.md07.beeslearn.screens.lessons
 
-import android.util.Log
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
@@ -22,23 +25,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import fpl.md07.beeslearn.components.BeeAnimaComponent
 import fpl.md07.beeslearn.components.TextBoxComponent
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.HomeComponent
 import fpl.md07.beeslearn.components.HomePageComponent
-import fpl.md07.beeslearn.components.TopBarComponent
 import fpl.md07.beeslearn.components.TopBarComponent_A
 import fpl.md07.beeslearn.components.customFont
-import fpl.md07.beeslearn.models.GrammarQuestionModel
-import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
 import fpl.md07.beeslearn.models.responseModel.QuestionResponseModel
+import fpl.md07.beeslearn.notifications.LessonViewModels
+import fpl.md07.beeslearn.notifications.NotificationHelper
+import fpl.md07.beeslearn.notifications.TimePreferences
+import fpl.md07.beeslearn.notifications.TimeTrackingManager
 import fpl.md07.beeslearn.screens.CongratulationsScreen
 import fpl.md07.beeslearn.screens.questions.ArrangeSentenceScreen
 import fpl.md07.beeslearn.screens.questions.FillInTheBlankScreen
@@ -47,17 +49,16 @@ import fpl.md07.beeslearn.screens.questions.SpeakingQuestionScreen
 import fpl.md07.beeslearn.screens.questions.TrueFalseScreen
 import fpl.md07.beeslearn.viewmodels.QuestionViewModel
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
-import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-enum class QuestionMode{
+enum class QuestionMode {
     TRUEFALSE, GRAMMAR, MULTIPLECHOICE, FILLIN, FINISH, SPEAKBITCH
 }
 
 @Composable
-fun SelectLessonScreen(navController: NavController) {
+fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonViewModels) {
 
     val userDataViewModel: UserDataViewModel = viewModel()
     val currencyData by userDataViewModel.currencyData.observeAsState()
@@ -69,23 +70,54 @@ fun SelectLessonScreen(navController: NavController) {
     var showHoneyStatusComponent by remember { mutableStateOf(false) }
 
     val questionViewModel: QuestionViewModel = viewModel()
-    var questions by remember { mutableStateOf(QuestionResponseModel(
-        words = null,
-        trueFalseQuestions = null,
-        grammarQuestions = null
-    )) }
+    var questions by remember {
+        mutableStateOf(
+            QuestionResponseModel(
+                words = null,
+                trueFalseQuestions = null,
+                grammarQuestions = null
+            )
+        )
+    }
 
     val totalAmountOfQuestion = 10
     var questionIndex by remember { mutableIntStateOf(1) }
-    var questionMode by remember { mutableStateOf( QuestionMode.GRAMMAR ) }
+    var questionMode by remember { mutableStateOf(QuestionMode.GRAMMAR) }
+
+    val context = LocalContext.current
+    val notificationHelper = NotificationHelper(context)
+    var timePreferences: TimePreferences? = null
+    var isNotificationShown = false
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+        ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        ActivityCompat.requestPermissions(
+            context as Activity,
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            1
+        )
+    } else {
+        notificationHelper.createNotificationChannel()
+    }
 
     LaunchedEffect(isLessonSelected) {
-        if(!isLessonSelected){
+        if (isLessonSelected) {
+            lessonViewModel.startLesson("lesson_${currencyData?.level}")
+            TimeTrackingManager.startTracking("lesson_${currencyData?.level}")
+
+        } else {
+            lessonViewModel.pauseLesson()
+            TimeTrackingManager.pauseTracking()
+
             isQuestionLoaded = false
             questionViewModel.getRandomQuestions(
                 total = totalAmountOfQuestion,
-                onSuccess = { isQuestionLoaded = true; questions = it},
-                onError = {println(it)}
+                onSuccess = { isQuestionLoaded = true; questions = it },
+                onError = { println(it) }
             )
             questionIndex = 1
             questionMode = QuestionMode.GRAMMAR
@@ -94,30 +126,51 @@ fun SelectLessonScreen(navController: NavController) {
     }
 
     LaunchedEffect(questionIndex) {
-        if(questionIndex == totalAmountOfQuestion + 1){
+        if (questionIndex == totalAmountOfQuestion + 1) {
+            lessonViewModel.endLesson(context)
+
+            val duration = TimeTrackingManager.stopTracking()
+            timePreferences?.saveDailyLearningTime(duration)
+            val selectedTime = timePreferences?.getSelectedTime() ?: 2
+            var totalTime = timePreferences?.getDailyLearningTime() ?: 0
+            totalTime += duration
+
+            if (totalTime >= selectedTime) {
+                notificationHelper.showTimeAchievementNotification()
+                timePreferences?.setTodayAchievementShown()
+            }else if (totalTime < selectedTime) {
+                notificationHelper.showTimeAchievementNotification1()
+            }
+
             questionMode = QuestionMode.FINISH
-        }else{
-            if(questionIndex == 5 || questionIndex == 7){
+            isLessonSelected = false
+        } else {
+            lessonViewModel.pauseLesson()
+            lessonViewModel.resumeLesson()
+            TimeTrackingManager.resumeTracking()
+
+            if (questionIndex == 5 || questionIndex == 7) {
                 questionMode = QuestionMode.TRUEFALSE
-            }else if(questionIndex == 3 || questionIndex == 9){
+            } else if (questionIndex == 3 || questionIndex == 9) {
                 questionMode = QuestionMode.MULTIPLECHOICE
-            }else if(questionIndex == 2 || questionIndex == 6){
+            } else if (questionIndex == 2 || questionIndex == 6) {
                 questionMode = QuestionMode.FILLIN
-            }else{
+            } else {
                 questionMode = QuestionMode.GRAMMAR
             }
         }
     }
 
-    BackHandler (enabled = isLessonSelected) {
+    BackHandler(enabled = isLessonSelected) {
+        TimeTrackingManager.pauseTracking()
         isLessonSelected = false
     }
 
-    BackHandler (enabled = showHoneyCombSellComponent) {
+    BackHandler(enabled = showHoneyCombSellComponent) {
         showHoneyCombSellComponent = false
     }
 
-    BackHandler (enabled = showHoneyStatusComponent) {
+    BackHandler(enabled = showHoneyStatusComponent) {
         showHoneyStatusComponent = false
     }
 
@@ -131,19 +184,20 @@ fun SelectLessonScreen(navController: NavController) {
         ) {
             TopBarComponent_A(
                 goBack = {
-                    if(isLessonSelected){
+                    if (isLessonSelected) {
+                        TimeTrackingManager.pauseTracking()
                         isLessonSelected = false
-                    }else{
+                    } else {
                         navController.popBackStack()
                     }
                 },
                 showHoneyCombStatus = {
-                    if (!isLessonSelected){
+                    if (!isLessonSelected) {
                         showHoneyCombSellComponent = true
                     }
                 }
             )
-            if(!isLessonSelected){
+            if (!isLessonSelected) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                 ) {
@@ -161,21 +215,25 @@ fun SelectLessonScreen(navController: NavController) {
                     },
                     userLevel = currencyData?.level ?: 0
                 )
-            }else{
-                if(isQuestionLoaded){
+            } else {
+                if (isQuestionLoaded) {
                     ShowQuestionScreens(
                         questionMode = questionMode,
                         questions = questions,
-                        goBack = { isLessonSelected = false },
+                        goBack = {
+                            isLessonSelected = false
+                        },
                         onCompleteQuestion = { questionIndex += 1 }
                     )
-                }else{
+                } else {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.width(64.dp).height(64.dp),
+                            modifier = Modifier
+                                .width(64.dp)
+                                .height(64.dp),
                             color = colorResource(R.color.primary_color),
                             trackColor = colorResource(R.color.secondary_color)
                         )
@@ -183,10 +241,11 @@ fun SelectLessonScreen(navController: NavController) {
                 }
             }
         }
+        
         if (showHoneyStatusComponent){
             HomePageComponent(navController)
         }
-        if (showHoneyCombSellComponent){
+        if (showHoneyCombSellComponent) {
             HomeComponent(
                 honeyCombCount = currencyData?.honeyComb,
                 honeyJarCount = currencyData?.honeyJar
@@ -200,8 +259,8 @@ fun ShowQuestionScreens(
     questionMode: QuestionMode,
     questions: QuestionResponseModel,
     goBack: () -> Unit,
-    onCompleteQuestion: () -> Unit)
-{
+    onCompleteQuestion: () -> Unit
+) {
 
     val trueFalseQuestions = questions.trueFalseQuestions
     var trueFalseQuestionIndex by remember { mutableIntStateOf(0) }
@@ -220,9 +279,10 @@ fun ShowQuestionScreens(
                     onCompleteQuestion()
                     if (trueFalseQuestionIndex != trueFalseQuestions.size - 1) trueFalseQuestionIndex += 1
                 },
-                goBack = {goBack()},
+                goBack = { goBack() },
             )
         }
+
         QuestionMode.GRAMMAR -> {
             ArrangeSentenceScreen(
                 grammarQuestions!![grammarQuestionIndex],
@@ -230,9 +290,10 @@ fun ShowQuestionScreens(
                     onCompleteQuestion()
                     if (grammarQuestionIndex != grammarQuestions.size - 1) grammarQuestionIndex += 1
                 },
-                goBack = {goBack()}
+                goBack = { goBack() }
             )
         }
+
         QuestionMode.MULTIPLECHOICE -> {
             MultipleChoiceScreen(
                 words = multipleChoiceQuestion!!.shuffled().chunked(4)
@@ -242,9 +303,10 @@ fun ShowQuestionScreens(
                     onCompleteQuestion()
                     if (multipleChoiceQuestionIndex != multipleChoiceQuestion.chunked(4).size - 1) multipleChoiceQuestionIndex += 1
                 },
-                goBack = {goBack()}
+                goBack = { goBack() }
             )
         }
+
         QuestionMode.FILLIN -> {
             FillInTheBlankScreen(
                 question = grammarQuestions!![grammarQuestionIndex],
@@ -254,14 +316,16 @@ fun ShowQuestionScreens(
                     onCompleteQuestion()
                     if (grammarQuestionIndex != grammarQuestions.size - 1) grammarQuestionIndex += 1
                 },
-                goBack = {goBack()}
+                goBack = { goBack() }
             )
         }
-        QuestionMode.SPEAKBITCH ->{
+
+        QuestionMode.SPEAKBITCH -> {
             SpeakingQuestionScreen()
         }
+
         QuestionMode.FINISH -> {
-            CongratulationsScreen(){
+            CongratulationsScreen() {
                 goBack()
             }
         }
@@ -287,10 +351,14 @@ fun HexGridd(onPress: () -> Unit, userLevel: Int) {
                 number = i + 1,
                 isClicked = i + 1 < userLevel,
                 onClick = {
-                    if (i + 1 < userLevel+1){
+                    if (i + 1 < userLevel + 1) {
                         onPress()
-                    }else{
-                        Toast.makeText(context, "Bạn cần hoàn thành level phía trước", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Bạn cần hoàn thành level phía trước",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             )
@@ -303,7 +371,7 @@ fun HexGridd(onPress: () -> Unit, userLevel: Int) {
                         .width(100.dp)
                         .height(4.dp)
                         .align(Alignment.CenterVertically),
-                    color = if(i + 1 < userLevel) colorResource(R.color.newInnerColor) else Color.Gray
+                    color = if (i + 1 < userLevel) colorResource(R.color.newInnerColor) else Color.Gray
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Adjust space after line
             }
@@ -397,5 +465,5 @@ fun HexagonWithNumber(
 @Composable
 fun PreviewSelectExercise() {
     val mockNavController = rememberNavController()
-    SelectLessonScreen(navController = mockNavController)
+    SelectLessonScreen(navController = mockNavController, lessonViewModel = LessonViewModels())
 }

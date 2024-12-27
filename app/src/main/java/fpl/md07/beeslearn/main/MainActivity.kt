@@ -21,6 +21,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.navigation.BottomNavBar
+import fpl.md07.beeslearn.notifications.LessonViewModels
+import fpl.md07.beeslearn.notifications.ReminderService
+import fpl.md07.beeslearn.notifications.TimePreferences
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
 import fpl.md07.beeslearn.screens.movie.MovieListScreen
@@ -33,6 +36,8 @@ import vn.zalopay.sdk.Environment
 import vn.zalopay.sdk.ZaloPaySDK
 
 class MainActivity : ComponentActivity() {
+    lateinit var timePreferences: TimePreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,6 +45,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             BeesLearnTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    val intent = Intent(this, ReminderService::class.java)
+                    startService(intent)
+                    timePreferences = TimePreferences(this)
+                    timePreferences.resetDailyStatus()
+                    timePreferences.checkAndResetDaily()
+
                     val navController = rememberNavController()
                     val movieViewModel: MovieViewModel = viewModel()
                     MainScreen(navController = navController, movieViewModel = movieViewModel) // Truyền movieViewModel vào MainScreen
@@ -87,7 +98,7 @@ fun SetupNavGraph(navController: NavHostController, movieViewModel: MovieViewMod
         composable("podcastScreen") { PodcastListScreen( navController = navController) }
         composable("movieScreen") {  MovieListScreen(navController = navController, movieViewModel = movieViewModel)}
         composable("musicScreen") { MusicListScreen (navController = navController) }
-        composable("selectExercise") { SelectLessonScreen (navController = navController) }
+        composable("selectExercise") { SelectLessonScreen (navController = navController, lessonViewModel = LessonViewModels()) }
 
         composable("bottomNavBar") {  BottomNavBar(navController = navController, movieViewModel = movieViewModel)}
     }

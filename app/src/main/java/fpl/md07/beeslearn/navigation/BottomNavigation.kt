@@ -41,6 +41,8 @@ import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.components.HomePageComponent
 import fpl.md07.beeslearn.components.PaymentComponent
 import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
+import fpl.md07.beeslearn.models.Music
+import fpl.md07.beeslearn.notifications.LessonViewModels
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
@@ -141,7 +143,7 @@ fun NestedBottomTab(
             SettingScreen(navController)
         }
         composable("selectExercise") {
-            SelectLessonScreen(navController)
+            SelectLessonScreen(navController = navController, lessonViewModel = LessonViewModels())
         }
         composable("podcastScreen") {
             PodcastListScreen(navController)
@@ -220,7 +222,7 @@ fun NestedBottomTab(
             SelectLevelScreen(navController)
         }
         composable("tanSuatScreen") {
-            FrequencyScreen(navController)
+            FrequencyScreen(navController= navController, lessonViewModel = LessonViewModels())
         }
         composable("editProfile") {
             EditProfile(navController)

@@ -115,4 +115,16 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
 
+    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
+
+    implementation ("com.github.therealbush:translator:1.1.1")
+
+    implementation ("com.github.therealbush:translator:1.1.1")
+    implementation("io.ktor:ktor-client-core:2.0.0")
+    implementation("io.ktor:ktor-client-cio:2.0.0")
+    implementation("io.ktor:ktor-client-serialization:2.0.0")
+
+    implementation ("androidx.work:work-runtime-ktx:2.8.1")
+
 }
