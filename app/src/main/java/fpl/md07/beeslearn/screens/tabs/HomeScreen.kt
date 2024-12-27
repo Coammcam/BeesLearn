@@ -573,7 +573,7 @@ data class ListItem(
 
 val listItems = listOf(
     ListItem(
-        title = "Luyện tập", iconResIdgs = R.drawable.icpractice, funtion = "selectExercise"
+        title = "Luyện tập", iconResIdgs = R.drawable.icpractice, funtion = "homeLeversScreen"
     ),
     ListItem(
         title = "Podcast", iconResIdgs = R.drawable.icpodcast, funtion = "podcastScreen"

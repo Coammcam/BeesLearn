@@ -241,8 +241,9 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
                 }
             }
         }
-        if (showHoneyStatusComponent) {
-            HomePageComponent()
+        
+        if (showHoneyStatusComponent){
+            HomePageComponent(navController)
         }
         if (showHoneyCombSellComponent) {
             HomeComponent(
