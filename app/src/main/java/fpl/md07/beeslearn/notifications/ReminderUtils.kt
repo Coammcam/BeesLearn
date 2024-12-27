@@ -12,7 +12,7 @@ class ReminderUtils {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         // Danh sách các khung giờ (giờ, phút)
-        val reminderTimes = listOf(Pair(8, 15), Pair(16, 45), Pair(23,10 ))
+        val reminderTimes = listOf(Pair(8, 15), Pair(9, 45), Pair(10,10 ), Pair(11,10 ), Pair(12,10 ), Pair(13,10 ), Pair(22,10 ), Pair(23,10 ))
 
         reminderTimes.forEachIndexed { index, (hour, minute) ->
             val intent = Intent(context, ReminderBroadcastReceiver::class.java)

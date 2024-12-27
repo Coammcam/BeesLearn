@@ -87,7 +87,12 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
     val context = LocalContext.current
     val notificationHelper = NotificationHelper(context)
     var timePreferences: TimePreferences? = null
-    var isNotificationShown = false
+    var selectedTime by remember { mutableStateOf(2) } // Giá trị mặc định là 2 phút
+//    LaunchedEffect(Unit) {
+//        // Khởi tạo TimePreferences và đọc thời gian đã chọn
+//        timePreferences = TimePreferences(context)
+//        selectedTime = timePreferences?.getSelectedTime() ?: 2
+//    }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
         ActivityCompat.checkSelfPermission(
