@@ -1,7 +1,9 @@
 package fpl.md07.beeslearn.main
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.navigation.BottomNavBar
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
@@ -26,11 +29,14 @@ import fpl.md07.beeslearn.screens.lessons.SelectLessonScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
+import vn.zalopay.sdk.Environment
+import vn.zalopay.sdk.ZaloPaySDK
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        ZaloPaySDK.init(389012528223546448.toInt(), Environment.SANDBOX);
         setContent {
             BeesLearnTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
@@ -38,17 +44,26 @@ class MainActivity : ComponentActivity() {
                     val movieViewModel: MovieViewModel = viewModel()
                     MainScreen(navController = navController, movieViewModel = movieViewModel) // Truyền movieViewModel vào MainScreen
                 }
-//                    WelcomeScreen(navController)
-                }
             }
         }
+        try {
+            ZaloPaySDK.init(APP_ID, Environment.SANDBOX)
+            Log.d("ZaloPayInit", "ZaloPay SDK initialized successfully")
+        } catch (e: Exception) {
+            Log.e("ZaloPayInitError", "Error initializing ZaloPay SDK: ${e.message}")
+            e.printStackTrace()
+        }
     }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        ZaloPaySDK.getInstance().onResult(intent)
+    }
+}
 
 
 @Composable
 fun MainScreen(navController : NavHostController, movieViewModel: MovieViewModel) {
     val navController = rememberNavController()
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

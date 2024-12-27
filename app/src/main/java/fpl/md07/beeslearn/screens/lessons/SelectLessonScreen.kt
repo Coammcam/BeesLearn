@@ -136,7 +136,7 @@ fun SelectLessonScreen(navController: NavController) {
                     }else{
                         navController.popBackStack()
                     }
-                         },
+                },
                 showHoneyCombStatus = {
                     if (!isLessonSelected){
                         showHoneyCombSellComponent = true
@@ -184,7 +184,7 @@ fun SelectLessonScreen(navController: NavController) {
             }
         }
         if (showHoneyStatusComponent){
-            HomePageComponent()
+            HomePageComponent(navController)
         }
         if (showHoneyCombSellComponent){
             HomeComponent(
@@ -287,7 +287,7 @@ fun HexGridd(onPress: () -> Unit, userLevel: Int) {
                 number = i + 1,
                 isClicked = i + 1 < userLevel,
                 onClick = {
-                    if (i + 1 < userLevel + 1){
+                    if (i + 1 < userLevel+1){
                         onPress()
                     }else{
                         Toast.makeText(context, "Bạn cần hoàn thành level phía trước", Toast.LENGTH_SHORT).show()
