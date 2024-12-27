@@ -1,31 +1,19 @@
 package fpl.md07.beeslearn.components
 
-
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,13 +24,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.api.AppInfo.APP_ID
+import fpl.md07.beeslearn.api.CreateOrder
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import kotlinx.coroutines.launch
+import vn.zalopay.sdk.Environment
+import vn.zalopay.sdk.ZaloPayError
+import vn.zalopay.sdk.ZaloPaySDK
+import vn.zalopay.sdk.listeners.PayOrderListener
+import fpl.md07.beeslearn.R
 
 @Composable
-fun PaymentComponent(navController: NavController) {
+fun PaymentComponent(navController: NavHostController) {
     val context = LocalContext.current
 
     Column(
@@ -53,80 +49,39 @@ fun PaymentComponent(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Button 2 tháng
-        ButtonCardPay(
+        PaymentButton(
             text = "Gói 1 Tháng",
-            price = "99,000 VNĐ",
-            onClick = {
-                startZaloPayPayment(context, 99000)
-            }
+            amount = 99000,
+            context = context
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button 3 tháng
-        ButtonCardPay(
+        PaymentButton(
             text = "Gói 3 Tháng",
-            price = "255,000 VNĐ",
-            onClick = {
-                startZaloPayPayment(context, 255000)
-            }
+            amount = 255000,
+            context = context
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Third button: 6 Months
-        ButtonCardPay(
+        PaymentButton(
             text = "Gói 6 Tháng",
-            price = "450,000 VNĐ",
-            onClick = {
-                startZaloPayPayment(context, 450000)
-            }
+            amount = 450000,
+            context = context
         )
     }
 }
-
-//fun startZaloPayPayment(context: Context, amount: Int) {
-//    // Dữ liệu giả lập để QC
-//    val paymentData = mapOf(
-//        "app_id" to "554", // Thay bằng app_id thực tế
-//        "amount" to amount.toString(),
-//        "description" to "Thanh toán gói học phí",
-//        "zptranstoken" to "mock_transaction_token" // Dữ liệu giả QC
-//    )
-//
-//    // Khởi động Intent để thanh toán qua ZaloPay
-//    val intent = Intent(Intent.ACTION_VIEW).apply {
-//        data = Uri.parse("zalopay://payment?${paymentData.map { "${it.key}=${it.value}" }.joinToString("&")}")
-//    }
-//
-//    if (intent.resolveActivity(context.packageManager) != null) {
-//        context.startActivity(intent)
-//    } else {
-//        Toast.makeText(context, "Không tìm thấy ứng dụng ZaloPay trên thiết bị", Toast.LENGTH_SHORT).show()
-//    }
-//}
-
-fun startZaloPayPayment(context: Context, amount: Int) {
-    val paymentData = mapOf(
-        "app_id" to "554", // app_id của bạn
-        "amount" to amount.toString(),
-        "description" to "Thanh toán gói học phí",
-        "zptranstoken" to "mock_transaction_token" // Giả lập token giao dịch cho mục đích kiểm thử
-    )
-    val queryString = paymentData.map { "${it.key}=${it.value}" }.joinToString("&")
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("zalopay://payment?$queryString"))
-
-    if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(intent)
-    } else {
-        Toast.makeText(context, "Không tìm thấy ứng dụng ZaloPay trên thiết bị", Toast.LENGTH_SHORT).show()
-    }
-}
-
 
 @Composable
-fun ButtonCardPay(text: String, price: String, onClick: () -> Unit) {
+fun PaymentButton(
+    text: String,
+    amount: Int,
+    context: Context
+) {
+    val activity = context as? ComponentActivity ?: return // Bảo đảm context là ComponentActivity
+    val totalString = amount.toString()
+
     Card(
         modifier = Modifier
             .width(275.dp)
@@ -135,26 +90,116 @@ fun ButtonCardPay(text: String, price: String, onClick: () -> Unit) {
             )
             .clip(RoundedCornerShape(16.dp))
             .background(Color(0xFFFFF192))
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-            .clickable(onClick = onClick)
+            .clickable {
+                Log.d("ZaloPay", "Button clicked")
+
+                try {
+                    ZaloPaySDK.init(APP_ID, Environment.SANDBOX)
+                    Log.d("ZaloPayInit", "ZaloPay SDK initialized successfully")
+                } catch (e: Exception) {
+                    Log.e("ZaloPayInitError", "Error initializing ZaloPay SDK: ${e.message}")
+                    e.printStackTrace()
+                    return@clickable
+                }
+
+                val orderApi = CreateOrder()
+
+                activity.lifecycleScope.launch {
+                    try {
+                        val data = orderApi.createOrder(totalString)
+                        Log.d("Amount", totalString)
+
+                        val code = data.getString("return_code")
+                        Log.d("ZaloPay", "Order created successfully: $code")
+
+                        if (code == "1") {
+                            val token = data.getString("zp_trans_token")
+                            ZaloPaySDK.getInstance().payOrder(
+                                activity,
+                                token,
+                                "demozpdk://app",
+                                object : PayOrderListener {
+                                    override fun onPaymentSucceeded(
+                                        payUrl: String?,
+                                        transToken: String?,
+                                        appTransID: String?
+                                    ) {
+                                        Toast.makeText(
+                                            context,
+                                            "Thanh toán thành công",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.d(
+                                            "ZaloPay",
+                                            "Payment succeeded: payUrl=$payUrl, transToken=$transToken, appTransID=$appTransID"
+                                        )
+                                    }
+
+                                    override fun onPaymentCanceled(
+                                        payUrl: String?,
+                                        transToken: String?
+                                    ) {
+                                        Toast.makeText(
+                                            context,
+                                            "Hủy thanh toán",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.d(
+                                            "ZaloPay",
+                                            "Payment canceled: payUrl=$payUrl, transToken=$transToken"
+                                        )
+                                    }
+
+                                    override fun onPaymentError(
+                                        error: ZaloPayError?,
+                                        payUrl: String?,
+                                        transToken: String?
+                                    ) {
+                                        Toast.makeText(
+                                            context,
+                                            "Lỗi thanh toán",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.e(
+                                            "ZaloPayError",
+                                            "Payment error: payUrl=$payUrl, transToken=$transToken"
+                                        )
+                                    }
+                                })
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Không thể tạo đơn hàng",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Toast.makeText(context, "Đã xảy ra lỗi", Toast.LENGTH_SHORT).show()
+                        Log.e("ZaloPayError", "Exception: ${e.message}")
+                    }
+                }
+            }
     ) {
         Row(
             modifier = Modifier
                 .background(Color(0xFFFFF192))
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically, // Đặt căn giữa theo chiều dọc
-            horizontalArrangement = Arrangement.Center // Đặt căn giữa theo chiều ngang
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.heart8), // You can update this icon if needed
+                painter = painterResource(id = R.drawable.heart8),
                 contentDescription = null,
                 tint = Color.Red,
                 modifier = Modifier
                     .size(45.dp)
-                    .align(Alignment.CenterVertically) // Đảm bảo Icon được căn giữa dọc trong Row
+                    .align(Alignment.CenterVertically)
             )
 
-            Spacer(modifier = Modifier.width(8.dp)) // Khoảng cách giữa Icon và Text
+            Spacer(modifier = Modifier.width(8.dp))
 
             Column(
                 modifier = Modifier
@@ -172,7 +217,7 @@ fun ButtonCardPay(text: String, price: String, onClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = price,
+                    text = "${amount}đ",
                     fontFamily = Nunito_Bold,
                     fontSize = 22.sp,
                     color = Color(0xFFFFA500)
@@ -182,10 +227,9 @@ fun ButtonCardPay(text: String, price: String, onClick: () -> Unit) {
     }
 }
 
-
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun PayComponentPreview() {
+fun PreviewPaymentComponent() {
     val navController = rememberNavController()
     PaymentComponent(navController)
 }
