@@ -26,7 +26,9 @@ class LessonViewModels : ViewModel() {
     fun setSelectedTime(minutes: Int) {
         timePreferences?.saveSelectedTime(minutes)
     }
-
+    fun getSelectedTime(): Int {
+        return timePreferences?.getSelectedTime() ?: 1 // Lấy thời gian hoặc giá trị mặc định là 1
+    }
     fun startLesson(lessonId: String) {
         TimeTrackingManager.startTracking(lessonId)
     }
@@ -35,7 +37,7 @@ class LessonViewModels : ViewModel() {
         val duration = TimeTrackingManager.stopTracking()
         timePreferences?.saveDailyLearningTime(duration)
 
-        val selectedTime = timePreferences?.getSelectedTime()
+        val selectedTime = timePreferences?.getSelectedTime()?: 2
         var totalTime = timePreferences?.getDailyLearningTime() ?: 0
         // Cộng thời gian học vào tổng thời gian
         totalTime += duration

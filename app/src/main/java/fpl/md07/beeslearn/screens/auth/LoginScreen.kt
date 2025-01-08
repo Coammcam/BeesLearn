@@ -147,7 +147,6 @@ fun LoginScreen(
             onClick = {
                 if (email.isNotBlank() && password.isNotBlank()) {
                     viewModel.login(context, email, password, isRememberMeChecked)
-                    navController.navigate("tanSuatScreen")
                 } else {
                     Toast.makeText(context, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT)
                         .show()
