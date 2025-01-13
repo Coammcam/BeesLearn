@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        ZaloPaySDK.init(389012528223546448.toInt(), Environment.SANDBOX);
+        ZaloPaySDK.init(2553.toInt(), Environment.SANDBOX);
         setContent {
             BeesLearnTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -64,7 +65,6 @@ import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
 import fpl.md07.beeslearn.screens.tabs.HomeLeversScreen
-import fpl.md07.beeslearn.screens.tabs.VideoScreen
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
 import vn.zalopay.sdk.Environment
 import vn.zalopay.sdk.ZaloPaySDK
@@ -127,6 +127,7 @@ fun NestedBottomTab(
 
     NavHost(
         navController, "welcomeScreen"
+//        navController, "HomeScreen"
 
     ) {
         //dinh nghia man hinh
@@ -222,7 +223,7 @@ fun NestedBottomTab(
             SelectLevelScreen(navController)
         }
         composable("tanSuatScreen") {
-            FrequencyScreen(navController= navController, lessonViewModel = LessonViewModels())
+            FrequencyScreen(navController, lessonViewModel = viewModel())
         }
         composable("editProfile") {
             EditProfile(navController)
@@ -242,10 +243,10 @@ fun NestedBottomTab(
             }
         }
 
-        composable("videoScreen/{videoResId}") { backStackEntry ->
-            val videoResId = backStackEntry.arguments?.getString("videoResId")?.toIntOrNull() ?: 0
-            VideoScreen(navController = navController, videoResId = videoResId)
-        }
+//        composable("videoScreen/{videoResId}") { backStackEntry ->
+//            val videoResId = backStackEntry.arguments?.getString("videoResId")?.toIntOrNull() ?: 0
+//            VideoScreen(navController = navController, videoResId = videoResId)
+//        }
         composable("homeComponents") {
             HomePageComponent (navController)
         }
