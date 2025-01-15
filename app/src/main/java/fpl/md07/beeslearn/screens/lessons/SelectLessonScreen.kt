@@ -34,8 +34,9 @@ import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.HomeComponent
 import fpl.md07.beeslearn.components.HomePageComponent
-import fpl.md07.beeslearn.components.TopBarComponent_A
+import fpl.md07.beeslearn.components.TopBarComponent
 import fpl.md07.beeslearn.components.customFont
+import fpl.md07.beeslearn.models.PartOfLevel
 import fpl.md07.beeslearn.models.responseModel.QuestionResponseModel
 import fpl.md07.beeslearn.notifications.LessonViewModels
 import fpl.md07.beeslearn.notifications.NotificationHelper
@@ -58,11 +59,10 @@ enum class QuestionMode {
 }
 
 @Composable
-fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonViewModels) {
+fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonViewModels, level: Int) {
 
     val userDataViewModel: UserDataViewModel = viewModel()
-    val currencyData by userDataViewModel.currencyData.observeAsState()
-    userDataViewModel.getCurrencyData()
+    val currencyData by userDataViewModel.currencyData.observeAsState(null)
 
     var isQuestionLoaded by remember { mutableStateOf(false) }
     var isLessonSelected by remember { mutableStateOf(false) }
@@ -70,6 +70,7 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
     var showHoneyStatusComponent by remember { mutableStateOf(false) }
 
     val questionViewModel: QuestionViewModel = viewModel()
+    val listOfPart by questionViewModel.partOfLevel.observeAsState(ArrayList())
     var questions by remember {
         mutableStateOf(
             QuestionResponseModel(
@@ -88,11 +89,11 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
     val notificationHelper = NotificationHelper(context)
     var timePreferences: TimePreferences? = null
     var selectedTime by remember { mutableStateOf(2) } // Giá trị mặc định là 2 phút
-//    LaunchedEffect(Unit) {
-//        // Khởi tạo TimePreferences và đọc thời gian đã chọn
-//        timePreferences = TimePreferences(context)
-//        selectedTime = timePreferences?.getSelectedTime() ?: 2
-//    }
+
+    LaunchedEffect(Unit) {
+        userDataViewModel.getCurrencyData()
+        questionViewModel.getPartsOfLevel(level)
+    }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
         ActivityCompat.checkSelfPermission(
@@ -120,6 +121,7 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
 
             isQuestionLoaded = false
             questionViewModel.getRandomQuestions(
+                level = level,
                 total = totalAmountOfQuestion,
                 onSuccess = { isQuestionLoaded = true; questions = it },
                 onError = { println(it) }
@@ -127,6 +129,8 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
             questionIndex = 1
             questionMode = QuestionMode.GRAMMAR
             UserSession.bonusHoneyJar = 0
+            UserSession.bonusScore = 0
+            UserSession.bonusExp = 0
         }
     }
 
@@ -148,7 +152,6 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
             }
 
             questionMode = QuestionMode.FINISH
-            isLessonSelected = false
         } else {
             lessonViewModel.pauseLesson()
             lessonViewModel.resumeLesson()
@@ -187,7 +190,7 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TopBarComponent_A(
+            TopBarComponent(
                 goBack = {
                     if (isLessonSelected) {
                         TimeTrackingManager.pauseTracking()
@@ -209,7 +212,8 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
                     TextBoxComponent(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 50.dp)
+                            .padding(top = 50.dp),
+                        displayText = "Level: ${level}"
                     )
                 }
                 Spacer(modifier = Modifier.height(200.dp))
@@ -218,7 +222,8 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
                     onPress = {
                         isLessonSelected = true
                     },
-                    userLevel = currencyData?.level ?: 0
+                    userLevel = currencyData?.part ?: 0,
+                    parts = listOfPart
                 )
             } else {
                 if (isQuestionLoaded) {
@@ -253,7 +258,8 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
         if (showHoneyCombSellComponent) {
             HomeComponent(
                 honeyCombCount = currencyData?.honeyComb,
-                honeyJarCount = currencyData?.honeyJar
+                honeyJarCount = currencyData?.honeyJar,
+                userScore = currencyData?.score
             )
         }
     }
@@ -338,9 +344,8 @@ fun ShowQuestionScreens(
 }
 
 @Composable
-fun HexGridd(onPress: () -> Unit, userLevel: Int) {
+fun HexGridd(onPress: () -> Unit, userLevel: Int, parts: ArrayList<PartOfLevel>) {
     val hexagonRadius = 40.dp
-    val hexagonCount = 10
 
     val context = LocalContext.current
 
@@ -350,18 +355,18 @@ fun HexGridd(onPress: () -> Unit, userLevel: Int) {
             .horizontalScroll(rememberScrollState()),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        for (i in 0 until hexagonCount) {
+        for (i in 0 until parts.size) {
             HexagonWithNumber(
                 radius = hexagonRadius,
                 number = i + 1,
-                isClicked = i + 1 < userLevel,
+                isClicked = parts[i].part < userLevel,
                 onClick = {
-                    if (i + 1 < userLevel + 1) {
+                    if (parts[i].part < userLevel + 1) {
                         onPress()
                     } else {
                         Toast.makeText(
                             context,
-                            "Bạn cần hoàn thành level phía trước",
+                            "Bạn cần hoàn thành phần phía trước",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -369,14 +374,14 @@ fun HexGridd(onPress: () -> Unit, userLevel: Int) {
             )
 
             // Draw a connecting line (except for the last hexagon)
-            if (i < hexagonCount - 1) {
+            if (i < parts.size - 1) {
                 Spacer(modifier = Modifier.width(8.dp))
                 HorizontalDivider(
                     modifier = Modifier
                         .width(100.dp)
                         .height(4.dp)
                         .align(Alignment.CenterVertically),
-                    color = if (i + 1 < userLevel) colorResource(R.color.newInnerColor) else Color.Gray
+                    color = if (parts[i].part < userLevel) colorResource(R.color.newInnerColor) else Color.Gray
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Adjust space after line
             }
@@ -470,5 +475,5 @@ fun HexagonWithNumber(
 @Composable
 fun PreviewSelectExercise() {
     val mockNavController = rememberNavController()
-    SelectLessonScreen(navController = mockNavController, lessonViewModel = LessonViewModels())
+    SelectLessonScreen(navController = mockNavController, lessonViewModel = LessonViewModels(), 1)
 }
