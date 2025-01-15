@@ -1,7 +1,6 @@
 package fpl.md07.beeslearn.navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,11 +37,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
-import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.components.HomePageComponent
 import fpl.md07.beeslearn.components.PaymentComponent
 import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
-import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.notifications.LessonViewModels
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
@@ -53,7 +50,6 @@ import fpl.md07.beeslearn.screens.movie.MovieDetailScreen
 import fpl.md07.beeslearn.screens.music.MusicDetailScreen
 import fpl.md07.beeslearn.screens.podcast.PodcastListScreen
 import fpl.md07.beeslearn.screens.podcast.PodcastDetailScreen
-import fpl.md07.beeslearn.screens.lessons.LessonScreen
 import fpl.md07.beeslearn.screens.auth.ForgotPasswordScreen
 import fpl.md07.beeslearn.screens.lessons.SelectLessonScreen
 import fpl.md07.beeslearn.screens.tabs.SettingScreen
@@ -64,10 +60,8 @@ import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
-import fpl.md07.beeslearn.screens.tabs.HomeLeversScreen
+import fpl.md07.beeslearn.screens.tabs.HomeLevelsScreen
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
-import vn.zalopay.sdk.Environment
-import vn.zalopay.sdk.ZaloPaySDK
 
 data class TabItem(
     val unselectedIcon: Int,
@@ -143,8 +137,12 @@ fun NestedBottomTab(
         composable("settingScreen") {
             SettingScreen(navController)
         }
-        composable("selectExercise") {
-            SelectLessonScreen(navController = navController, lessonViewModel = LessonViewModels())
+        composable(
+            "selectExercise/{level}",
+            arguments = listOf(navArgument("level") { type = NavType.IntType})
+        ) { backStackEntry ->
+            val level = backStackEntry.arguments!!.getInt("level")
+            SelectLessonScreen(navController = navController, lessonViewModel = LessonViewModels(), level = level)
         }
         composable("podcastScreen") {
             PodcastListScreen(navController)
@@ -197,9 +195,6 @@ fun NestedBottomTab(
         ) { backStackEntry ->
             val musicId = backStackEntry.arguments?.getInt("musicId")
             MusicDetailScreen(navController, musicId)
-        }
-        composable("practiceOneScreen") {
-            LessonScreen(navController)
         }
         composable("welcomeScreen") {
             ChooseLoginScreen(navController)
@@ -254,7 +249,7 @@ fun NestedBottomTab(
             PaymentComponent(navController)
         }
         composable("homeLeversScreen") {
-            HomeLeversScreen(navController)
+            HomeLevelsScreen(navController)
         }
     }
 }
