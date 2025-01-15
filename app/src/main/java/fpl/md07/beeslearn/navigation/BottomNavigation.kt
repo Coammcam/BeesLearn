@@ -219,7 +219,7 @@ fun NestedBottomTab(
             LanguagesScreen(navController)
         }
         composable("trinhDoScreen") {
-            SelectLevelScreen(navController)
+            SelectLevelScreen(navController, viewModel())
         }
         composable("tanSuatScreen") {
             FrequencyScreen(navController, lessonViewModel = viewModel())

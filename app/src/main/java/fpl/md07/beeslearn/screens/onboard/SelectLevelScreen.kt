@@ -24,10 +24,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.CustomButtonWithText
+import fpl.md07.beeslearn.models.CurrencyModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
-fun SelectLevelScreen(navController: NavController) {
+fun SelectLevelScreen(navController: NavController, viewModel: UserDataViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -71,21 +73,30 @@ fun SelectLevelScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(55.dp))
 
             CustomButtonWithText(
-                onClick = { navController.navigate("tanSuatScreen")},
+                onClick = {
+                    viewModel.updateCurrencyData(CurrencyModel(level = 1))
+                    navController.navigate("tanSuatScreen")
+                },
                 buttonText = "Người mới bắt đầu"
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             CustomButtonWithText(
-                onClick = { navController.navigate("tanSuatScreen")},
+                onClick = {
+                    viewModel.updateCurrencyData(CurrencyModel(level = 2))
+                    navController.navigate("tanSuatScreen")
+                },
                 buttonText = "Đã biết một chút"
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             CustomButtonWithText(
-                onClick = { navController.navigate("tanSuatScreen")},
+                onClick = {
+                    viewModel.updateCurrencyData(CurrencyModel(level = 3))
+                    navController.navigate("tanSuatScreen")
+                },
                 buttonText = "Đã nghe nói ở mức khá tốt"
             )
 
@@ -93,9 +104,9 @@ fun SelectLevelScreen(navController: NavController) {
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun TrinhDoScreenPreview() {
-    var navController = rememberNavController()
-    SelectLevelScreen(navController)
-}
+//@Preview(showSystemUi = true, showBackground = true)
+//@Composable
+//fun TrinhDoScreenPreview() {
+//    var navController = rememberNavController()
+//    SelectLevelScreen(navController)
+//}
