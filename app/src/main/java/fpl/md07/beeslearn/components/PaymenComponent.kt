@@ -1,7 +1,9 @@
 package fpl.md07.beeslearn.components
 
+
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -25,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.api.AppInfo.APP_ID
@@ -36,6 +39,7 @@ import vn.zalopay.sdk.ZaloPayError
 import vn.zalopay.sdk.ZaloPaySDK
 import vn.zalopay.sdk.listeners.PayOrderListener
 import fpl.md07.beeslearn.R
+
 
 @Composable
 fun PaymentComponent(navController: NavHostController) {
@@ -51,24 +55,28 @@ fun PaymentComponent(navController: NavHostController) {
     ) {
         PaymentButton(
             text = "Gói 1 Tháng",
-            amount = 99000,
-            context = context
+            amount = 1000,
+            context = context,
+            navController
+
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         PaymentButton(
             text = "Gói 3 Tháng",
-            amount = 255000,
-            context = context
+            amount = 2000,
+            context = context,
+            navController
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         PaymentButton(
             text = "Gói 6 Tháng",
-            amount = 450000,
-            context = context
+            amount = 3000,
+            context = context,
+            navController
         )
     }
 }
@@ -77,9 +85,10 @@ fun PaymentComponent(navController: NavHostController) {
 fun PaymentButton(
     text: String,
     amount: Int,
-    context: Context
+    context: Context,
+    navController: NavController
 ) {
-    val activity = context as? ComponentActivity ?: return // Bảo đảm context là ComponentActivity
+    val activity = context as? ComponentActivity ?: return
     val totalString = amount.toString()
 
     Card(
@@ -103,7 +112,6 @@ fun PaymentButton(
                 }
 
                 val orderApi = CreateOrder()
-
                 activity.lifecycleScope.launch {
                     try {
                         val data = orderApi.createOrder(totalString)
@@ -114,69 +122,51 @@ fun PaymentButton(
 
                         if (code == "1") {
                             val token = data.getString("zp_trans_token")
-                            ZaloPaySDK.getInstance().payOrder(
-                                activity,
-                                token,
-                                "demozpdk://app",
-                                object : PayOrderListener {
-                                    override fun onPaymentSucceeded(
-                                        payUrl: String?,
-                                        transToken: String?,
-                                        appTransID: String?
-                                    ) {
-                                        Toast.makeText(
-                                            context,
-                                            "Thanh toán thành công",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        Log.d(
-                                            "ZaloPay",
-                                            "Payment succeeded: payUrl=$payUrl, transToken=$transToken, appTransID=$appTransID"
-                                        )
-                                    }
+                            ZaloPaySDK
+                                .getInstance()
+                                .payOrder(
+                                    activity, token, "demozpdk://app",
+                                    object : PayOrderListener {
+                                        override fun onPaymentSucceeded(
+                                            payUrl: String?,
+                                            transToken: String?,
+                                            appTransID: String?
+                                        ) {
+                                            Toast.makeText(context, "Thanh toán thành công", Toast.LENGTH_SHORT).show()
+                                            Log.d("ZaloPay", "Payment succeeded: payUrl=$payUrl, transToken=$transToken, appTransID=$appTransID")
+                                            navController.navigate("homeScreen") {
+                                                popUpTo("currentScreen") { inclusive = true } // Xóa màn hình hiện tại khỏi stack
+                                            }
+                                        }
 
-                                    override fun onPaymentCanceled(
-                                        payUrl: String?,
-                                        transToken: String?
-                                    ) {
-                                        Toast.makeText(
-                                            context,
-                                            "Hủy thanh toán",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        Log.d(
-                                            "ZaloPay",
-                                            "Payment canceled: payUrl=$payUrl, transToken=$transToken"
-                                        )
-                                    }
+                                        override fun onPaymentCanceled(
+                                            payUrl: String?,
+                                            transToken: String?
+                                        ) {
+                                            Toast.makeText(context, "Hủy thanh toán", Toast.LENGTH_SHORT).show()
+                                            Log.d("ZaloPay", "Payment canceled: payUrl=$payUrl, transToken=$transToken")
+                                        }
 
-                                    override fun onPaymentError(
-                                        error: ZaloPayError?,
-                                        payUrl: String?,
-                                        transToken: String?
-                                    ) {
-                                        Toast.makeText(
-                                            context,
-                                            "Lỗi thanh toán",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        Log.e(
-                                            "ZaloPayError",
-                                            "Payment error: payUrl=$payUrl, transToken=$transToken"
-                                        )
+                                        override fun onPaymentError(
+                                            error: ZaloPayError?,
+                                            payUrl: String?,
+                                            transToken: String?
+                                        ) {
+                                            Toast.makeText(context, "Lỗi thanh toán!", Toast.LENGTH_SHORT).show()
+                                            Log.e("ZaloPayError", "Payment error: payUrl=$payUrl, transToken=$transToken")
+                                        }
                                     }
-                                })
+                                )
                         } else {
-                            Toast.makeText(
-                                context,
-                                "Không thể tạo đơn hàng",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast
+                                .makeText(context, "Không thể tạo đơn hàng", Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        Toast.makeText(context, "Đã xảy ra lỗi", Toast.LENGTH_SHORT).show()
+                        Toast
+                            .makeText(context, "Đã xảy ra lỗi", Toast.LENGTH_SHORT)
+                            .show()
                         Log.e("ZaloPayError", "Exception: ${e.message}")
                     }
                 }
@@ -214,7 +204,9 @@ fun PaymentButton(
                     color = Color(0xFF000000)
                 )
 
+
                 Spacer(modifier = Modifier.height(4.dp))
+
 
                 Text(
                     text = "${amount}đ",

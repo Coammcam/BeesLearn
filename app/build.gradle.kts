@@ -50,11 +50,15 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.1")
-    implementation(fileTree(mapOf(
-        "dir" to "D:\\DuAnToiNghiep\\ZaloPay",
-        "include" to listOf("*.aar", "*.jar"),
-        "exclude" to listOf("")
-    )))
+    implementation(
+        fileTree(
+            mapOf(
+                "dir" to "D:\\DuAnToiNghiep\\ZaloPay",
+                "include" to listOf("*.aar", "*.jar"),
+                "exclude" to listOf("")
+            )
+        )
+    )
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
@@ -86,6 +90,9 @@ dependencies {
     // Media playback (Media3)
     implementation("androidx.media3:media3-exoplayer:1.5.1")
     implementation("androidx.media3:media3-ui:1.5.1")
+    implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.0")
+
+
 
     // YouTube Player
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
@@ -107,24 +114,24 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.01.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    implementation ("com.google.accompanist:accompanist-flowlayout:0.30.1")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
 
     //ZaloPay
-    implementation ("org.json:json:20210307")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("org.json:json:20210307")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
 
-    implementation ("com.google.code.gson:gson:2.8.8")
-    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
+    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
 
-    implementation ("com.github.therealbush:translator:1.1.1")
+    implementation("com.github.therealbush:translator:1.1.1")
 
-    implementation ("com.github.therealbush:translator:1.1.1")
+    implementation("com.github.therealbush:translator:1.1.1")
     implementation("io.ktor:ktor-client-core:2.0.0")
     implementation("io.ktor:ktor-client-cio:2.0.0")
     implementation("io.ktor:ktor-client-serialization:2.0.0")
 
-    implementation ("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 
 }
