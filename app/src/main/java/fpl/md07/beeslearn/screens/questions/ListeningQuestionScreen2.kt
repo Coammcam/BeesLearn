@@ -52,7 +52,7 @@ fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onCompl
     var result: AnswerResult? by remember { mutableStateOf(null) }
 
     LaunchedEffect(grammarQuestionModel) {
-        sentenceParts = grammarQuestionModel.question.split(" ").shuffled()
+        sentenceParts = grammarQuestionModel.content.split(" ").shuffled()
         println(sentenceParts)
     }
 
@@ -61,7 +61,7 @@ fun ListeningQuestionScreen2(grammarQuestionModel: GrammarQuestionModel, onCompl
             val completeSentence = selectedParts.joinToString(" ")
             println(completeSentence)
 
-            if (completeSentence == grammarQuestionModel.question) {
+            if (completeSentence == grammarQuestionModel.content) {
                 println("correct")
                 result = AnswerResult.CORRECT
             } else {
