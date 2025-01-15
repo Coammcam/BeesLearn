@@ -208,7 +208,7 @@ fun SettingScreen(
 
             Button(
                 onClick = {
-                    navController.navigate("homeComponents")
+                    navController.navigate("paymentComponent")
                 },
                 modifier = Modifier
                     .height(55.dp)
@@ -225,15 +225,15 @@ fun SettingScreen(
                         .padding(start = 50.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.heart8),
+                        painter = painterResource(id = R.drawable.heart_buy),
                         contentDescription = "Languages",
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Mua Premium",
+                        text = "Mua Heart",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
                     )
                 }
             }
