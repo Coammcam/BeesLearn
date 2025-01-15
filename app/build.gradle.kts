@@ -51,6 +51,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation(files("libs/zpdk-release-v3.1.aar"))
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity)
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 

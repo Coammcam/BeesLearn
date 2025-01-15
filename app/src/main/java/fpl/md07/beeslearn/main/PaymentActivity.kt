@@ -1,6 +1,6 @@
-package fpl.md07.beeslearn.components
+package fpl.md07.beeslearn.main
 
-
+import android.Manifest
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,13 +9,24 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,7 +34,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,16 +41,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.api.CreateOrder
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
@@ -49,8 +56,21 @@ import vn.zalopay.sdk.Environment
 import vn.zalopay.sdk.ZaloPayError
 import vn.zalopay.sdk.ZaloPaySDK
 import vn.zalopay.sdk.listeners.PayOrderListener
-import fpl.md07.beeslearn.R
-import java.nio.file.WatchEvent
+
+class PaymentActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        setContent(){
+            PaymentComponent()
+        }
+    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        ZaloPaySDK.getInstance().onResult(intent)
+    }
+}
 
 @Composable
 fun PaymentComponent() {
@@ -70,7 +90,7 @@ fun PaymentComponent() {
             context = context,
 
 
-        )
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -79,7 +99,7 @@ fun PaymentComponent() {
             amount = 2000,
             context = context,
 
-        )
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -155,7 +175,7 @@ fun PaymentButton(
                 fun sendNotification(context: Context, title: String, message: String) {
                     val channelId = "beeslearn_notifications"
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val permission = android.Manifest.permission.POST_NOTIFICATIONS
+                        val permission = Manifest.permission.POST_NOTIFICATIONS
                         if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(
                                 (context as Activity),
@@ -204,7 +224,7 @@ fun PaymentButton(
                                             sendNotification(
                                                 context,
                                                 "BeesLearn",
-                                                "Thành Công"
+                                                "Bạn đã thanh toán thành công bằng ZaloPay!"
                                             )
                                         }
 
@@ -297,10 +317,3 @@ fun PaymentButton(
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun PreviewPaymentComponent() {
-//    val navController = rememberNavController()
-//    PaymentComponent()
-//}

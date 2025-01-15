@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.components
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,18 +30,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.main.PaymentActivity
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
-fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, navController: NavController) {
+fun HomeComponent(
+    honeyCombCount: Int?,
+    honeyJarCount: Int?,
+    userScore: Int?,
+    navController: NavController,
+    goBack : () -> Unit
+) {
 
     val context = LocalContext.current
     val userDataViewModel: UserDataViewModel = viewModel()
@@ -140,6 +148,9 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, na
                             newData.honeyJar -= 50
                             newData.honeyComb += 1
                             userDataViewModel.updateCurrencyData(newData)
+                            Toast
+                                .makeText(context, "Mua thành công 1 tim !", Toast.LENGTH_SHORT)
+                                .show()
                         } else {
                             Toast
                                 .makeText(context, "Hết tiền", Toast.LENGTH_SHORT)
@@ -194,6 +205,7 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, na
                                 .fillMaxSize()
                         )
                     }
+
                 }
             }
         }
@@ -211,9 +223,10 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, na
                 .background(Color(0xFFFFF192))
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .clickable {
-                    navController.navigate("paymentComponent")
+                    val payment = Intent(context, PaymentActivity::class.java)
+                    context.startActivity(payment)
                 }
-         ) {
+        ) {
             Row(
                 modifier = Modifier
                     .background(Color(0xFFFFF192)),
@@ -246,7 +259,7 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, na
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Thanh Toán",
+                            text = "Thanh Toán Bằng ZaloPay!",
                             fontFamily = Nunito_Bold,
                             fontSize = 22.sp,
                             color = Color(0xFFFFA500)
@@ -254,6 +267,22 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, na
                     }
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth()
+                .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
+            onClick = {
+                goBack()
+            },
+            colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(text = "Trở lại", color = Color.White)
         }
 
 //        Spacer(modifier = Modifier.height(16.dp))
