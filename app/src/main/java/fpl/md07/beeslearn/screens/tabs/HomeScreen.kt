@@ -212,9 +212,7 @@ fun IconRowFirst(onIcon1Click: () -> Unit, onIcon2Click: () -> Unit, onIcon3Clic
                 .clickable {
                     isCalendarPressed = false
                     isTranslatePressed = false
-                    Toast
-                        .makeText(context, "Icon 1 (EN) Clicked", Toast.LENGTH_SHORT)
-                        .show()
+
                     onIcon1Click()
                 }
         )
@@ -559,6 +557,7 @@ fun FunctionButtonsGrid(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
+
             ActionButton(navController = navController, item = listItems[2])
             ActionButton(navController = navController, item = listItems[3])
         }
