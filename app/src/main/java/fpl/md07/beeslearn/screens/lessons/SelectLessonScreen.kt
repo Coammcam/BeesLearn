@@ -259,7 +259,8 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
             HomeComponent(
                 honeyCombCount = currencyData?.honeyComb,
                 honeyJarCount = currencyData?.honeyJar,
-                userScore = currencyData?.score
+                userScore = currencyData?.score,
+                navController
             )
         }
     }

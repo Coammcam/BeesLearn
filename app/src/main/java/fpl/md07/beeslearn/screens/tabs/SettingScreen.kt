@@ -258,7 +258,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = { /* Add your action here */ },
+                onClick = { navController.navigate("tanSuatScreen")},
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
@@ -279,7 +279,7 @@ fun SettingScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Yêu thích",
+                        text = "Tần suất",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -325,7 +325,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = { /* Add your action here */ },
+                onClick = { navController.navigate("languagesScreen")},
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
@@ -403,7 +403,7 @@ fun SettingScreen(
                         sendNotification(
                             context,
                             "Bạn đã đăng xuất",
-                            "Thời gian học tập của bạn chưa đủ"
+                            "Vui lòng quay trở lại để học tập!"
                         )
                         loginViewModel.logout(context = navController.context)
                         navController.navigate("welcomeScreen") {

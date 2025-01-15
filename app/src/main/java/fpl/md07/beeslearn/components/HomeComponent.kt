@@ -31,13 +31,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
-fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?) {
+fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, navController: NavController) {
 
     val context = LocalContext.current
     val userDataViewModel: UserDataViewModel = viewModel()
@@ -135,12 +136,14 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?) {
                 .clickable {
                     val newData = currencyData
                     if (newData != null) {
-                        if(newData.honeyJar >= 50){
+                        if (newData.honeyJar >= 50) {
                             newData.honeyJar -= 50
                             newData.honeyComb += 1
                             userDataViewModel.updateCurrencyData(newData)
-                        }else{
-                            Toast.makeText(context, "Hết tiền", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast
+                                .makeText(context, "Hết tiền", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
@@ -173,7 +176,7 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?) {
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Row (
+                    Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -189,6 +192,64 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?) {
                             modifier = Modifier
                                 .size(24.dp)
                                 .fillMaxSize()
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Card(
+            modifier = Modifier
+                .width(275.dp)
+                .shadow(
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFFFFF192))
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .clickable {
+                    navController.navigate("paymentComponent")
+                }
+         ) {
+            Row(
+                modifier = Modifier
+                    .background(Color(0xFFFFF192)),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.heart),
+                    contentDescription = null,
+                    tint = Color.Red,
+                    modifier = Modifier.size(32.dp)
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Refill 1",
+                        fontFamily = Nunito_Bold,
+                        fontSize = 22.sp,
+                        color = Color(0xFF000000)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Thanh Toán",
+                            fontFamily = Nunito_Bold,
+                            fontSize = 22.sp,
+                            color = Color(0xFFFFA500)
                         )
                     }
                 }

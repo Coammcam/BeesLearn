@@ -98,7 +98,7 @@ fun SetupNavGraph(navController: NavHostController, movieViewModel: MovieViewMod
         composable("podcastScreen") { PodcastListScreen( navController = navController) }
         composable("movieScreen") {  MovieListScreen(navController = navController, movieViewModel = movieViewModel)}
         composable("musicScreen") { MusicListScreen (navController = navController) }
-        composable("selectExercise") { SelectLessonScreen (navController = navController, lessonViewModel = LessonViewModels()) }
+//        composable("selectExercise") { SelectLessonScreen (navController = navController, lessonViewModel = LessonViewModels()) }
 
         composable("bottomNavBar") {  BottomNavBar(navController = navController, movieViewModel = movieViewModel)}
     }
