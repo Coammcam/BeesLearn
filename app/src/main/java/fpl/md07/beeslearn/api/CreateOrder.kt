@@ -10,6 +10,7 @@ class CreateOrder {
 
     @Throws(Exception::class)
     suspend fun createOrder(amount: String): JSONObject {
+        println("Lon")
         return withContext(Dispatchers.IO) {
             val input = ZaloPayOrder(amount = amount)
             val formBody: RequestBody = FormBody.Builder()
@@ -23,6 +24,7 @@ class CreateOrder {
                 .add("bank_code", input.bankCode)
                 .add("description", input.description)
                 .add("mac", input.mac)
+//                .add("return_code", input.)
                 .build()
 
             HttpProvider.sendPost(url = AppInfo.URL_CREATE_ORDER, formBody =  formBody)

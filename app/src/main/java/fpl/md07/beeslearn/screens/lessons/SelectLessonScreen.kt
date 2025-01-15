@@ -260,7 +260,10 @@ fun SelectLessonScreen(navController: NavController, lessonViewModel: LessonView
                 honeyCombCount = currencyData?.honeyComb,
                 honeyJarCount = currencyData?.honeyJar,
                 userScore = currencyData?.score,
-                navController
+                navController,
+                goBack = {
+                    showHoneyCombSellComponent = false
+                },
             )
         }
     }

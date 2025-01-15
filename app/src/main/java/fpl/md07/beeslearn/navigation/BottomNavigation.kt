@@ -1,6 +1,5 @@
 package fpl.md07.beeslearn.navigation
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
@@ -40,11 +39,9 @@ import androidx.navigation.navArgument
 import fpl.md07.beeslearn.screens.auth.InputOTPScreen
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.HomePageComponent
-import fpl.md07.beeslearn.components.PaymentComponent
 import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
 import fpl.md07.beeslearn.notifications.LessonViewModels
 import fpl.md07.beeslearn.notifications.NotifyChangeScreen
-import fpl.md07.beeslearn.notifications.ReminderUtils
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
@@ -123,6 +120,7 @@ fun NestedBottomTab(
     navController: NavHostController,
     movieViewModel: MovieViewModel,
 ) {
+    val context = LocalContext.current
 
     NavHost(
       navController, "welcomeScreen"
@@ -252,7 +250,7 @@ fun NestedBottomTab(
             HomePageComponent (navController)
         }
         composable("paymentComponent") {
-            PaymentComponent(navController)
+
         }
         composable("homeLeversScreen") {
             HomeLevelsScreen(navController)
