@@ -32,7 +32,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
     var result: AnswerResult? by remember { mutableStateOf(null) }
 
     LaunchedEffect(grammarQuestionModel) {
-        sentenceParts = grammarQuestionModel.question.split(" ").shuffled()
+        sentenceParts = grammarQuestionModel.content.split(" ").shuffled()
         println(sentenceParts)
     }
 
@@ -41,7 +41,7 @@ fun ArrangeSentenceScreen(grammarQuestionModel: GrammarQuestionModel, onComplete
             val completeSentence = selectedParts.joinToString(" ")
             println(completeSentence)
 
-            if (completeSentence == grammarQuestionModel.question) {
+            if (completeSentence == grammarQuestionModel.content) {
                 println("correct")
                 result = AnswerResult.CORRECT
             } else {
