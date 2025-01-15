@@ -43,7 +43,8 @@ fun ConfirmQuestionYes (Continue: ()->Unit) {
 
     LaunchedEffect(Unit) {
         UserSession.bonusHoneyJar += 10
-//        userDataViewModel.updateCurrencyData(currencyData!!)
+        UserSession.bonusScore += 10
+        UserSession.bonusExp += 5
     }
 
     Box(

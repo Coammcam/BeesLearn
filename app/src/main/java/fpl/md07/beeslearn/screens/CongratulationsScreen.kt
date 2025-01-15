@@ -36,9 +36,15 @@ fun CongratulationsScreen(goBack: () -> Unit) {
 
     LaunchedEffect(Unit) {
         currencyData!!.honeyJar += UserSession.bonusHoneyJar
-        currencyData!!.level += 1
-        println(currencyData!!.level)
-        userDataViewModel.updateCurrencyData(currencyData!!)
+        currencyData!!.score += UserSession.bonusScore
+        if(currencyData!!.exp < 1050){
+            currencyData.exp += UserSession.bonusExp
+        }
+        currencyData!!.part += 1
+        if(currencyData!!.exp + UserSession.bonusExp >= UserSession.expReq){
+            currencyData.level += 1
+        }
+        userDataViewModel.updateCurrencyData(currencyData)
     }
 
     Box(
@@ -132,10 +138,10 @@ fun InfoBoxes() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Box đầu tiên cho "Total XP"
-//        InfoBox(title = "Total XP", value = "+30", icon = null)
+        InfoBox(title = "Phần thưởng", value = "+ ${UserSession.bonusScore}", icon = R.drawable.gem_blue)
 
         // Box thứ hai cho "Reward" với biểu tượng
-        InfoBox(title = "Reward", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey_picture)
+        InfoBox(title = "Phần thưởng", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey_picture)
     }
 }
 
