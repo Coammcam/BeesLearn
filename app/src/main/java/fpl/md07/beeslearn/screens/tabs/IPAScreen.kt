@@ -177,7 +177,7 @@ fun VideoPlayer(videoResId: Int?, onVideoEnded: () -> Unit) {
             )
         } else {
             Image(
-                painter = painterResource(R.drawable.music4),
+                painter = painterResource(R.drawable.banneripa),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
