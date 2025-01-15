@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,13 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.GenericShape
@@ -34,11 +33,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import fpl.md07.beeslearn.components.BackComponentLevers
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.R
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fpl.md07.beeslearn.GlobalVariable.UserSession
+import fpl.md07.beeslearn.components.TopBarComponent
+import fpl.md07.beeslearn.viewmodels.QuestionViewModel
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 fun hexagonShape() = GenericShape { size, _ ->
     val width = size.width
@@ -56,13 +68,57 @@ fun hexagonShape() = GenericShape { size, _ ->
 
 
 @Composable
-fun HomeLeversScreen(navController: NavController) {
+fun HomeLevelsScreen(navController: NavController) {
+    val userDataViewModel: UserDataViewModel = viewModel()
+    val questionViewModel: QuestionViewModel = viewModel()
+    val currencyData by userDataViewModel.currencyData.observeAsState(null)
+    val levels by questionViewModel.levels.observeAsState(ArrayList())
+
+    val context = LocalContext.current
+
+    var playerLevel by remember { mutableIntStateOf(1) }
+    var levelExpReq by remember { mutableIntStateOf(0) }
+    var playerExp by remember { mutableIntStateOf(0) }
+
+    var playerLevelProgress by remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(Unit) {
+        userDataViewModel.getCurrencyData()
+        questionViewModel.getLevels()
+    }
+
+    LaunchedEffect(currencyData) {
+        if(currencyData != null){
+            playerExp = currencyData!!.exp
+            playerLevel = currencyData!!.level
+
+            if(currencyData!!.level == 1){
+                levelExpReq = 525
+                UserSession.expReq = 525
+            }else if(currencyData!!.level == 2){
+                levelExpReq = 1050
+                UserSession.expReq = 1050
+            }
+
+            playerLevelProgress = playerExp.toFloat() / levelExpReq.toFloat()
+
+            if(currencyData!!.level == 3){
+                playerLevelProgress = 1f
+                levelExpReq = 1050
+                UserSession.expReq = 1060
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
-        BackComponentLevers(navController)
+        TopBarComponent(
+            goBack = {navController.popBackStack()},
+            showHoneyCombStatus = {}
+        )
 
         Spacer(modifier = Modifier.height(35.dp))
 
@@ -74,7 +130,7 @@ fun HomeLeversScreen(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "LV1",
+                text = "LV$playerLevel",
                 fontSize = 16.sp,
                 color = Color.Black,
                 fontFamily = Nunito_Bold,
@@ -85,23 +141,19 @@ fun HomeLeversScreen(navController: NavController) {
                 modifier = Modifier
                     .weight(1f)
                     .height(20.dp)
-                    .background(
-                        Color(0xFFE5E5E5),
-                        shape = RoundedCornerShape(4.dp)
-                    )
+//                    .background(
+//                        Color(0xFFE5E5E5),
+//                        shape = RoundedCornerShape(4.dp)
+//                    )
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(0.2f) // 20% progress
-                        .background(
-                            Color(0xFF8A1538),
-                            shape = RoundedCornerShape(4.dp)
-                        )
+                LinearProgressIndicator(
+                    progress = { playerLevelProgress },
+                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(4.dp)),
+                    color = Color(0xFF8A1538)
                 )
 
                 Text(
-                    text = "40/200",
+                    text = "$playerExp/$levelExpReq",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(color = (0xFFFFAA01)),
@@ -111,13 +163,15 @@ fun HomeLeversScreen(navController: NavController) {
                 )
             }
 
-            Text(
-                text = "LV2",
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontFamily = Nunito_Bold,
-                modifier = Modifier.padding(start = 8.dp)
-            )
+            if(playerLevel < 3){
+                Text(
+                    text = "LV${playerLevel + 1}",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontFamily = Nunito_Bold,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -127,13 +181,7 @@ fun HomeLeversScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         ) {
             itemsIndexed(
-                listOf(
-                    "Cấp độ 1",
-                    "Cấp độ 2",
-                    "Cấp độ 3",
-                    "Cấp độ 4",
-                    "Cấp độ 5"
-                )
+                levels.toList()
             ) { index, level ->
                 Box(
                     contentAlignment = Alignment.Center,
@@ -155,7 +203,15 @@ fun HomeLeversScreen(navController: NavController) {
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable {
-                                navController.navigate("selectExercise")
+                                if(playerLevel >= level.level){
+                                    navController.navigate("selectExercise/${level.level}")
+                                }else{
+                                    Toast.makeText(
+                                        context,
+                                        "Bạn cần hoàn thành level phía trước",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                     ) {
                         Image(
@@ -168,7 +224,7 @@ fun HomeLeversScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = level,
+                            text = "Cấp độ ${level.level}",
                             fontFamily = Nunito_Bold,
                             fontSize = 14.sp,
                             color = Color.Black,
@@ -185,5 +241,5 @@ fun HomeLeversScreen(navController: NavController) {
 @Composable
 fun PreviewHomeLeversScreen() {
     val navController = rememberNavController()
-    HomeLeversScreen(navController)
+    HomeLevelsScreen(navController)
 }
