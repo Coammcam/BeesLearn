@@ -1,15 +1,9 @@
 package fpl.md07.beeslearn.screens.questions
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,13 +14,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import fpl.md07.beeslearn.R
-import fpl.md07.beeslearn.data.fillInTheBlankQuestions // Import fake data
 import fpl.md07.beeslearn.models.GrammarQuestionModel
-import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
-import androidx.compose.foundation.lazy.grid.items
 import fpl.md07.beeslearn.models.Word
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.style.TextAlign
@@ -40,9 +29,9 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 @Composable
 fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word>, onComplete: () -> Unit, goBack: () -> Unit) {
     var selectedWord by remember { mutableStateOf("") }
-    val listOfWordInQuestion by remember { mutableStateOf(question.question.split(" ")) }
+    val listOfWordInQuestion by remember { mutableStateOf(question.content.split(" ")) }
     val randomWordFromQuestion by remember { mutableStateOf(listOfWordInQuestion.random()) }
-    val currentQuestion = question.question.replace(randomWordFromQuestion, selectedWord.ifEmpty { "_____" } )
+    val currentQuestion = question.content.replace(randomWordFromQuestion, selectedWord.ifEmpty { "_____" } )
     var listOfAnswer by remember { mutableStateOf(emptyList<String>().toMutableList()) }
     var result: AnswerResult? by remember { mutableStateOf(null) }
 
@@ -57,7 +46,7 @@ fun FillInTheBlankScreen(question: GrammarQuestionModel, noiseAnswers: List<Word
 
     LaunchedEffect(selectedWord) {
         if(selectedWord.isNotEmpty()){
-            if(currentQuestion == question.question){
+            if(currentQuestion == question.content){
                 println("Correct")
                 result = AnswerResult.CORRECT
             }else{
