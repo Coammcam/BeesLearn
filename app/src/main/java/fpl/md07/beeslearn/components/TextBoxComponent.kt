@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TextBoxComponent(modifier: Modifier = Modifier) {
+fun TextBoxComponent(modifier: Modifier = Modifier, displayText: String) {
     Box(
         modifier = modifier
             .shadow(8.dp, shape = RoundedCornerShape(16.dp))
@@ -27,7 +27,7 @@ fun TextBoxComponent(modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(16.dp))
     ) {
         Text(
-            text = "Xin mời chọn level",
+            text = displayText,
             textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.Center),
             fontFamily = customFont,
@@ -40,5 +40,5 @@ fun TextBoxComponent(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun PreviewTextBoxComponent() {
-    TextBoxComponent()
+    TextBoxComponent(displayText = "")
 }
