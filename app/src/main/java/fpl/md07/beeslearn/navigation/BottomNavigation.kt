@@ -1,5 +1,6 @@
 package fpl.md07.beeslearn.navigation
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -24,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,8 @@ import fpl.md07.beeslearn.components.PaymentComponent
 import fpl.md07.beeslearn.screens.auth.ChangePasswordScreen
 import fpl.md07.beeslearn.models.Music
 import fpl.md07.beeslearn.notifications.LessonViewModels
+import fpl.md07.beeslearn.notifications.NotifyChangeScreen
+import fpl.md07.beeslearn.notifications.ReminderUtils
 import fpl.md07.beeslearn.screens.onboard.ChooseLanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.HomeScreen
 import fpl.md07.beeslearn.screens.tabs.IPAExercise
@@ -126,7 +130,7 @@ fun NestedBottomTab(
 ) {
 
     NavHost(
-        navController, "welcomeScreen"
+      navController, "welcomeScreen"
 
     ) {
         //dinh nghia man hinh
@@ -254,6 +258,11 @@ fun NestedBottomTab(
         }
         composable("homeLeversScreen") {
             HomeLeversScreen(navController)
+        }
+        composable("notifyChange") {
+            NotifyChangeScreen(
+                navController = navController
+            )
         }
     }
 }

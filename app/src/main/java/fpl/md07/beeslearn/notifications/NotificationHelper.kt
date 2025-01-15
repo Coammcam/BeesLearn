@@ -34,7 +34,6 @@ class NotificationHelper(private val context: Context) {
             return
         }
 
-        // Tạo thông báo
         val notification = NotificationCompat.Builder(context, "learning_channel")
             .setSmallIcon(R.drawable.beeds)
             .setContentTitle("Chúc mừng!")
@@ -46,7 +45,6 @@ class NotificationHelper(private val context: Context) {
         NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), notification)
     }
     fun showTimeAchievementNotification1() {
-        // Kiểm tra quyền trước khi hiển thị
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -54,7 +52,6 @@ class NotificationHelper(private val context: Context) {
             return
         }
 
-        // Tạo thông báo
         val notification = NotificationCompat.Builder(context, "learning_channel")
             .setSmallIcon(R.drawable.beeds)
             .setContentTitle("Beeslearn!")

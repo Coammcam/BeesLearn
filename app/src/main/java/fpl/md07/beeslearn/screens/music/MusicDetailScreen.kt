@@ -222,7 +222,7 @@ fun MusicDetailScreen(navController: NavController, musicId: Int?) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    items(musics) { music ->
+                    items(musics) { music->
                         Music3Item(music)
                     }
                 }
