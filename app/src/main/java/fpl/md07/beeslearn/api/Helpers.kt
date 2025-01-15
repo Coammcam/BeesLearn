@@ -1,7 +1,7 @@
 package fpl.md07.beeslearn.api
 
 import android.annotation.SuppressLint
-import fpl.md07.beeslearn.core.helper.hmac.HMacUtil
+import fpl.md07.beeslearn.api.hmac.HMacUtil
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
