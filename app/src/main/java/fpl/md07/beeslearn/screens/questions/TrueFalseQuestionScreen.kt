@@ -23,12 +23,12 @@ import fpl.md07.beeslearn.components.ConfirmQuestionNo
 import fpl.md07.beeslearn.components.ConfirmQuestionYes
 import fpl.md07.beeslearn.models.AnswerResult
 import fpl.md07.beeslearn.ui.theme.BeesLearnTheme
-import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
+import fpl.md07.beeslearn.models.TrueFalseQuestionModel
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 
 @Composable
 fun TrueFalseScreen(
-    truefalsequestion: TrueFalseQuestionModel_A,
+    truefalsequestion: TrueFalseQuestionModel,
     onComplete: ()->Unit,
     goBack: () -> Unit
 ) {
