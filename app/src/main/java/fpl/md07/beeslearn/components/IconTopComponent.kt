@@ -17,7 +17,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun IconTopComponent(honeyCombCount: Int?, honeyJarCount: Int?, showHoneyCombStatus: ()->Unit) {
+fun IconTopComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?, showHoneyCombStatus: ()->Unit) {
 
     // Heart and coins row
     Row(
@@ -39,7 +39,7 @@ fun IconTopComponent(honeyCombCount: Int?, honeyJarCount: Int?, showHoneyCombSta
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "$honeyCombCount",
+                    text = "$honeyCombCount/3",
                     fontSize = 16.sp,
                     fontFamily = customFont,
                     color = colorResource(id = R.color.secondary_color)
@@ -62,6 +62,29 @@ fun IconTopComponent(honeyCombCount: Int?, honeyJarCount: Int?, showHoneyCombSta
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = "$honeyJarCount",
+                    fontFamily = customFont,
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.secondary_color)
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.primary_color),
+                    shape = RoundedCornerShape(50))
+                .padding(horizontal = 12.dp, vertical = 4.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.gem_blue),
+                    contentDescription = "Coins",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = "$userScore",
                     fontFamily = customFont,
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.secondary_color)

@@ -37,7 +37,7 @@ import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
 @Composable
-fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?) {
+fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?) {
 
     val context = LocalContext.current
     val userDataViewModel: UserDataViewModel = viewModel()
@@ -61,7 +61,8 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?) {
             IconTopComponent(
                 honeyCombCount = honeyCombCount,
                 honeyJarCount = honeyJarCount,
-                showHoneyCombStatus = {}
+                showHoneyCombStatus = {},
+                userScore = userScore
             )
         }
 
@@ -134,7 +135,7 @@ fun HomeComponent(honeyCombCount: Int?, honeyJarCount: Int?) {
                 .clickable {
                     val newData = currencyData
                     if (newData != null) {
-                        if(newData.honeyJar > 50){
+                        if(newData.honeyJar >= 50){
                             newData.honeyJar -= 50
                             newData.honeyComb += 1
                             userDataViewModel.updateCurrencyData(newData)
