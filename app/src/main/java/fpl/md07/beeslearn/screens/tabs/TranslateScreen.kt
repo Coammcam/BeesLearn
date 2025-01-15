@@ -1,5 +1,7 @@
 package fpl.md07.beeslearn.screens.tabs
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
+import fpl.md07.beeslearn.generateSpeechAndPlay
 import fpl.md07.beeslearn.translate.Language
 import fpl.md07.beeslearn.translate.Translation
 import fpl.md07.beeslearn.translate.Translator
@@ -40,6 +44,7 @@ fun TranslateScreen(navController: NavController) {
     val isLoading = remember { mutableStateOf(false) }
     val translationError = remember { mutableStateOf<String?>(null) }
     val translationHistory = remember { mutableStateListOf<Pair<String, String>>() }
+    val apiKey = "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"
 
     Column(
         modifier = Modifier
@@ -214,7 +219,7 @@ fun TranslateScreen(navController: NavController) {
             modifier = Modifier.fillMaxHeight(),
             content = {
                 items(translationHistory) { historyItem ->
-                    TranslationHistoryItem(historyItem)
+                    TranslationHistoryItem(historyItem, apiKey)
                 }
             }
         )
@@ -231,7 +236,9 @@ fun TranslateScreen(navController: NavController) {
 }
 
 @Composable
-fun TranslationHistoryItem(history: Pair<String, String>) {
+fun TranslationHistoryItem(history: Pair<String, String>, api: String) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -241,9 +248,14 @@ fun TranslationHistoryItem(history: Pair<String, String>) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-                painter = painterResource(id = R.drawable.translate),
-                contentDescription = "Translate Icon",
-                modifier = Modifier.size(16.dp)
+                painter = painterResource(id = R.drawable.audio),
+                contentDescription = "Audio Icon",
+                modifier = Modifier.size(16.dp).clickable {
+
+                    Log.d("Audio: ", history.first)
+                    generateSpeechAndPlay(apiKey = api, history.first, cacheDir = context.cacheDir )
+                }
+
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
