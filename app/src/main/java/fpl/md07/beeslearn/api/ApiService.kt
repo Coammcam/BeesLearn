@@ -3,9 +3,11 @@ package fpl.md07.beeslearn.api
 import com.google.gson.JsonObject
 import fpl.md07.beeslearn.models.CurrencyModel
 import fpl.md07.beeslearn.models.GrammarQuestionModel
+import fpl.md07.beeslearn.models.Level
 import fpl.md07.beeslearn.models.Movie
 import fpl.md07.beeslearn.models.Music
-import fpl.md07.beeslearn.models.TrueFalseQuestionModel_A
+import fpl.md07.beeslearn.models.PartOfLevel
+import fpl.md07.beeslearn.models.TrueFalseQuestionModel
 import fpl.md07.beeslearn.models.Podcast
 import fpl.md07.beeslearn.requests.LoginRequest
 import fpl.md07.beeslearn.requests.RegisterRequest
@@ -26,7 +28,6 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface ApiService {
 
     @POST("/auth/login")
@@ -38,16 +39,21 @@ interface ApiService {
     @PUT("/auth/change-password")
     suspend fun ChangePassword(@Body request: ChangePasswordRequest): Response<JsonObject>
 
+    @GET("/level")
+    suspend fun getLevels(): Response<ArrayList<Level>>
+
+    @GET("/part_of_level/{level}")
+    suspend fun getPartOfLevel(@Path("level") level: Int): Response<ArrayList<PartOfLevel>>
+
     // get question by amount
+    @GET("/grammarquestions/{level}")
+    suspend fun getGrammarByAmount(@Path("level") level: Int, @Query("amount") amount: Int): Response<List<GrammarQuestionModel>>
 
-    @GET("/grammarquestions/byamount")
-    suspend fun getGrammarByAmount(@Query("amount") amount: Int): Response<List<GrammarQuestionModel>>
+    @GET("/truefalse/{level}")
+    suspend fun getTrueFalseByAmount(@Path("level") level: Int, @Query("amount") amount: Int): Response<List<TrueFalseQuestionModel>>
 
-    @GET("/truefalse/byamount")
-    suspend fun getTrueFalseByAmount(@Query("amount") amount: Int): Response<List<TrueFalseQuestionModel_A>>
-
-    @GET("/words/byamount")
-    suspend fun getWordByAmount(@Query("amount") amount: Int): Response<List<Word>>
+    @GET("/words/{level}")
+    suspend fun getWordByAmount(@Path("level") level: Int, @Query("amount") amount: Int): Response<List<Word>>
 
     // get questions
     @GET("/questions")
@@ -65,10 +71,10 @@ interface ApiService {
     @GET("/music")
     suspend fun getMusicList(): Response<List<Music>>
 
-    @GET("/user/currency/{email}")
+    @GET("/user/data/{email}")
     suspend fun getCurrency(@Path("email") email: String): Response<CurrencyModel>
 
-    @PUT("/user/currency/{email}")
+    @PUT("/user/data/{email}")
     suspend fun updateCurrency(@Path("email") email: String, @Body currencyData: CurrencyModel): Response<CurrencyModel>
 
     @Multipart
