@@ -11,6 +11,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -39,6 +41,7 @@ import vn.zalopay.sdk.ZaloPayError
 import vn.zalopay.sdk.ZaloPaySDK
 import vn.zalopay.sdk.listeners.PayOrderListener
 import fpl.md07.beeslearn.R
+import java.nio.file.WatchEvent
 
 
 @Composable
@@ -78,6 +81,22 @@ fun PaymentComponent(navController: NavHostController) {
             context = context,
             navController
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth()
+                .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
+            onClick = {
+               navController.popBackStack()
+            },
+            colors = ButtonDefaults.buttonColors(Color(0xFFFFD528)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(text = "Trở lại", color = Color.White)
+        }
     }
 }
 

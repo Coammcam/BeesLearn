@@ -63,6 +63,7 @@ import fpl.md07.beeslearn.screens.onboard.FrequencyScreen
 import fpl.md07.beeslearn.screens.onboard.SelectLevelScreen
 import fpl.md07.beeslearn.screens.auth.ChooseLoginScreen
 import fpl.md07.beeslearn.screens.music.MusicListScreen
+import fpl.md07.beeslearn.screens.onboard.LanguagesScreen
 import fpl.md07.beeslearn.screens.tabs.EditProfile
 import fpl.md07.beeslearn.screens.tabs.HomeLevelsScreen
 import fpl.md07.beeslearn.viewmodels.MovieViewModel
@@ -215,6 +216,9 @@ fun NestedBottomTab(
         }
         composable("chaoHoiScreen") {
             ChooseLanguagesScreen(navController)
+        }
+        composable("languagesScreen") {
+            LanguagesScreen(navController)
         }
         composable("trinhDoScreen") {
             SelectLevelScreen(navController)

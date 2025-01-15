@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -119,9 +120,30 @@ fun NotifyChangeScreen(
         Button(
             onClick = {
                 triggerCustomNotification(context, selectedHour, selectedMinute)
+                navController.navigate("settingScreen")
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.newInnerColor),
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp)
+                .height(50.dp)
+        ) {
+            Text(
+                "Turn on",
+                color = Color.White
+            )
+        }
+
+        Button(
+            onClick = {
+                navController.navigate("settingScreen")
+                Toast.makeText(context, "Bạn đã tắt thông báo!", Toast.LENGTH_SHORT).show()
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.secondary_color),
                 contentColor = Color.White
             ),
             modifier = Modifier
@@ -130,7 +152,7 @@ fun NotifyChangeScreen(
                 .height(50.dp)
         ) {
             Text(
-                "Turn on",
+                "Turn Off",
                 color = Color.White
             )
         }
