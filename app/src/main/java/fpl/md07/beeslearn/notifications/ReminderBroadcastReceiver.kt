@@ -13,16 +13,28 @@ import fpl.md07.beeslearn.R
 
 class ReminderBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
+        val action = intent?.action
         val timePrefs = TimePreferences(context)
 
-        // Kiểm tra nếu người dùng đã học trong ngày
-        if (timePrefs.getDailyLearningTime() > 0L) {
-            // Người dùng đã học, không gửi thông báo
-            return
+//        if (timePrefs.getDailyLearningTime() > 0L) {
+//            return
+//        }
+//
+//        showDailyReminder(context)
+        when (action) {
+            "ACTION_MANUAL_NOTIFICATION" -> {
+                showDailyReminder(context)
+            }
+            "ACTION_CUSTOM_NOTIFICATION" -> {
+                showCustomReminder(context)
+            }
+            else -> {
+                if (timePrefs.getDailyLearningTime() > 0L) {
+                    return
+                }
+                showDailyReminder(context)
+            }
         }
-
-        // Người dùng chưa học, gửi thông báo
-        showDailyReminder(context)
     }
 
     private fun showDailyReminder(context: Context) {
@@ -44,4 +56,24 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
 
         NotificationManagerCompat.from(context).notify((System.currentTimeMillis() % 10000).toInt(), notification)
     }
+
+    private fun showCustomReminder(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(context, "Vui lòng cấp quyền thông báo!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val notification = NotificationCompat.Builder(context, "learning_channel")
+            .setSmallIcon(R.drawable.beeds)
+            .setContentTitle("Thông báo đặc biệt!")
+            .setContentText("Hãy vào học để cải thiện kỹ năng!")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build()
+
+        NotificationManagerCompat.from(context).notify((System.currentTimeMillis() % 10000).toInt(), notification)
+    }
 }
+

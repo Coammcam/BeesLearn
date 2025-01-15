@@ -6,6 +6,11 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.OptIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +47,17 @@ import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
 import fpl.md07.beeslearn.viewmodels.LoginViewModel
 
+class SettingActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            Surface(color = MaterialTheme.colorScheme.background) {
+                SettingScreen(navController = NavController(context = this) , loginViewModel = LoginViewModel())
+            }
+        }
+    }
+}
 @Composable
 fun SettingScreen(
     navController: NavController,
@@ -63,7 +79,8 @@ fun SettingScreen(
             ).apply {
                 description = "Thông báo từ ứng dụng BeesLearn"
             }
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
     }
@@ -142,7 +159,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             user?.let { userInfo ->
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -163,7 +180,7 @@ fun SettingScreen(
                                     "BeesLearn",
                                     "Tài khoản của bạn đang sử dụng gói Premium."
                                 )
-                            showAlert = true
+                                showAlert = true
                             }
                     )
                 }
@@ -273,7 +290,10 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = { /* Add your action here */ },
+                onClick = {
+                    Log.d("Navigation", "Navigating to notifyChange")
+                    navController.navigate("notifyChange")
+                },
                 modifier = Modifier
                     .height(55.dp)
                     .fillMaxWidth()
@@ -289,12 +309,12 @@ fun SettingScreen(
                         .padding(start = 50.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.download),
-                        contentDescription = "Download",
+                        painter = painterResource(id = R.drawable.volume),
+                        contentDescription = "Notify",
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Tải xuống",
+                        text = "Thông báo",
                         fontFamily = Nunito_Bold,
                         color = colorResource(id = R.color.secondary_color),
                         modifier = Modifier.padding(start = 8.dp)
@@ -380,7 +400,11 @@ fun SettingScreen(
                 TextButton(
                     onClick = {
                         showLogoutAlert = false // Đóng hộp thoại
-                        sendNotification(context, "Bạn đã đăng xuất", "Thời gian học tập của bạn chưa đủ")
+                        sendNotification(
+                            context,
+                            "Bạn đã đăng xuất",
+                            "Thời gian học tập của bạn chưa đủ"
+                        )
                         loginViewModel.logout(context = navController.context)
                         navController.navigate("welcomeScreen") {
                             popUpTo(0) // Xóa toàn bộ stack điều hướng để ngăn quay lại màn hình cũ
