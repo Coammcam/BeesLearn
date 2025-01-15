@@ -3,6 +3,7 @@ package fpl.md07.beeslearn.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.components.GlideImage
 import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 
-// Tạo FontFamily cho Nunito Bold
+
 val NunitoBold = FontFamily(
     Font(R.font.nunito_bold, FontWeight.Bold)
 )
@@ -50,6 +51,8 @@ fun CongratulationsScreen(goBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(bottom = 40.dp)
+
     ) {
         // Main content box for overlapping images
         Box(
@@ -69,7 +72,7 @@ fun CongratulationsScreen(goBack: () -> Unit) {
             GlideImage(
                 imageUrl = R.drawable.firework,
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(170.dp)
                     .align(Alignment.CenterStart)
                     .offset(x = (-80).dp)
                     .offset(y = (-50).dp)
@@ -79,7 +82,7 @@ fun CongratulationsScreen(goBack: () -> Unit) {
             GlideImage(
                 imageUrl = R.drawable.firework,
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(170.dp)
                     .align(Alignment.CenterEnd)
                     .offset(x = 80.dp)
                     .offset(y = (-50).dp)
@@ -122,7 +125,29 @@ fun CongratulationsScreen(goBack: () -> Unit) {
             // Info Boxes for "Reward"
             InfoBoxes()
         }
+        // Nút "Trở về" ở dưới cùng
+        Button(
+            onClick = { goBack() },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(20.dp)
+                .padding(bottom = 20.dp)
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFD700)
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = "Trở về",
+                color = Color(0xFF6A1B9A),
+                fontSize = 18.sp,
+                fontFamily = NunitoBold
+            )
+        }
     }
+
 }
 
 
@@ -138,11 +163,12 @@ fun InfoBoxes() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Box đầu tiên cho "Total XP"
-        InfoBox(title = "Phần thưởng", value = "+ ${UserSession.bonusScore}", icon = R.drawable.gem_blue)
+        InfoBox(title = "Total XP", value = "+ ${UserSession.bonusScore}", icon = R.drawable.gem_blue)
 
         // Box thứ hai cho "Reward" với biểu tượng
-        InfoBox(title = "Phần thưởng", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey_picture)
+        InfoBox(title = "Reward", value = "+ ${UserSession.bonusHoneyJar}", icon = R.drawable.honey)
     }
+
 }
 
 
@@ -160,22 +186,20 @@ fun InfoBox(title: String, value: String, icon: Int?) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            // Text "Total XP" hoặc "Reward" ở trên cùng của Box vàng
+            // Text "Total XP" hoặc "Reward"
             Text(
                 text = title,
                 fontSize = 14.sp,
                 fontFamily = NunitoBold,
                 color = Color(0xFF6A1B9A)
-
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight() // Chiều cao của Box màu trắng
+                    .fillMaxHeight()
                     .background(Color.White, shape = RoundedCornerShape(8.dp)), // Nền trắng và bo góc
                 contentAlignment = Alignment.Center
             ) {
@@ -191,13 +215,12 @@ fun InfoBox(title: String, value: String, icon: Int?) {
                         fontWeight = FontWeight.Bold
                     )
 
-                    // Nếu có biểu tượng, hiển thị biểu tượng bên cạnh giá trị
+                    // Hiển thị hình ảnh giữ nguyên màu gốc
                     icon?.let {
                         Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
+                        Image(
                             painter = painterResource(id = it),
                             contentDescription = null,
-                            tint = Color(0xFF6A1B9A),
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -206,6 +229,7 @@ fun InfoBox(title: String, value: String, icon: Int?) {
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = false)
 @Composable
