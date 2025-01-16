@@ -47,6 +47,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.api.CreateOrder
@@ -63,7 +65,7 @@ class PaymentActivity : ComponentActivity() {
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         setContent(){
-            PaymentComponent()
+            PaymentComponent(navController = rememberNavController())
         }
     }
     override fun onNewIntent(intent: Intent) {
@@ -73,7 +75,7 @@ class PaymentActivity : ComponentActivity() {
 }
 
 @Composable
-fun PaymentComponent() {
+fun PaymentComponent(navController: NavController) {
     val context = LocalContext.current
 
     Column(
@@ -85,17 +87,15 @@ fun PaymentComponent() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PaymentButton(
-            text = "Gói 1 Tháng",
+            text = "Mua 1 tim với",
             amount = 1000,
             context = context,
-
-
             )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         PaymentButton(
-            text = "Gói 3 Tháng",
+            text = "Mua 2 tim với",
             amount = 2000,
             context = context,
 
@@ -104,7 +104,7 @@ fun PaymentComponent() {
         Spacer(modifier = Modifier.height(16.dp))
 
         PaymentButton(
-            text = "Gói 6 Tháng",
+            text = "Mua 3 tim với",
             amount = 3000,
             context = context
         )
@@ -280,7 +280,7 @@ fun PaymentButton(
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.heart8),
+                painter = painterResource(id = R.drawable.heart_by_red),
                 contentDescription = null,
                 tint = Color.Red,
                 modifier = Modifier
