@@ -34,6 +34,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,12 +48,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fpl.md07.beeslearn.GlobalVariable.UserSession
 import fpl.md07.beeslearn.R
 import fpl.md07.beeslearn.api.AppInfo.APP_ID
 import fpl.md07.beeslearn.api.CreateOrder
 import fpl.md07.beeslearn.ui.theme.Nunito_Bold
+import fpl.md07.beeslearn.viewmodels.UserDataViewModel
 import kotlinx.coroutines.launch
 import vn.zalopay.sdk.Environment
 import vn.zalopay.sdk.ZaloPayError
@@ -65,7 +67,7 @@ class PaymentActivity : ComponentActivity() {
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         setContent(){
-            PaymentComponent(navController = rememberNavController())
+            PaymentComponent()
         }
     }
     override fun onNewIntent(intent: Intent) {
@@ -75,7 +77,7 @@ class PaymentActivity : ComponentActivity() {
 }
 
 @Composable
-fun PaymentComponent(navController: NavController) {
+fun PaymentComponent() {
     val context = LocalContext.current
 
     Column(
@@ -135,6 +137,9 @@ fun PaymentButton(
 ) {
     val activity = context as? ComponentActivity ?: return
     val totalString = amount.toString()
+
+    val userDataViewModel: UserDataViewModel = viewModel()
+    val currencyData = UserSession.currencyModel
 
     Card(
         modifier = Modifier
@@ -226,6 +231,16 @@ fun PaymentButton(
                                                 "BeesLearn",
                                                 "Bạn đã thanh toán thành công bằng ZaloPay!"
                                             )
+                                                if(amount == 1000){
+                                                    currencyData.honeyComb += 1
+                                                    userDataViewModel.updateCurrencyData(currencyData)
+                                                }else if(amount == 2000){
+                                                    currencyData.honeyComb += 2
+                                                    userDataViewModel.updateCurrencyData(currencyData)
+                                                }else if(amount == 3000){
+                                                    currencyData.honeyComb += 3
+                                                    userDataViewModel.updateCurrencyData(currencyData)
+                                                }
                                         }
 
                                         override fun onPaymentCanceled(

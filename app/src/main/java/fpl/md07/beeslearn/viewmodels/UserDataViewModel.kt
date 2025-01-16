@@ -21,6 +21,7 @@ class UserDataViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val currencyData = api.getCurrency(UserSession.currentUser!!.email).body()
+                UserSession.currencyModel = currencyData!!
                 _currencyData.postValue(currencyData)
             }catch (e: Exception){
                 println(e)

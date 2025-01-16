@@ -60,76 +60,22 @@ fun HomeComponent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconTopComponent(
-                honeyCombCount = honeyCombCount,
-                honeyJarCount = honeyJarCount,
-                showHoneyCombStatus = {},
-                userScore = userScore
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-//        Card(
+//        Row(
 //            modifier = Modifier
-//                .width(275.dp)
-//                .shadow(
-//                    elevation = 8.dp,
-//                    shape = RoundedCornerShape(16.dp)
-//                )
-//                .clip(RoundedCornerShape(16.dp))
-//                .background(Color(0xFFFFF192))
-//                .padding(horizontal = 16.dp, vertical = 12.dp)
-//                .clickable {
-//                    Toast.makeText(context, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show()
-//                }
+//                .fillMaxWidth()
+//                .padding(top = 8.dp, end = 16.dp),
+//            horizontalArrangement = Arrangement.End,
+//            verticalAlignment = Alignment.CenterVertically
 //        ) {
-//            Row(
-//                modifier = Modifier
-//                    .background(Color(0xFFFFF192)),
-//                verticalAlignment = Alignment.Top,
-//                horizontalArrangement = Arrangement.Center,
-//            ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.heart),
-//                    contentDescription = null,
-//                    tint = Color.Red,
-//                    modifier = Modifier.size(32.dp)
-//                )
-//
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    Text(
-//                        text = "Unlimited",
-//                        fontFamily = Nunito_Bold,
-//                        fontSize = 22.sp,
-//                        color = Color(0xFF000000)
-//                    )
-//
-//                    Spacer(modifier = Modifier.height(4.dp))
-//
-//                    Text(
-//                        text = "20$ / Month",
-//                        fontFamily = Nunito_Bold,
-//                        fontSize = 22.sp,
-//                        color = Color(0xFFFFA500)
-//                    )
-//                }
-//            }
+//            IconTopComponent(
+//                honeyCombCount = honeyCombCount,
+//                honeyJarCount = honeyJarCount,
+//                showHoneyCombStatus = {},
+//                userScore = userScore
+//            )
 //        }
 //
-//        Spacer(modifier = Modifier.height(16.dp))
+//        Spacer(modifier = Modifier.height(24.dp))
 
         Card(
             modifier = Modifier
@@ -143,19 +89,23 @@ fun HomeComponent(
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .clickable {
                     val newData = currencyData
-                    if (newData != null) {
+                    if (newData != null && newData.honeyComb < 3) {
                         if (newData.honeyJar >= 50) {
                             newData.honeyJar -= 50
                             newData.honeyComb += 1
                             userDataViewModel.updateCurrencyData(newData)
                             Toast
-                                .makeText(context, "Mua thành công 1 tim !", Toast.LENGTH_SHORT)
+                                .makeText(context, "Mua thành công 1 tim!", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
                             Toast
                                 .makeText(context, "Hết tiền", Toast.LENGTH_SHORT)
                                 .show()
                         }
+                    }else{
+                        Toast
+                            .makeText(context, "Bạn đã có đủ tim", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
         ) {
@@ -223,8 +173,15 @@ fun HomeComponent(
                 .background(Color(0xFFFFF192))
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .clickable {
-                    val payment = Intent(context, PaymentActivity::class.java)
-                    context.startActivity(payment)
+                    val newData = currencyData
+                    if (newData != null && newData.honeyComb < 3) {
+                        val payment = Intent(context, PaymentActivity::class.java)
+                        context.startActivity(payment)
+                    }else{
+                        Toast
+                            .makeText(context, "Bạn đã có đủ tim", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
         ) {
             Row(
@@ -247,7 +204,7 @@ fun HomeComponent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Refill 1",
+                        text = "Refill",
                         fontFamily = Nunito_Bold,
                         fontSize = 22.sp,
                         color = Color(0xFF000000)

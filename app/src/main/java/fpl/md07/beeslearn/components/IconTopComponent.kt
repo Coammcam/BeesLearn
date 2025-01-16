@@ -39,7 +39,7 @@ fun IconTopComponent(honeyCombCount: Int?, honeyJarCount: Int?, userScore: Int?,
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "$honeyCombCount/3",
+                    text = "$honeyCombCount/3 +",
                     fontSize = 16.sp,
                     fontFamily = customFont,
                     color = colorResource(id = R.color.secondary_color)
